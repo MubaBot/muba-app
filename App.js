@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import MyChat from "./src/components/Chat";
+import Muba from "./src/Muba";
 
 export default class App extends Component {
   render() {
-    return <MyChat />;
+    return <Muba />;
   }
 }
