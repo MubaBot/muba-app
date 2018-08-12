@@ -1,7 +1,12 @@
 // import "prop-types"; // Supported builtin module
 
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard
+} from "react-native";
 
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { GiftedChat } from "react-native-gifted-chat";
@@ -41,24 +46,30 @@ export default class MyChat extends Component {
 
   render() {
     return (
-      <View style={[{ flex: 1 }]}>
-        <GiftedChat
-          messages={this.state.messages}
-          onSend={messages => this.onSend(messages)}
-          renderCustomView={this.renderCustomView}
-          user={{
-            _id: 1
-          }}
-          parsePatterns={linkStyle => [
-            {
-              pattern: /#(\w+)/,
-              style: { ...linkStyle, color: "lightgreen" },
-              onPress: props => alert(`press on ${props}`)
-            }
-          ]}
-        />
-        <KeyboardSpacer />
-      </View>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View style={[{ flex: 1 }]}>
+          <GiftedChat
+            messages={this.state.messages}
+            onSend={messages => this.onSend(messages)}
+            renderCustomView={this.renderCustomView}
+            user={{
+              _id: 1
+            }}
+            parsePatterns={linkStyle => [
+              {
+                pattern: /#(\w+)/,
+                style: { ...linkStyle, color: "lightgreen" },
+                onPress: props => alert(`press on ${props}`)
+              }
+            ]}
+          />
+          <KeyboardSpacer />
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
