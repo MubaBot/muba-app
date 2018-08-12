@@ -2,8 +2,8 @@
 
 import React, { Component } from "react";
 import {
+  Platform,
   View,
-  StyleSheet,
   TouchableWithoutFeedback,
   Keyboard
 } from "react-native";
@@ -11,16 +11,7 @@ import {
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { GiftedChat } from "react-native-gifted-chat";
 
-const styles = StyleSheet.create({
-  mapView: {
-    width: 150,
-    height: 100,
-    borderRadius: 13,
-    margin: 3
-  }
-});
-
-export default class MyChat extends Component {
+export default class Chat extends Component {
   state = {
     messages: []
   };
@@ -45,6 +36,8 @@ export default class MyChat extends Component {
   }
 
   render() {
+    const Spacer = Platform.OS === "ios" ? null : <KeyboardSpacer />;
+
     return (
       <TouchableWithoutFeedback
         onPress={() => {
@@ -67,7 +60,7 @@ export default class MyChat extends Component {
               }
             ]}
           />
-          <KeyboardSpacer />
+          {Spacer}
         </View>
       </TouchableWithoutFeedback>
     );
