@@ -44,7 +44,7 @@ export default class Chat extends Component {
           Keyboard.dismiss();
         }}
       >
-        <View style={[{ flex: 1 }]}>
+        <View style={[{ flex: 1, backgroundColor: "white" }]}>
           <GiftedChat
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}

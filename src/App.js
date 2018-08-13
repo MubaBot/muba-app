@@ -1,3 +1,4 @@
+import * as Expo from "expo";
 import React, { Component } from "react";
 import { Scene, Router } from "react-native-router-flux";
 
@@ -11,9 +12,11 @@ export default class Muba extends Component {
       isReady: false
     };
   }
+  
   componentWillMount() {
     this.loadFonts();
   }
+
   async loadFonts() {
     await Expo.Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
@@ -24,6 +27,9 @@ export default class Muba extends Component {
   }
 
   render() {
+    if (!this.state.isReady) {
+      return <Expo.AppLoading />;
+    }
     return (
       <Router hideNavBar>
         <Scene key="root" hideNavBar>

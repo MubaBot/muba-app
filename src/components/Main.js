@@ -11,14 +11,12 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     height: 50,
-    paddingTop: 10,
-    paddingBottom: 10,
-    textAlign: "center",
+    padding: 10,
+    paddingLeft: 12.5,
     borderRadius: 100,
     borderColor: "white",
     borderWidth: 1,
-    backgroundColor: "#1e99dc",
-    color: "white"
+    backgroundColor: "#1e99dc"
   }
 });
 
@@ -26,9 +24,14 @@ export default class Main extends Component {
   render() {
     const goToChat = () => Actions.chat({});
     return (
-      <View style={{ flex: 1, paddingTop: 128 }}>
-        <Text onPress={goToChat}>This is PageOne!</Text>
-        <Icon onPress={goToChat} name="chatboxes" style={styles.chatButton} />
+      <View style={{ flex: 1, paddingTop: 128, backgroundColor: "white" }}>
+        <View style={styles.chatButton}>
+          <Icon
+            onPress={goToChat}
+            name="chatboxes"
+            style={{ color: "white" }}
+          />
+        </View>
       </View>
     );
   }
