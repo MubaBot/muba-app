@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Muba from "./src/Muba";
+import Muba from "./src/App";
 
 export default class App extends Component {
   render() {
