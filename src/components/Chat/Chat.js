@@ -36,6 +36,22 @@ export default class Chat extends Component {
 
     const chat = await this.saveMessage("", { bot: true, type: TYPE_LOADING });
 
+    fetch("https://randomuser.me/api/?results=1", {
+      // method: 'POST',
+      // headers: {
+      //   Accept: 'application/json',
+      //   'Content-Type': 'application/json',
+      // },
+      // body: JSON.stringify({
+      //   firstParam: 'yourValue',
+      // }),
+    })
+      .then(response => response.json())
+      .then(async responseJson => {
+        await this.removeChatMessage(chat._id);
+        this.saveMessage(responseJson.results[0].login.username, { bot: true });
+      });
+  }
 
   parsePatterns(linkStyle) {
     return [
