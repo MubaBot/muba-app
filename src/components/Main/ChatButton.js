@@ -1,12 +1,23 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { Platform, View, StyleSheet } from "react-native";
 import { Actions } from "react-native-router-flux";
-import { Icon } from "native-base";
+import { Icon, Text } from "native-base";
 
 const styles = StyleSheet.create({
-  chatButton: {
+  chatContainer: {
+    width: "100%",
     position: "absolute",
     bottom: 20,
+    height: 50
+  },
+  chatText: {
+    position: "absolute",
+    right: 80,
+    lineHeight: Platform.OS === "ios" ? 65 : 50,
+    fontSize: 20
+  },
+  chatButton: {
+    position: "absolute",
     right: 20,
     height: 50,
     width: 50,
@@ -20,11 +31,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class Main extends Component {
+export default class ChatButton extends Component {
   render() {
     const goToChat = () => Actions.chat({});
     return (
-      <View style={{ flex: 1, paddingTop: 128, backgroundColor: "white" }}>
+      <View style={styles.chatContainer}>
+        <Text style={styles.chatText}>무바랑 대화하기</Text>
         <View style={styles.chatButton}>
           <Icon
             onPress={goToChat}
