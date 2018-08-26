@@ -21,7 +21,9 @@ export default class Chat extends Component {
   componentWillMount() {
     this.getChatMessage().then(messages => {
       this.setState({
-        messages: messages
+        messages: messages,
+        intent: -1,
+        argv: JSON.stringify({})
       });
     });
   }
@@ -32,25 +34,31 @@ export default class Chat extends Component {
    * Methods
    */
   async onSend(messages = []) {
-    for (let i in messages) await this.saveMessage(messages[i].text);
+    if (messages.length === 0) return;
+
+    await this.saveMessage(messages[0].text);
 
     const chat = await this.saveMessage("", { bot: true, type: TYPE_LOADING });
 
-    fetch("https://randomuser.me/api/?results=1", {
-      // method: 'POST',
-      // headers: {
-      //   Accept: 'application/json',
-      //   'Content-Type': 'application/json',
-      // },
-      // body: JSON.stringify({
-      //   firstParam: 'yourValue',
-      // }),
-    })
+    fetch(
+      "http://222.111.144.32:5000/chatbot/api/get_message?get_params=" +
+        JSON.stringify({
+          text: messages[0].text,
+          intent: this.state.intent,
+          argv: JSON.parse(this.state.argv)
+        })
+    )
       .then(response => response.json())
       .then(async responseJson => {
+        console.log(responseJson);
+        this.setState({
+          intent: responseJson.intent,
+          argv: responseJson.argv
+        });
         await this.removeChatMessage(chat._id);
-        this.saveMessage(responseJson.results[0].login.username, { bot: true });
-      });
+        this.saveMessage(responseJson.msg, { bot: true });
+      })
+      .catch(err => console.log(err));
   }
 
   parsePatterns(linkStyle) {
@@ -85,7 +93,7 @@ export default class Chat extends Component {
 
     if (bot) {
       id = 0;
-      name = "Muba Bot";
+      name = "무바 봇";
     }
 
     const chat = await this.makeChat({
@@ -116,7 +124,7 @@ export default class Chat extends Component {
 
   async getChatMessage() {
     return AsyncStorage.getItem("chat").then(msg => {
-      if (msg) return JSON.parse(msg);
+      if (msg) return JSON.parse(msg).filter((i, n) => i.type !== TYPE_LOADING);
       return [];
     });
   }
