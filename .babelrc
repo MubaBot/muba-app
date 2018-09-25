@@ -1,8 +1,26 @@
 {
-  "presets": ["babel-preset-expo", "react-native"],
+  "presets": [
+    "babel-preset-expo",
+    "react-native"
+  ],
   "env": {
     "development": {
-      "plugins": ["transform-react-jsx-source", "transform-decorators-legacy"]
+      "plugins": [
+        "transform-react-jsx-source",
+        "transform-decorators-legacy",
+        [
+          "module-resolver",
+          {
+            "root": [
+              "./src"
+            ],
+            "alias": {
+              "test": "./test",
+              "underscore": "lodash"
+            }
+          }
+        ]
+      ]
     }
   }
 }
