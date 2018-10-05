@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { View, AsyncStorage } from "react-native";
-import { Container, Header, Body, Left, Right, Button, Text, Title, Icon } from 'native-base';
+import { Container, Header, Body, Left, Right, Text, Title, Icon } from "native-base";
 
 import ChatButton from "./ChatButton";
-import ActionButton from "components/ActionButton";
+import RouteButton from "components/RouteButton";
 
 export default class Main extends Component {
   async clearChat() {
@@ -21,17 +21,25 @@ export default class Main extends Component {
             <Title>Muba</Title>
           </Body>
           <Right>
-            <ActionButton transparent link="settings">
-              <Icon name='settings' />
-            </ActionButton>
+            <RouteButton transparent link="settings">
+              <Icon name="settings" />
+            </RouteButton>
           </Right>
         </Header>
 
         <View style={{ flex: 1, backgroundColor: "white" }}>
-          <ActionButton link=""><Text>1</Text></ActionButton>
-          <ActionButton link=""><Text>2</Text></ActionButton>
-          <ActionButton link=""><Text>3</Text></ActionButton>
-          <ActionButton onPress={this.clearChat}><Text>Clear Chat</Text></ActionButton>
+          <RouteButton link="recommend">
+            <Text>추천받기</Text>
+          </RouteButton>
+          <RouteButton link="search">
+            <Text>상점찾기</Text>
+          </RouteButton>
+          <RouteButton link="order">
+            <Text>주문목록</Text>
+          </RouteButton>
+          <RouteButton onPress={this.clearChat}>
+            <Text>Clear Chat</Text>
+          </RouteButton>
           <ChatButton />
         </View>
       </Container>

@@ -1,19 +1,30 @@
 import React, { Component } from "react";
 import { Actions } from "react-native-router-flux";
-import { View, Text } from "react-native";
-import { Container, Header, Body, Left, Right, Button, Title, Icon } from 'native-base';
+import { View, ScrollView } from "react-native";
+import { Header, Body, Left, Right, Title, Icon, Button, Text } from "native-base";
+
+import RouteButton from "components/RouteButton";
+import LoadingContainer from "components/LoadingContainer";
 
 import Location from "./Location";
+import Tendency from "./Tendency";
+
+import { doLogout } from "apis/auth";
 
 export default class Settings extends Component {
+  doLogout = async () => {
+    doLogout()
+      .then(() => Actions.popTo("main"))
+      .catch(() => null);
+  };
   render() {
     return (
-      <Container>
+      <LoadingContainer requireAuth={true}>
         <Header>
           <Left>
-            <Button transparent onPress={Actions.pop}>
-              <Icon name='arrow-back' />
-            </Button>
+            <RouteButton transparent goBack={true}>
+              <Icon name="arrow-back" />
+            </RouteButton>
           </Left>
           <Body>
             <Title>Settings</Title>
@@ -22,10 +33,19 @@ export default class Settings extends Component {
         </Header>
 
         <View style={{ flex: 1, backgroundColor: "white" }}>
-          <Text>위치설정</Text>
-          <Location />
+          <ScrollView>
+            <Text>위치설정</Text>
+            <Location />
+
+            <Text>성향 설정</Text>
+            <Tendency />
+
+            <Button onPress={this.doLogout}>
+              <Text>Logout</Text>
+            </Button>
+          </ScrollView>
         </View>
-      </Container>
+      </LoadingContainer>
     );
   }
 }

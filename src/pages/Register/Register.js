@@ -1,18 +1,17 @@
 import React, { Component } from "react";
-import { Text } from "react-native";
-import { Actions } from "react-native-router-flux";
-import { Container, Header, Body, Left, Right, Button, Title, Icon, Input, Content, Form, Item, Label } from 'native-base';
+import { Container, Header, Body, Left, Right, Title, Icon, Input, Content, Form, Item, Label, Text } from "native-base";
+
+import RouteButton from "components/RouteButton";
 
 export default class Register extends Component {
-
   render() {
     return (
       <Container>
         <Header>
           <Left>
-            <Button transparent onPress={Actions.pop}>
-              <Icon name='arrow-back' />
-            </Button>
+            <RouteButton transparent goBack={true}>
+              <Icon name="arrow-back" />
+            </RouteButton>
           </Left>
           <Body>
             <Title>Login</Title>
@@ -42,12 +41,11 @@ export default class Register extends Component {
               <Label>Password</Label>
               <Input />
             </Item>
-            <Button>
+            <RouteButton goBack={true}>
               <Text>Register</Text>
-            </Button>
+            </RouteButton>
           </Form>
         </Content>
-
       </Container>
     );
   }

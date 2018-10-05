@@ -1,11 +1,14 @@
 // import "prop-types"; // Supported builtin module
 
-import "moment/locale/ko";
 import React, { Component } from "react";
-import { Platform, View, TouchableWithoutFeedback, Keyboard, AsyncStorage, Text } from "react-native";
-import { Spinner } from "native-base";
+import { Platform, View, TouchableWithoutFeedback, Keyboard, AsyncStorage } from "react-native";
+import { Container, Header, Body, Left, Right, Text, Title, Icon, Spinner } from "native-base";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { GiftedChat } from "react-native-gifted-chat";
+import "moment/locale/ko";
+
+import RouteButton from "components/RouteButton";
+import LoadingContainer from "components/LoadingContainer";
 
 const TYPE_NORMAL = 0;
 const TYPE_LOADING = 1;
@@ -18,7 +21,7 @@ export default class Chat extends Component {
   /**
    * Lifecycle
    */
-  componentWillMount() {
+  componentWillMount = () => {
     this.getChatMessage().then(messages => {
       this.setState({
         messages: messages,
@@ -26,9 +29,7 @@ export default class Chat extends Component {
         argv: JSON.stringify({})
       });
     });
-  }
-
-  componentDidMount() {}
+  };
 
   /**
    * Methods
@@ -175,24 +176,38 @@ export default class Chat extends Component {
     const Spacer = Platform.OS === "ios" ? null : <KeyboardSpacer />;
 
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
-        <View style={[{ flex: 1, backgroundColor: "white" }]}>
-          <GiftedChat
-            messages={this.state.messages}
-            user={{ _id: 1 }}
-            placeholder="입력해주세요."
-            parsePatterns={this.parsePatterns}
-            onSend={messages => this.onSend(messages)}
-            renderCustomView={this.renderCustomView}
-            // renderDay={this.renderDay}
-          />
-          {Spacer}
-        </View>
-      </TouchableWithoutFeedback>
+      <LoadingContainer requireAuth={true}>
+        <Header>
+          <Left>
+            <RouteButton transparent goBack={true}>
+              <Icon name="arrow-back" />
+            </RouteButton>
+          </Left>
+          <Body>
+            <Title>Muba Chat</Title>
+          </Body>
+          <Right />
+        </Header>
+
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <View style={[{ flex: 1, backgroundColor: "white" }]}>
+            <GiftedChat
+              messages={this.state.messages}
+              user={{ _id: 1 }}
+              placeholder="입력해주세요."
+              parsePatterns={this.parsePatterns}
+              onSend={messages => this.onSend(messages)}
+              renderCustomView={this.renderCustomView}
+              // renderDay={this.renderDay}
+            />
+            {Spacer}
+          </View>
+        </TouchableWithoutFeedback>
+      </LoadingContainer>
     );
   }
 }
