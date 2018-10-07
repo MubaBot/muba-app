@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView } from "react-native";
 import { Content, Button, Text } from "native-base";
 
-import Swiper from "react-native-swiper";
+import Swiper from "@/components/Swiper";
 
 import Tendency from "./Tendency";
 import Search from "./Search";
@@ -27,17 +27,17 @@ export default class Recommend extends Component {
 
   render() {
     return (
-      <ScrollView ref={r => (this.scrollView = r)}>
+      <ScrollView ref={r => (this.scrollView = r)} scrollEnabled={false}>
         <Swiper ref={r => (this.swiper = r)} stlye={{ flex: 1 }} scrollEnabled={false} showsButtons={false} loop={false} showsPagination={false} autoplay={false} index={this.state.index}>
-          <Content>
+          <Content style={{ flex: 1 }}>
             <Tendency />
             <Button onPress={this.goNext}>
               <Text>메뉴 추천</Text>
             </Button>
           </Content>
-          <View style={{ flex: 1 }}>
+          <Content style={{ flex: 1 }}>
             <Search skip={this.props.skip} goBack={this.goBack} />
-          </View>
+          </Content>
         </Swiper>
       </ScrollView>
     );

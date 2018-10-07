@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Header, Body, Left, Right, Title, Icon, Content, Button, Text } from "native-base";
 
-import LoadingContainer from "components/LoadingContainer";
-import RouteButton from "components/RouteButton";
+import LoadingContainer from "@/components/LoadingContainer";
+import RouteButton from "@/components/RouteButton";
 
-import { RecommendPopup } from "components/PopupComponent";
+import { RecommendPopup } from "@/components/PopupComponent";
 
 export default class Recommend extends Component {
   state = {

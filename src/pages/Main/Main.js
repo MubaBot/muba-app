@@ -3,7 +3,7 @@ import { View, AsyncStorage } from "react-native";
 import { Container, Header, Body, Left, Right, Text, Title, Icon } from "native-base";
 
 import ChatButton from "./ChatButton";
-import RouteButton from "components/RouteButton";
+import RouteButton from "@/components/RouteButton";
 
 export default class Main extends Component {
   async clearChat() {

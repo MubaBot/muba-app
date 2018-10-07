@@ -10,6 +10,7 @@
     .hAddr {display:none;/*position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;*/}
     #centerAddr {display:block;font-weight: normal;}
     .bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+    .btn {position:absolute;right:10px;bottom:10px;z-index:1}
 </style>
 </head>
 
@@ -20,6 +21,10 @@
       <span class="title">지도중심기준 행정동 주소정보</span>
       <span id="centerAddr"></span>
     </div>
+    <div class="btn">
+      <button onclick="zoomOut()">축소</button>
+      <button onclick="zoomIn()">확대</button>
+    </div>
   </div>
 
   <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fd6eeb2029cb9d0081ff33606fafdbaa&libraries=services"></script>
@@ -27,7 +32,7 @@
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
       mapOption = {
         center: new daum.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-        level: 1 // 지도의 확대 레벨
+        level: 3 // 지도의 확대 레벨
       };
 
     // 지도를 생성합니다    
@@ -55,12 +60,12 @@
             '</div>';
 
           // 마커를 클릭한 위치에 표시합니다 
-          marker.setPosition(mouseEvent.latLng);
-          marker.setMap(map);
+          // marker.setPosition(mouseEvent.latLng);
+          // marker.setMap(map);
 
           // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
-          infowindow.setContent(content);
-          infowindow.open(map, marker);
+          // infowindow.setContent(content);
+          // infowindow.open(map, marker);
         }
       });
     });
@@ -94,6 +99,22 @@
         }
       }
     }
+
+    function zoomIn() {
+      // 현재 지도의 레벨을 얻어옵니다
+      var level = map.getLevel();
+
+      // 지도를 1레벨 내립니다 (지도가 확대됩니다)
+      map.setLevel(level - 1);
+    }
+
+    function zoomOut() {
+      // 현재 지도의 레벨을 얻어옵니다
+      var level = map.getLevel();
+
+      // 지도를 1레벨 올립니다 (지도가 축소됩니다)
+      map.setLevel(level + 1);
+    }    
   </script>
 </body>
 

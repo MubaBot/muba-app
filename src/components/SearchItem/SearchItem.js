@@ -1,9 +1,17 @@
 import React, { Component } from "react";
-import { TouchableWithoutFeedback } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { ListItem, Body, Text, Label, Grid, Row, Col, Button } from "native-base";
 import { Rating } from "react-native-elements";
 
-import SearchItemMap from "./SearchItemMap";
+const styles = StyleSheet.create({
+  view: {
+    width: "100%",
+    height: 150,
+    marginTop: 5
+  }
+});
+
+import DaumMap from "@/components/DaumMap";
 
 export default class SearchItem extends Component {
   render() {
@@ -19,9 +27,11 @@ export default class SearchItem extends Component {
 
           <Row>
             <Col>
-              <TouchableWithoutFeedback>
-                <SearchItemMap />
-              </TouchableWithoutFeedback>
+              <TouchableOpacity onPress={() => (this.props.onPressMap ? this.props.onPressMap() : null)} onPressIn={this.props.onPressMapBegin} onPressOut={this.props.onPressMapEnd}>
+                <View style={styles.view}>
+                  <DaumMap />
+                </View>
+              </TouchableOpacity>
             </Col>
           </Row>
 

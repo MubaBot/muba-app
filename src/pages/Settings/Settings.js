@@ -3,8 +3,8 @@ import { Actions } from "react-native-router-flux";
 import { View, ScrollView } from "react-native";
 import { Header, Body, Left, Right, Title, Icon, Button, Text } from "native-base";
 
-import RouteButton from "components/RouteButton";
-import LoadingContainer from "components/LoadingContainer";
+import RouteButton from "@/components/RouteButton";
+import LoadingContainer from "@/components/LoadingContainer";
 
 import Location from "./Location";
 import Tendency from "./Tendency";

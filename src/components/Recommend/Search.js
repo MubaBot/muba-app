@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import { Keyboard, ScrollView } from "react-native";
+import { Keyboard, View, ScrollView, Dimensions } from "react-native";
 import { Content, List, Button, Text } from "native-base";
 
-import Swiper from "react-native-swiper";
+import Swiper from "@/components/Swiper";
 
-import SearchItem from "components/SearchItem";
-import Info from "components/Info";
-import Review from "components/Review";
-import Order from "components/Order";
+import SearchItem from "@/components/SearchItem";
+import Info from "@/components/Info";
+import Review from "@/components/Review";
+import Order from "@/components/Order";
+import DaumMap from "@/components/DaumMap";
 
 function makeMockItems(num) {
   var items = [];
@@ -21,7 +22,8 @@ export default class Search extends Component {
   state = {
     lists: [],
     page: 1,
-    loading: false
+    loading: false,
+    scrollEnabled: true
   };
 
   getOrderLists = async () => {
@@ -65,6 +67,12 @@ export default class Search extends Component {
     // this.scrollToTop();
   };
 
+  showMap = async id => {
+    this.setState({ page: 4 });
+    this.swiper.scrollBy(1, true);
+    // this.scrollToTop();
+  };
+
   goBack = async id => {
     this.swiper.scrollBy(-1, true);
     // this.scrollToTop();
@@ -78,8 +86,17 @@ export default class Search extends Component {
         return <Review />;
       case 3:
         return <Order />;
+      case 4:
+        return (
+          <View style={{ height: Dimensions.get("window").height * 0.7 - 50 }}>
+            <DaumMap />
+          </View>
+        );
     }
   };
+
+  onPressMapBegin = () => this.setState({ scrollEnabled: false });
+  onPressMapEnd = () => this.setState({ scrollEnabled: true });
 
   renderGoBack = () => {
     if (this.props.skip === true) return null;
@@ -92,13 +109,13 @@ export default class Search extends Component {
 
   render() {
     return (
-      <ScrollView style={{ backgroundColor: "white" }} onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}>
+      <ScrollView style={{ backgroundColor: "white" }} scrollEnabled={this.state.scrollEnabled} onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}>
         <Swiper ref={r => (this.swiper = r)} scrollEnabled={false} showsButtons={false} scrollsToTop={true} loop={false} showsPagination={false} autoplay={false} index={this.state.index}>
           <Content>
             {this.renderGoBack()}
             <List>
               {this.state.lists.map((x, i) => (
-                <SearchItem key={i} {...x} showShopInfo={this.showShopInfo} showShopReview={this.showShopReview} showShopOrder={this.showShopOrder} />
+                <SearchItem key={i} {...x} showShopInfo={this.showShopInfo} showShopReview={this.showShopReview} showShopOrder={this.showShopOrder} onPressMap={this.showMap} />
               ))}
             </List>
           </Content>

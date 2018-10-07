@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Container, Header, Body, Left, Right, Title, Icon, Input, Content, Form, Item, Label, Text } from "native-base";
 
-import RouteButton from "components/RouteButton";
+import RouteButton from "@/components/RouteButton";
 
 export default class Register extends Component {
   render() {

@@ -7,8 +7,8 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 import { GiftedChat } from "react-native-gifted-chat";
 import "moment/locale/ko";
 
-import RouteButton from "components/RouteButton";
-import LoadingContainer from "components/LoadingContainer";
+import RouteButton from "@/components/RouteButton";
+import LoadingContainer from "@/components/LoadingContainer";
 
 const TYPE_NORMAL = 0;
 const TYPE_LOADING = 1;

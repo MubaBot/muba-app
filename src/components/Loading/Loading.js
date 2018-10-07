@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, StyleSheet } from "react-native";
 import { CircleSnail } from "react-native-progress";
 
-import HideView from "components/HideView";
+import HideView from "@/components/HideView";
 
 const styles = StyleSheet.create({
   background: {

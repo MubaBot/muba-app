@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { ScrollView } from "react-native";
 import { Header, Body, Left, Right, Title, Icon, Label, List } from "native-base";
 
-import LoadingContainer from "components/LoadingContainer";
-import RouteButton from "components/RouteButton";
-import { OrderPopup } from "components/PopupComponent";
+import LoadingContainer from "@/components/LoadingContainer";
+import RouteButton from "@/components/RouteButton";
+import { OrderPopup } from "@/components/PopupComponent";
 
 import OrderItem from "./OrderItem";
 

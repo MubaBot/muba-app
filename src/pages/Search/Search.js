@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { View, Keyboard, ScrollView, TextInput } from "react-native";
 import { Header, Body, Left, Right, Title, Icon, Button, Text, List } from "native-base";
 
-import LoadingContainer from "components/LoadingContainer";
-import RouteButton from "components/RouteButton";
-import SearchItem from "components/SearchItem";
+import LoadingContainer from "@/components/LoadingContainer";
+import RouteButton from "@/components/RouteButton";
+import SearchItem from "@/components/SearchItem";
 
-import { InfoPopup, ReviewPopup, OrderPopup } from "components/PopupComponent";
+import { InfoPopup, ReviewPopup, OrderPopup, DaumMapPopup } from "@/components/PopupComponent";
 
 function makeMockItems(num) {
   var items = [];
@@ -21,10 +21,12 @@ export default class Search extends Component {
     lists: [],
     page: 1,
     loading: false,
+    scrollEnabled: true,
     search: false,
     showInfo: false,
     showReview: false,
-    showOrder: false
+    showOrder: false,
+    showMap: false
   };
 
   getOrderLists = async () => {
@@ -53,23 +55,28 @@ export default class Search extends Component {
   };
 
   showShopInfo = async id => {
-    this.setState({ showInfo: true, loading: true });
-    this.showNextPage();
+    this.setState({ showInfo: true });
   };
 
   showShopReview = async id => {
-    this.setState({ showReview: true, loading: true });
-    this.showNextPage();
+    this.setState({ showReview: true });
   };
 
   showShopOrder = async id => {
-    this.setState({ showOrder: true, loading: true });
-    this.showNextPage();
+    this.setState({ showOrder: true });
+  };
+
+  showMap = async id => {
+    this.setState({ showMap: true });
   };
 
   closeEvent = () => {
-    this.setState({ showInfo: false, showReview: false, showOrder: false });
+    this.setState({ showInfo: false, showReview: false, showOrder: false, showMap: false });
   };
+
+  // onPressMapBegin = () => this.setState({ scrollEnabled: false });
+  onPressMapBegin = () => this.setState({ scrollEnabled: false });
+  onPressMapEnd = () => this.setState({ scrollEnabled: true });
 
   render() {
     return (
@@ -93,10 +100,19 @@ export default class Search extends Component {
               <Text>Search</Text>
             </Button>
           </View>
-          <ScrollView style={{ backgroundColor: "white" }} onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}>
+          <ScrollView scrollEnabled={this.state.scrollEnabled} style={{ backgroundColor: "white" }} onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}>
             <List style={{ display: "flex" }}>
               {this.state.lists.map((x, i) => (
-                <SearchItem key={i} {...x} showShopInfo={this.showShopInfo} showShopReview={this.showShopReview} showShopOrder={this.showShopOrder} />
+                <SearchItem
+                  key={i}
+                  {...x}
+                  showShopInfo={this.showShopInfo}
+                  showShopReview={this.showShopReview}
+                  showShopOrder={this.showShopOrder}
+                  onPressMapBegin={this.onPressMapBegin}
+                  onPressMap={this.showMap}
+                  onPressMapEnd={this.onPressMapEnd}
+                />
               ))}
             </List>
           </ScrollView>
@@ -105,6 +121,7 @@ export default class Search extends Component {
         <InfoPopup hide={!this.state.showInfo} onClose={this.closeEvent} />
         <ReviewPopup hide={!this.state.showReview} onClose={this.closeEvent} />
         <OrderPopup hide={!this.state.showOrder} onClose={this.closeEvent} />
+        <DaumMapPopup hide={!this.state.showMap} onClose={this.closeEvent} />
       </LoadingContainer>
     );
   }

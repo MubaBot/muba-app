@@ -36,6 +36,9 @@
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-progress": "^3.5.0",
     "react-native-router-flux": "^4.0.1",
-    "react-native-swiper": "^1.5.13"
+    "react-native-swiper": "^1.5.13",
+    "react-native-swiper-animated": "^1.5.1",
+    "react-native-swiper-flatlist": "^1.0.8",
+    "react-native-webview-bridge": "^0.40.0"
   }
 }

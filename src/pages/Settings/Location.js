@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View } from "react-native";
 import { Label } from "native-base";
 
-import RouteButton from "components/RouteButton";
+import RouteButton from "@/components/RouteButton";
 
 export default class Location extends Component {
   constructor(props) {

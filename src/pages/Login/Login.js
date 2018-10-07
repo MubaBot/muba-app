@@ -3,7 +3,7 @@ import { Actions } from "react-native-router-flux";
 import { Text } from "react-native";
 import { Container, Header, Body, Left, Right, Button, Title, Icon, Input, Content, Form, Item, Label } from "native-base";
 
-import RouteButton from "components/RouteButton";
+import RouteButton from "@/components/RouteButton";
 
 import { doLogin } from "apis/auth";
 

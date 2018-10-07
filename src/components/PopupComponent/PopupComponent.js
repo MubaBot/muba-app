@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 
-import HideView from "components/HideView";
+import HideView from "@/components/HideView";
 
 const styles = StyleSheet.create({
   background: {

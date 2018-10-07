@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Container } from "native-base";
 
-import Loading from "components/Loading";
+import Loading from "@/components/Loading";
 import { Auth } from "apis";
 
 export default class LoadingContainer extends Component {

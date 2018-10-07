@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
-import OrderContainer from "@/components/Order";
+import DaumMapContainer from "@/components/DaumMap";
 import PopupComponent from "./PopupComponent";
 
-export default class OrderPopup extends Component {
+export default class DaumMapPopup extends Component {
   render() {
     return (
       <PopupComponent hide={this.props.hide === true ? true : false} onClose={this.props.onClose}>
-        <OrderContainer {...this.props} />
+        <DaumMapContainer {...this.props} />
       </PopupComponent>
     );
   }

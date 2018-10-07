@@ -3,19 +3,19 @@ import React, { Component } from "react";
 import { AsyncStorage } from "react-native";
 import { Scene, Router, Actions } from "react-native-router-flux";
 
-import Main from "pages/Main";
-import Chat from "pages/Chat";
+import Main from "@/pages/Main";
+import Chat from "@/pages/Chat";
 
-import Order from "pages/Order";
-import Search from "pages/Search";
-import Recommend from "pages/Recommend";
+import Order from "@/pages/Order";
+import Search from "@/pages/Search";
+import Recommend from "@/pages/Recommend";
 
-import Settings from "pages/Settings";
-import Login from "pages/Login";
-import Register from "pages/Register";
+import Settings from "@/pages/Settings";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
 
-import DaumMap from "pages/DaumMap";
-import DaumMapSearch from "pages/DaumMapSearch";
+import DaumMap from "@/pages/DaumMap";
+import DaumMapSearch from "@/pages/DaumMapSearch";
 
 export default class Muba extends Component {
   constructor() {

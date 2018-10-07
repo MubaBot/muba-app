@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { WebView, StyleSheet } from "react-native";
 import { Container, Header, Body, Left, Right, Title, Icon } from "native-base";
 
-import RouteButton from "components/RouteButton";
+import RouteButton from "@/components/RouteButton";
 
 const styles = StyleSheet.create({
   webView: {
