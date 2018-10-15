@@ -1,6 +1,5 @@
 import * as Expo from "expo";
 import React, { Component } from "react";
-import { AsyncStorage } from "react-native";
 import { Scene, Router, Actions } from "react-native-router-flux";
 
 import Main from "@/pages/Main";
@@ -17,6 +16,8 @@ import Register from "@/pages/Register";
 import DaumMap from "@/pages/DaumMap";
 import DaumMapSearch from "@/pages/DaumMapSearch";
 
+import { Auth } from "@/apis";
+
 export default class Muba extends Component {
   constructor() {
     super();
@@ -26,10 +27,9 @@ export default class Muba extends Component {
   }
 
   componentWillMount = () => this.loadFonts();
-  loggedIn = async () => AsyncStorage.getItem("user").then(user => (user ? true : false));
 
   requireAuth = async (nextState, replace) => {
-    if (!(await this.loggedIn())) {
+    if (!(await Auth.isLogged())) {
       Actions.pop();
       Actions.login({ route: nextState.routeName });
     }
@@ -61,7 +61,7 @@ export default class Muba extends Component {
 
           <Scene key="order" component={Order} title="Order" onEnter={this.requireAuth} />
           <Scene key="recommend" component={Recommend} title="Recommend" onEnter={this.requireAuth} />
-          <Scene key="search" component={Search} title="Search" />
+          <Scene key="search" component={Search} title="Search" onEnter={this.requireAuth} />
 
           <Scene key="chat" component={Chat} title="Chat" onEnter={this.requireAuth} />
 

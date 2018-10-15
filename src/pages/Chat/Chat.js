@@ -1,8 +1,8 @@
 // import "prop-types"; // Supported builtin module
 
 import React, { Component } from "react";
-import { Platform, View, TouchableWithoutFeedback, Keyboard, AsyncStorage } from "react-native";
-import { Container, Header, Body, Left, Right, Text, Title, Icon, Spinner } from "native-base";
+import { Platform, View, TouchableWithoutFeedback, Keyboard, AsyncStorage, Alert } from "react-native";
+import { Header, Body, Left, Right, Text, Title, Icon, Spinner } from "native-base";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { GiftedChat } from "react-native-gifted-chat";
 import "moment/locale/ko";
@@ -14,9 +14,7 @@ const TYPE_NORMAL = 0;
 const TYPE_LOADING = 1;
 
 export default class Chat extends Component {
-  state = {
-    messages: []
-  };
+  state = { messages: [] };
 
   /**
    * Lifecycle
@@ -51,7 +49,6 @@ export default class Chat extends Component {
     )
       .then(response => response.json())
       .then(async responseJson => {
-        console.log(responseJson);
         this.setState({
           intent: responseJson.intent,
           argv: responseJson.argv
@@ -89,8 +86,8 @@ export default class Chat extends Component {
   async saveMessage(text, { bot, createdAt, type } = { bot: false, createdAt: new Date(), type: TYPE_NORMAL }) {
     let msg = await this.getChatMessage();
 
-    var id = 1,
-      name = "User";
+    var id = 1;
+    var name = "User";
 
     if (bot) {
       id = 0;
@@ -144,6 +141,25 @@ export default class Chat extends Component {
       .catch(() => false);
   }
 
+  clearChat = () => {
+    Alert.alert(
+      "",
+      "채팅 기록을 지우시겠습니까?",
+      [
+        {
+          text: "예",
+          onPress: async () => {
+            await AsyncStorage.removeItem("chatCount");
+            await AsyncStorage.removeItem("chat");
+            this.setState({ messages: [] });
+          }
+        },
+        { text: "아니오", onPress: () => null }
+      ],
+      { cancelable: false }
+    );
+  };
+
   /**
    * UI
    */
@@ -186,7 +202,11 @@ export default class Chat extends Component {
           <Body>
             <Title>Muba Chat</Title>
           </Body>
-          <Right />
+          <Right>
+            <RouteButton transparent onPress={this.clearChat}>
+              <Icon name="trash" style={{ color: "#000" }} />
+            </RouteButton>
+          </Right>
         </Header>
 
         <TouchableWithoutFeedback

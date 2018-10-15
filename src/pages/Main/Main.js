@@ -6,12 +6,6 @@ import ChatButton from "./ChatButton";
 import RouteButton from "@/components/RouteButton";
 
 export default class Main extends Component {
-  async clearChat() {
-    await AsyncStorage.removeItem("chatCount");
-    await AsyncStorage.removeItem("chat");
-    alert("clear");
-  }
-
   render() {
     return (
       <Container>
@@ -36,9 +30,6 @@ export default class Main extends Component {
           </RouteButton>
           <RouteButton link="order">
             <Text>주문목록</Text>
-          </RouteButton>
-          <RouteButton onPress={this.clearChat}>
-            <Text>Clear Chat</Text>
           </RouteButton>
           <ChatButton />
         </View>

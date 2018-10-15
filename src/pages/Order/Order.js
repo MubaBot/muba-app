@@ -8,26 +8,25 @@ import { OrderPopup } from "@/components/PopupComponent";
 
 import OrderItem from "./OrderItem";
 
-function makeMockItems(num) {
-  var items = [];
-  for (var i = 0; i < num; i++) {
-    items = items.concat({ id: i });
-  }
-
-  return items;
-}
+import { OrderApi } from "@/apis";
 
 export default class Order extends Component {
   state = {
     lists: [],
-    page: 1,
+    page: 0,
     loading: false,
     showOrder: false
   };
 
   getOrderLists = async () => {
     this.setState({ page: this.state.page + 1 });
-    return makeMockItems(10);
+    return this.getOrderList();
+  };
+
+  getOrderList = async page => {
+    return OrderApi.getOrderList({ page: this.state.page })
+      .then(shops => shops.data.lists)
+      .catch(err => []);
   };
 
   appendItem = async items => this.setState({ lists: this.state.lists.concat(items), loading: false });

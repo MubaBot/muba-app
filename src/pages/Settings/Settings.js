@@ -9,14 +9,15 @@ import LoadingContainer from "@/components/LoadingContainer";
 import Location from "./Location";
 import Tendency from "./Tendency";
 
-import { doLogout } from "apis/auth";
+import { Auth } from "@/apis";
 
 export default class Settings extends Component {
   doLogout = async () => {
-    doLogout()
+    Auth.doLogout()
       .then(() => Actions.popTo("main"))
       .catch(() => null);
   };
+  
   render() {
     return (
       <LoadingContainer requireAuth={true}>
@@ -37,8 +38,8 @@ export default class Settings extends Component {
             <Text>위치설정</Text>
             <Location />
 
-            <Text>성향 설정</Text>
-            <Tendency />
+            {/* <Text>성향 설정</Text>
+            <Tendency /> */}
 
             <Button onPress={this.doLogout}>
               <Text>Logout</Text>

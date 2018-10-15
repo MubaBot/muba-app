@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { WebView, StyleSheet } from "react-native";
 import { Container, Header, Body, Left, Right, Title, Icon } from "native-base";
+import { Actions } from "react-native-router-flux";
 
 import RouteButton from "@/components/RouteButton";
+import { User } from "@/apis";
 
 const styles = StyleSheet.create({
   webView: {
@@ -12,20 +14,34 @@ const styles = StyleSheet.create({
   }
 });
 
-export default class DaumMapSearch extends Component {
-  webview = null;
+const patchPostMessageFunction = function() {
+  var originalPostMessage = window.postMessage;
 
-  constructor(props) {
-    super(props);
-    // alert(JSON.stringify(props));
-  }
+  var patchedPostMessage = function(message, targetOrigin, transfer) {
+    originalPostMessage(message, targetOrigin, transfer);
+  };
+
+  patchedPostMessage.toString = function() {
+    return String(Object.hasOwnProperty).replace("hasOwnProperty", "postMessage");
+  };
+
+  window.postMessage = patchedPostMessage;
+};
+
+const patchPostMessageJsCode = "(" + String(patchPostMessageFunction) + ")();";
+
+export default class DaumMapSearch extends Component {
+  onSubmit = data => {
+    User.setAddressForDevice({ road_address: data.fullAddr, address_name: "", detail_address: "", lat: data.lat, lng: data.lng });
+    Actions.settings();
+  };
 
   render() {
     return (
       <Container>
         <Header>
           <Left>
-            <RouteButton transparent link="settings">
+            <RouteButton transparent goBack={true}>
               <Icon name="arrow-back" />
             </RouteButton>
           </Left>
@@ -34,7 +50,14 @@ export default class DaumMapSearch extends Component {
           </Body>
           <Right />
         </Header>
-        <WebView ref={r => (this.webview = r)} style={styles.webView} originWhitelist={["*"]} source={require("assets/html/daum.address.html")} scrollEnabled={true} startInLoadingState={true} />
+        <WebView
+          style={styles.webView}
+          injectedJavaScript={patchPostMessageJsCode}
+          source={require("assets/html/daum.address.html")}
+          scrollEnabled={true}
+          startInLoadingState={true}
+          onMessage={event => this.onSubmit(JSON.parse(event.nativeEvent.data))}
+        />
       </Container>
     );
   }
