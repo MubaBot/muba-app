@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { WebView, StyleSheet } from "react-native";
+import { WebView, StyleSheet, Platform } from "react-native";
 import { Shop } from "@/apis";
 
 const styles = StyleSheet.create({
@@ -30,13 +30,16 @@ export default class DaumMap extends Component {
 
   setLatLng = ({ lat, lng }) => Shop.setLatlng({ id: this.props.id, lat, lng });
 
+  getInjectedJavaScript = () =>
+    Platform.OS === "android" ? require("assets/html/daum.map.preview.html.android.js") : require("assets/html/daum.map.preview.html.js");
+
   render() {
     return (
       <WebView
         ref={r => (this.webView = r)}
         style={styles.webView}
         source={require("assets/html/daum.map.preview.html")}
-        injectedJavaScript={require("assets/html/daum.map.preview.html.js")(this.props.name, this.state.address, this.props.lat, this.props.lng)}
+        injectedJavaScript={this.getInjectedJavaScript()(this.props.name, this.state.address, this.props.lat, this.props.lng)}
         scrollEnabled={false}
         startInLoadingState={true}
         onMessage={event => this.setLatLng(JSON.parse(event.nativeEvent.data))}
