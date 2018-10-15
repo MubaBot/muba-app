@@ -47,6 +47,7 @@ export default class Recommend extends Component {
     });
 
   updateCartInfo = () => CartApi.getShopCart(this.props.id).then(result => this.setState({ cart: result, cartLength: result.length }));
+  // updateCartInfo = () => CartApi.getShopCart(this.props.id).then(result => alert(JSON.stringify(result)));
 
   render() {
     return (

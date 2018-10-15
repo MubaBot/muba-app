@@ -24,6 +24,8 @@ export default class ShopInfo extends Component {
         price: nextProps.cart[i].item.sales.length ? nextProps.cart[i].item.sales[0].PRICE : nextProps.cart[i].item.PRICE
       };
 
+    // alert(JSON.stringify(cart));
+
     this.setState({ cart: cart });
   };
 
@@ -106,18 +108,18 @@ export default class ShopInfo extends Component {
                         {x.item.sales[0].PRICE}원 ({x.item.sales[0].COUNT}개 한정)
                       </Text>
                     ) : null}
-                    <Text>
+                    <View>
                       <Button onPress={() => this.countMenu(x.id, -1)}>
                         <Text>-</Text>
                       </Button>
-                      {this.state.cart[x.id].count}
+                      <Text>{this.state.cart[x.id].count}</Text>
                       <Button onPress={() => this.countMenu(x.id, 1)}>
                         <Text>+</Text>
                       </Button>
                       <Button onPress={() => this.deleteMenu(x.id)}>
                         <Text>삭제</Text>
                       </Button>
-                    </Text>
+                    </View>
                   </ListItem>
                   {x.item.shop_menu_options.map((ox, oi) => (
                     <ListItem key={oi}>

@@ -24,7 +24,7 @@ const getShopCart = async shop => {
 };
 
 const getAllCart = async () => {
-  return JSON.parse((await AsyncStorage.getItem(StorageKeys.cartStorageKey)) || "[]");
+  return JSON.parse((await AsyncStorage.getItem(StorageKeys.cartStorageKey)) || "{}");
 };
 
 const getCartCount = async () => {
@@ -43,6 +43,10 @@ const removeShopCartMenu = async (shop, id) => {
 
 const clearCart = async shop => {
   return updateCartByShop(shop, []);
+};
+
+const resetCart = async () => {
+  return AsyncStorage.removeItem(StorageKeys.cartStorageKey);
 };
 
 export { addShopCart, getShopCart, removeShopCartMenu, clearCart };

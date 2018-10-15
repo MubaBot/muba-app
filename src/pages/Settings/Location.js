@@ -28,6 +28,7 @@ export default class Location extends Component {
   shouldComponentUpdate = (nextProps, nextState) => this.state.address_name !== nextState.address_name || this.state.detail === nextState.detail;
 
   onSetLocation = () => {
+    // if login
     navigator.geolocation.getCurrentPosition(
       position => {
         this.setState({
