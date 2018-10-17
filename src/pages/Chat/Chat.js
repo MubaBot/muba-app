@@ -47,7 +47,7 @@ export default class Chat extends Component {
           text: messages[0].text,
           scenario: this.state.scenario,
           intent_history: this.state.intent_history,
-          argv: argv
+          argv: this.state.argv
         })
     )
       .then(response => response.json())
