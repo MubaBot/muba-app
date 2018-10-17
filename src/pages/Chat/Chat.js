@@ -58,7 +58,7 @@ export default class Chat extends Component {
           argv: responseJson.argv
         });
         await this.removeChatMessage(chat._id);
-        this.saveMessage(responseJson.text, { bot: true });
+        this.saveMessage(responseJson.msg, { bot: true });
       })
       .catch(err => console.log(err));
   }

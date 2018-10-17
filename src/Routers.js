@@ -63,7 +63,7 @@ export default class Muba extends Component {
           <Scene key="recommend" component={Recommend} title="Recommend" onEnter={this.requireAuth} />
           <Scene key="search" component={Search} title="Search" onEnter={this.requireAuth} />
 
-          <Scene key="chat" component={Chat} title="Chat"/>
+          <Scene key="chat" component={Chat} title="Chat" onEnter={this.requireAuth} />
 
           <Scene key="daumMap" component={DaumMap} title="Daum Map" />
           <Scene key="daumMapSearch" component={DaumMapSearch} title="Daum Map Search" />
