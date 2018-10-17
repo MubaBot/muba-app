@@ -5,6 +5,7 @@ import { Platform, View, TouchableWithoutFeedback, Keyboard, AsyncStorage, Alert
 import { Header, Body, Left, Right, Text, Title, Icon, Spinner } from "native-base";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { GiftedChat } from "react-native-gifted-chat";
+import querystring from "querystring";
 import "moment/locale/ko";
 
 import RouteButton from "@/components/RouteButton";
@@ -23,8 +24,9 @@ export default class Chat extends Component {
     this.getChatMessage().then(messages => {
       this.setState({
         messages: messages,
-        intent: -1,
-        argv: JSON.stringify({})
+        intent_history: 1,
+        scenario: -1,
+        argv: JSON.stringify({ user: "say2" })
       });
     });
   };
@@ -40,21 +42,23 @@ export default class Chat extends Component {
     const chat = await this.saveMessage("", { bot: true, type: TYPE_LOADING });
 
     fetch(
-      "http://222.111.144.32:5000/chatbot/api/get_message?get_params=" +
-        JSON.stringify({
+      "https://chat.mubabot.com/chatbot/api/get_message?" +
+        querystring.stringify({
           text: messages[0].text,
-          intent: this.state.intent,
-          argv: JSON.parse(this.state.argv)
+          scenario: this.state.scenario,
+          intent_history: this.state.intent_history,
+          argv: argv
         })
     )
       .then(response => response.json())
       .then(async responseJson => {
         this.setState({
-          intent: responseJson.intent,
+          intent_history: responseJson.intent_history,
+          scenario: responseJson.scenario,
           argv: responseJson.argv
         });
         await this.removeChatMessage(chat._id);
-        this.saveMessage(responseJson.msg, { bot: true });
+        this.saveMessage(responseJson.text, { bot: true });
       })
       .catch(err => console.log(err));
   }
