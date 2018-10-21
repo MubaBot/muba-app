@@ -30,7 +30,6 @@ export default class Muba extends Component {
 
   requireAuth = async (nextState, replace) => {
     if (!(await Auth.isLogged())) {
-      Actions.pop();
       Actions.login({ route: nextState.routeName });
     }
   };
@@ -52,18 +51,18 @@ export default class Muba extends Component {
     return (
       <Router hideNavBar>
         <Scene key="root" hideNavBar>
-          <Scene key="main" component={Main} title="Muba" initial={true} />
+          <Scene key="main" component={Main} title="Muba" initial={true} onEnter={this.requireAuth} />
 
-          <Scene key="settings" component={Settings} title="Settings" onEnter={this.requireAuth} />
+          <Scene key="settings" component={Settings} title="Settings" />
 
-          <Scene key="login" component={Login} title="Login" />
+          <Scene key="login" component={Login} title="Login" gesturesEnabled={false} />
           <Scene key="register" component={Register} title="Register" />
 
-          <Scene key="order" component={Order} title="Order" onEnter={this.requireAuth} />
-          <Scene key="recommend" component={Recommend} title="Recommend" onEnter={this.requireAuth} />
-          <Scene key="search" component={Search} title="Search" onEnter={this.requireAuth} />
+          <Scene key="order" component={Order} title="Order" />
+          <Scene key="recommend" component={Recommend} title="Recommend" />
+          <Scene key="search" component={Search} title="Search" />
 
-          <Scene key="chat" component={Chat} title="Chat" onEnter={this.requireAuth} />
+          <Scene key="chat" component={Chat} title="Chat" />
 
           <Scene key="daumMap" component={DaumMap} title="Daum Map" />
           <Scene key="daumMapSearch" component={DaumMapSearch} title="Daum Map Search" />

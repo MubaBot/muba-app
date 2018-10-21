@@ -196,6 +196,7 @@ export default class Chat extends Component {
     const Spacer = Platform.OS === "ios" ? null : <KeyboardSpacer />;
 
     return (
+      // <LoadingContainer>
       <LoadingContainer requireAuth={true}>
         <Header>
           <Left>

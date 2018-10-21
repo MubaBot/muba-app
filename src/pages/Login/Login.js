@@ -10,10 +10,10 @@ import { Auth } from "@/apis";
 export default class Login extends Component {
   constructor(props) {
     super(props);
-    if (!props.navigation.state.params.route) {
-      alert("error");
-      Actions.pop();
-    }
+    // if (!props.navigation.state.params.route) {
+    //   alert("error");
+    //   Actions.pop();
+    // }
 
     this.state = {
       id: "",
@@ -41,7 +41,7 @@ export default class Login extends Component {
     })
       .then(() => {
         Actions.pop();
-        Actions[this.props.navigation.state.params.route]({});
+        // Actions[this.props.navigation.state.params.route]({});
       })
       .catch(() => Alert.alert("아이디 또는 비밀번호를 확인해주세요."));
   };
@@ -50,11 +50,7 @@ export default class Login extends Component {
     return (
       <Container>
         <Header>
-          <Left>
-            <RouteButton transparent goBack={true}>
-              <Icon name="arrow-back" />
-            </RouteButton>
-          </Left>
+          <Left />
           <Body>
             <Title>Login</Title>
           </Body>

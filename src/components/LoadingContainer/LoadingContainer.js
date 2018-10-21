@@ -3,6 +3,7 @@ import { Container } from "native-base";
 
 import Loading from "@/components/Loading";
 import { Auth } from "apis";
+import { Actions } from "react-native-router-flux";
 
 export default class LoadingContainer extends Component {
   state = { load: true };
@@ -12,7 +13,7 @@ export default class LoadingContainer extends Component {
       const logged = await Auth.isLogged();
       this.setState({ load: !logged });
 
-      if (!logged) return;
+      if (!logged) return Actions.pop();
     }
 
     if (this.props.loading === true || this.props.loading === false) this.setState({ load: this.props.loading });
