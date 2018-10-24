@@ -5,7 +5,7 @@ import { Container, Header, Body, Left, Right, Button, Title, Icon, Input, Conte
 
 import RouteButton from "@/components/RouteButton";
 
-import { Auth } from "@/apis";
+import { AuthApi } from "@/apis";
 
 export default class Login extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ export default class Login extends Component {
 
   doLogin = () => {
     if (!this.checkForm()) return;
-    Auth.doLogin({
+    AuthApi.doLogin({
       id: "U|L|" + this.state.id,
       password: this.state.password
     })

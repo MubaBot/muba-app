@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, View, StatusBar, Platform } from "react-native";
 
 import Loading from "./Loading";
-import { Auth } from "apis";
+import { AuthApi } from "apis";
 
 // import KeyboardSpacer from "react-native-keyboard-spacer";
 
@@ -37,7 +37,7 @@ export default class LoadingContainer extends Component {
 
   onLoad = async () => {
     if (this.props.requireAuth) {
-      const logged = !!(await Auth.getAuthentication()) && (await Auth.isLogged());
+      const logged = !!(await AuthApi.getAuthentication()) && (await AuthApi.isLogged());
       this.setState({ load: !logged });
 
       // if (!logged) return Actions.pop();

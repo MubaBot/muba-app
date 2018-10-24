@@ -8,7 +8,7 @@ import Image from "react-native-remote-svg";
 // import RouteButton from "@/components/RouteButton";
 import LoadingContainer from "@/components/LoadingContainer";
 
-import { User } from "@/apis";
+import { UserApi } from "@/apis";
 
 const styles = StyleSheet.create({
   webView: {
@@ -46,7 +46,7 @@ export default class DaumMap extends Component {
       {
         text: "예",
         onPress: () => {
-          User.setAddressForDevice({
+          UserApi.setAddressForDevice({
             road_address: this.state.road_address,
             address_name: this.state.address_name,
             detail_address: this.state.detail_address,

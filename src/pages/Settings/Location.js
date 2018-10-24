@@ -4,61 +4,27 @@ import { Actions } from "react-native-router-flux";
 
 import Image from "react-native-remote-svg";
 
-import { User, Auth } from "@/apis";
+import { AuthApi } from "@/apis";
 
 export default class Location extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      latitude: 37.50374576425619,
-      longitude: 127.04485358330714,
-      location: "",
       search: "",
       showAddress: false
     };
   }
 
-  componentWillReceiveProps = nextProps => this.syncAddress();
-
-  componentDidMount = () => {
-    this.syncAddress();
-    this.onSetLocation();
+  componentWillReceiveProps = nextProps => {
+    if (nextProps.nowAddress !== this.state.address)
+      this.setState({
+        address: nextProps.nowAddress
+      });
   };
-
-  shouldComponentUpdate = (nextProps, nextState) => this.state.address_name !== nextState.address_name || this.state.detail === nextState.detail;
-
-  onSetLocation = () => {
-    // if login
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          error: null
-        });
-      },
-      error => {
-        this.setState({ error: error.message });
-      },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-  };
-
-  syncAddress = () =>
-    User.getAddressForDevice().then(address => {
-      if (!address) return null;
-
-      const existRoad = address.road_address !== "";
-      // const existAddr = address.address_name !== "";
-
-      const addr = existRoad ? [address.road_address, address.detail_address].join(" ") : [address.address_name, address.detail_address].join(" ");
-
-      this.setState({ ...address, location: addr, detail: address.detail_address });
-    });
 
   searchAddress = () => {
     if (this.state.search === "") return Alert.alert("주소를 입력해주세요.");
-    return Actions["daumMap"]({ lat: this.state.latitude || null, lng: this.state.longitude || null, search: this.state.search });
+    return Actions["daumMap"]({ lat: this.props.latitude || null, lng: this.props.longitude || null, search: this.state.search });
   };
 
   onChangeAddressText = text => {
@@ -66,10 +32,12 @@ export default class Location extends Component {
   };
 
   doLogout = async () => {
-    Auth.doLogout()
+    AuthApi.doLogout()
       .then(() => Actions.popTo("main"))
       .catch(() => null);
   };
+
+  displayAddress = text => (text.length > 21 ? text.substring(0, 21 - 3) + "..." : text === "" ? "주소를 선택해주세요." : text);
 
   render() {
     return (
@@ -89,7 +57,13 @@ export default class Location extends Component {
           }}
         >
           <View style={{ flex: 4 }}>
-            <TextInput style={{ fontSize: 30 }} onChangeText={this.onChangeAddressText} value={this.state.search} placeholder="역삼동 아남타워" />
+            <TextInput
+              style={{ fontSize: 30 }}
+              onChangeText={this.onChangeAddressText}
+              value={this.state.search}
+              placeholder="역삼동 아남타워"
+              onSubmitEditing={this.searchAddress}
+            />
           </View>
           <View style={{ flex: 1, marginRight: -45 }}>
             <TouchableWithoutFeedback onPress={this.searchAddress}>
@@ -100,7 +74,7 @@ export default class Location extends Component {
           </View>
         </View>
 
-        <TouchableWithoutFeedback onPress={() => Actions["daumMap"]({ lat: this.state.latitude || null, lng: this.state.longitude || null })}>
+        <TouchableWithoutFeedback onPress={() => Actions["daumMap"]({ lat: this.props.latitude || null, lng: this.props.longitude || null })}>
           <View
             style={{
               marginTop: 10,
@@ -131,9 +105,7 @@ export default class Location extends Component {
               marginTop: 10
             }}
           >
-            <Text style={{ padding: 15, fontSize: 20 }}>
-              {this.state.showAddress ? "주소 선택" : this.state.location.length > 21 ? this.state.location.substring(0, 21 - 3) + "..." : this.state.location}
-            </Text>
+            <Text style={{ padding: 15, fontSize: 20 }}>{this.state.showAddress ? "주소 선택" : this.displayAddress(this.props.nowAddress)}</Text>
             <Image style={{ padding: 13, marginRight: 25 }} source={require("assets/icons/m-select.svg")} />
           </View>
         </TouchableWithoutFeedback>
@@ -155,7 +127,9 @@ export default class Location extends Component {
             onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}
           >
             <Picker.Item label="선택 안함" value="none" />
-            <Picker.Item label={this.state.location} value="1" />
+            {/* <map> */}
+            {/*   <Picker.Item label={this.props.nowAddress} value="1" /> */}
+            {/* </map> */}
           </Picker>
         </View>
 

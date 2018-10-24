@@ -5,7 +5,7 @@ import { Actions } from "react-native-router-flux";
 
 import RouteButton from "@/components/RouteButton";
 
-import { Auth } from "@/apis";
+import { AuthApi } from "@/apis";
 
 export default class Register extends Component {
   state = {
@@ -41,7 +41,7 @@ export default class Register extends Component {
 
   doRegister = () => {
     if (!this.checkForm()) return;
-    Auth.register(this.state)
+    AuthApi.register(this.state)
       .then(() => Actions.pop())
       .catch(() => Alert.alert("잠시 후 다시 시도해 주세요."));
   };

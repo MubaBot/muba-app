@@ -7,7 +7,7 @@ const isLogged = async () => {
 
   if (!isLogin) await AuthStorage.removeAuthentication();
   else AuthStorage.setAuthentication(result.data.token);
-  
+
   return isLogin;
 };
 

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, Alert } from "react-native";
 import { List, ListItem, Text, Button, Input, Form, Item, Label } from "native-base";
 
-import { User, Shop, CartApi } from "@/apis";
+import { UserApi, Shop, CartApi } from "@/apis";
 
 export default class ShopInfo extends Component {
   constructor(props) {
@@ -32,7 +32,7 @@ export default class ShopInfo extends Component {
   onChangeText = (name, text) => this.setState({ [name]: text });
 
   syncAddress = () =>
-    User.getAddressForDevice().then(address => {
+    UserApi.getAddressForDevice().then(address => {
       if (!address) return null;
 
       const existRoad = address.road_address !== "";

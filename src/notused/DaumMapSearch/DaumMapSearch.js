@@ -4,7 +4,7 @@ import { Container, Header, Body, Left, Right, Title, Icon } from "native-base";
 import { Actions } from "react-native-router-flux";
 
 import RouteButton from "@/components/RouteButton";
-import { User } from "@/apis";
+import { UserApi } from "@/apis";
 
 const styles = StyleSheet.create({
   webView: {
@@ -32,7 +32,7 @@ const patchPostMessageJsCode = "(" + String(patchPostMessageFunction) + ")();";
 
 export default class DaumMapSearch extends Component {
   onSubmit = data => {
-    User.setAddressForDevice({ road_address: data.fullAddr, address_name: "", detail_address: "", lat: data.lat, lng: data.lng });
+    UserApi.setAddressForDevice({ road_address: data.fullAddr, address_name: "", detail_address: "", lat: data.lat, lng: data.lng });
     Actions.settings();
   };
 
