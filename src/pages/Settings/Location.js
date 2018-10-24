@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { View } from "react-native";
-import { Label, Input } from "native-base";
-import { debounce } from "debounce";
+import { TouchableWithoutFeedback, View, Text, TextInput, Picker, Alert } from "react-native";
+import { Actions } from "react-native-router-flux";
 
-import RouteButton from "@/components/RouteButton";
+import Image from "react-native-remote-svg";
 
-import { User } from "@/apis";
+import { User, Auth } from "@/apis";
 
 export default class Location extends Component {
   constructor(props) {
@@ -14,7 +13,8 @@ export default class Location extends Component {
       latitude: 37.50374576425619,
       longitude: 127.04485358330714,
       location: "",
-      detail: ""
+      search: "",
+      showAddress: false
     };
   }
 
@@ -49,43 +49,129 @@ export default class Location extends Component {
       if (!address) return null;
 
       const existRoad = address.road_address !== "";
-      const existAddr = address.address_name !== "";
+      // const existAddr = address.address_name !== "";
 
-      const addr = address.road_address + (existRoad && existAddr ? " (" : "") + address.address_name + (existRoad && existAddr ? ")" : "");
+      const addr = existRoad ? [address.road_address, address.detail_address].join(" ") : [address.address_name, address.detail_address].join(" ");
 
       this.setState({ ...address, location: addr, detail: address.detail_address });
     });
 
-  saveDetailAddress = () => {
-    User.setAddressForDevice({
-      road_address: this.state.road_address,
-      address_name: this.state.address_name,
-      detail_address: this.state.detail,
-      lat: this.state.lat,
-      lng: this.state.lng
-    });
+  searchAddress = () => {
+    if (this.state.search === "") return Alert.alert("주소를 입력해주세요.");
+    return Actions["daumMap"]({ lat: this.state.latitude || null, lng: this.state.longitude || null, search: this.state.search });
   };
 
-  debounced = debounce(this.saveDetailAddress, 1000);
-
   onChangeAddressText = text => {
-    this.setState({ detail: text });
-    this.debounced();
+    this.setState({ search: text });
+  };
+
+  doLogout = async () => {
+    Auth.doLogout()
+      .then(() => Actions.popTo("main"))
+      .catch(() => null);
   };
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <RouteButton link="daumMap" linkOptions={{ lat: this.state.latitude || null, lng: this.state.longitude || null }}>
-          <Label>지도로 선택</Label>
-        </RouteButton>
-        <RouteButton link="daumMapSearch">
+      <View style={{ marginTop: 30, flex: 1 }}>
+        <Text style={{ fontSize: 30 }}>
+          지번, 도로명, 건물명을 {"\n"}
+          입력하세요.
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+            borderBottomWidth: 2,
+            paddingTop: 10,
+            paddingBottom: 10,
+            marginTop: 5
+          }}
+        >
+          <View style={{ flex: 4 }}>
+            <TextInput style={{ fontSize: 30 }} onChangeText={this.onChangeAddressText} value={this.state.search} placeholder="역삼동 아남타워" />
+          </View>
+          <View style={{ flex: 1, marginRight: -45 }}>
+            <TouchableWithoutFeedback onPress={this.searchAddress}>
+              <View>
+                <Image source={require("assets/icons/m-address-search.svg")} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
+
+        <TouchableWithoutFeedback onPress={() => Actions["daumMap"]({ lat: this.state.latitude || null, lng: this.state.longitude || null })}>
+          <View
+            style={{
+              marginTop: 10,
+              padding: 13,
+              borderWidth: 1,
+              borderColor: "#d9d9d9",
+              alignItems: "center",
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "center"
+            }}
+          >
+            <Image source={require("assets/icons/m-address.svg")} />
+            <Text style={{ marginLeft: 10, fontSize: 20 }}>현 위치로 주소 설정</Text>
+          </View>
+        </TouchableWithoutFeedback>
+
+        <TouchableWithoutFeedback onPress={() => this.setState({ showAddress: !this.state.showAddress })}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              overflow: "hidden",
+              backgroundColor: "#f5f5f5",
+              borderWidth: 1,
+              borderColor: "#d9d9d9",
+              justifyContent: "space-between",
+              marginTop: 10
+            }}
+          >
+            <Text style={{ padding: 15, fontSize: 20 }}>
+              {this.state.showAddress ? "주소 선택" : this.state.location.length > 21 ? this.state.location.substring(0, 21 - 3) + "..." : this.state.location}
+            </Text>
+            <Image style={{ padding: 13, marginRight: 25 }} source={require("assets/icons/m-select.svg")} />
+          </View>
+        </TouchableWithoutFeedback>
+
+        <View
+          style={{
+            display: this.state.showAddress ? "flex" : "none",
+            overflow: "hidden",
+            height: 100,
+            justifyContent: "center",
+            borderWidth: 1,
+            borderTopWidth: 0,
+            borderColor: "#d9d9d9"
+          }}
+        >
+          <Picker
+            selectedValue={this.state.language}
+            itemStyle={{ fontSize: 13 }}
+            onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}
+          >
+            <Picker.Item label="선택 안함" value="none" />
+            <Picker.Item label={this.state.location} value="1" />
+          </Picker>
+        </View>
+
+        <TouchableWithoutFeedback onPress={this.doLogout}>
+          <View style={{ flex: 1, alignSelf: "flex-end", marginTop: 20 }}>
+            <Text style={{ marginLeft: 10, fontSize: 20, textDecorationLine: "underline" }}>로그아웃</Text>
+          </View>
+        </TouchableWithoutFeedback>
+
+        {/* <RouteButton link="daumMapSearch">
           <Label>시/군/도로명 검색</Label>
         </RouteButton>
         <Label>주소</Label>
         <Label>{this.state.location}</Label>
         <Label>상세주소</Label>
-        <Input style={{ borderBottomWidth: 1 }} onChangeText={text => this.onChangeAddressText(text)} value={this.state.detail} />
+        <TextInput style={{ borderBottomWidth: 1 }} onChangeText={text => this.onChangeAddressText(text)} value={this.state.detail} /> */}
       </View>
     );
   }

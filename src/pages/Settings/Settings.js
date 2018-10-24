@@ -1,51 +1,57 @@
 import React, { Component } from "react";
+import { TouchableWithoutFeedback, View, ScrollView, KeyboardAvoidingView } from "react-native";
 import { Actions } from "react-native-router-flux";
-import { View, ScrollView } from "react-native";
-import { Header, Body, Left, Right, Title, Icon, Button, Text } from "native-base";
+import Image from "react-native-remote-svg";
 
-import RouteButton from "@/components/RouteButton";
 import LoadingContainer from "@/components/LoadingContainer";
 
 import Location from "./Location";
-import Tendency from "./Tendency";
-
-import { Auth } from "@/apis";
+import Profile from "./Profile";
 
 export default class Settings extends Component {
-  doLogout = async () => {
-    Auth.doLogout()
-      .then(() => Actions.popTo("main"))
-      .catch(() => null);
+  state = {
+    inputProfile: false
   };
-  
+
+  focusKeyboard = (panel, mode) => {
+    const enable = mode === "in" ? true : false;
+
+    switch (panel) {
+      case "profile":
+        this.setState({ inputProfile: enable });
+    }
+  };
+
   render() {
     return (
       <LoadingContainer requireAuth={true}>
-        <Header>
-          <Left>
-            <RouteButton transparent goBack={true}>
-              <Icon name="arrow-back" />
-            </RouteButton>
-          </Left>
-          <Body>
-            <Title>Settings</Title>
-          </Body>
-          <Right />
-        </Header>
-
-        <View style={{ flex: 1, backgroundColor: "white" }}>
+        <KeyboardAvoidingView behavior="position" enabled={this.state.inputProfile}>
           <ScrollView>
-            <Text>위치설정</Text>
-            <Location />
+            <View style={{ paddingTop: 30, paddingLeft: 30, paddingRight: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#dadada" }}>
+              <TouchableWithoutFeedback onPress={() => Actions.pop()}>
+                <View>
+                  <Image source={require("assets/icons/m-close.svg")} style={{ width: 20, height: 20 }} />
+                </View>
+              </TouchableWithoutFeedback>
 
-            {/* <Text>성향 설정</Text>
-            <Tendency /> */}
+              <Location />
+            </View>
 
-            <Button onPress={this.doLogout}>
-              <Text>Logout</Text>
-            </Button>
+            <View
+              style={{
+                paddingTop: 20,
+                paddingLeft: 20,
+                paddingRight: 20,
+                paddingBottom: 30,
+                borderTopWidth: 15,
+                backgroundColor: "#FFF",
+                borderTopColor: "#ebebeb"
+              }}
+            >
+              <Profile focusKeyboard={this.focusKeyboard} />
+            </View>
           </ScrollView>
-        </View>
+        </KeyboardAvoidingView>
       </LoadingContainer>
     );
   }

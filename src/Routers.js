@@ -53,16 +53,17 @@ export default class Muba extends Component {
         <Scene key="root" hideNavBar>
           <Scene key="main" component={Main} title="Muba" initial={true} onEnter={this.requireAuth} />
 
-          <Scene key="settings" component={Settings} title="Settings" />
-
-          <Scene key="login" component={Login} title="Login" gesturesEnabled={false} />
-          <Scene key="register" component={Register} title="Register" />
-
           <Scene key="order" component={Order} title="Order" />
           <Scene key="recommend" component={Recommend} title="Recommend" />
           <Scene key="search" component={Search} title="Search" />
 
           <Scene key="chat" component={Chat} title="Chat" />
+
+          <Scene key="login" component={Login} title="Login" gesturesEnabled={false} />
+          <Scene key="register" component={Register} title="Register" />
+
+          {/* popup */}
+          <Scene key="settings" component={Settings} title="Settings" gesturesEnabled={false} />
 
           <Scene key="daumMap" component={DaumMap} title="Daum Map" />
           <Scene key="daumMapSearch" component={DaumMapSearch} title="Daum Map Search" />

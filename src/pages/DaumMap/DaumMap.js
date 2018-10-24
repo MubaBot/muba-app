@@ -1,9 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, WebView, Alert } from "react-native";
-import { Container, Header, Body, Left, Right, Title, Icon, Text } from "native-base";
+import { StyleSheet, WebView, View, Alert, TouchableWithoutFeedback, Text, TextInput, KeyboardAvoidingView } from "react-native";
 import { Actions } from "react-native-router-flux";
 
-import RouteButton from "@/components/RouteButton";
+import Image from "react-native-remote-svg";
+// import KeyboardSpacer from "react-native-keyboard-spacer";
+
+// import RouteButton from "@/components/RouteButton";
+import LoadingContainer from "@/components/LoadingContainer";
 
 import { User } from "@/apis";
 
@@ -22,12 +25,19 @@ export default class DaumMap extends Component {
     this.state = {
       lat: props.navigation.state.params.lat,
       lng: props.navigation.state.params.lng,
+      search: props.navigation.state.params.search || "",
       road_address: "",
       address_name: "",
+      detail_address: "",
 
-      latLng: { jb: 0, ib: 0 }
+      latLng: { jb: 0, ib: 0 },
+      showKeyboard: false
     };
   }
+
+  keyboardDidShowListener = () => {
+    this.setState({ showKeyboard: true });
+  };
 
   onSubmit = () => {
     if (this.state.road_address === "" && this.state.address_name === "") return Alert.alert("", "주소를 선택해 주세요.");
@@ -39,7 +49,7 @@ export default class DaumMap extends Component {
           User.setAddressForDevice({
             road_address: this.state.road_address,
             address_name: this.state.address_name,
-            detail_address: "",
+            detail_address: this.state.detail_address,
             lat: this.state.latLng.jb,
             lng: this.state.latLng.ib
           });
@@ -50,34 +60,64 @@ export default class DaumMap extends Component {
     ]);
   };
 
+  onChangeAddressText = text => {
+    this.setState({ detail_address: text });
+  };
+
+  onParseAddress = event => {
+    const data = JSON.parse(event.nativeEvent.data);
+    this.setState(data);
+
+    if (data.success === -1) {
+      Alert.alert("다른 검색어를 입력해주세요.");
+      Actions.settings();
+    }
+  };
+
   render() {
     return (
-      <Container>
-        <Header>
-          <Left>
-            <RouteButton transparent goBack={true}>
-              <Icon name="arrow-back" />
-            </RouteButton>
-          </Left>
-          <Body>
-            <Title>Set Place</Title>
-          </Body>
-          <Right>
-            <RouteButton onPress={this.onSubmit}>
-              <Text>선택</Text>
-            </RouteButton>
-          </Right>
-        </Header>
+      <LoadingContainer requireAuth={true}>
+        <KeyboardAvoidingView behavior="position" enabled>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", margin: 30, marginBottom: 20 }}>
+            <TouchableWithoutFeedback onPress={() => Actions.pop()}>
+              <View>
+                <Image source={require("assets/icons/m-prev.svg")} style={{ width: 20, height: 20 }} />
+              </View>
+            </TouchableWithoutFeedback>
+            <Text style={{ fontSize: 30, marginTop: -5 }}>배달받을 주소</Text>
+            <View style={{ width: 20, height: 20 }} />
+          </View>
 
-        <WebView
-          style={styles.webView}
-          source={require("assets/html/daum.map.html")}
-          injectedJavaScript={require("assets/html/daum.map.html.js")(this.state.lat, this.state.lng)}
-          scrollEnabled={false}
-          startInLoadingState={true}
-          onMessage={event => this.setState(JSON.parse(event.nativeEvent.data))}
-        />
-      </Container>
+          <View style={{ height: "50%" }}>
+            <WebView
+              style={styles.webView}
+              source={require("assets/html/daum.map.html")}
+              injectedJavaScript={require("assets/html/daum.map.html.js")(this.state.lat, this.state.lng, this.state.search)}
+              scrollEnabled={false}
+              startInLoadingState={true}
+              onMessage={this.onParseAddress}
+            />
+          </View>
+
+          <View style={{ marginTop: 15, marginLeft: 25, marginRight: 25 }}>
+            <Text style={{ fontSize: 24 }}>{this.state.address_name || "지번 주소"}</Text>
+            <Text style={{ fontSize: 18, marginTop: 5, color: "#969ba7" }}>
+              {this.state.road_address ? this.state.road_address.split("구 ")[1] : "도로명 주소"}
+            </Text>
+            <TextInput
+              style={{ borderWidth: 1, marginTop: 15, borderColor: "#d9d9d9", padding: 15, fontSize: 20 }}
+              value={this.state.detail_address}
+              placeholder="상세주소를 입력하세요."
+              onChangeText={this.onChangeAddressText}
+            />
+            <TouchableWithoutFeedback onPress={this.onSubmit}>
+              <View style={{ backgroundColor: "#080808", marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "center", padding: 17 }}>
+                <Text style={{ color: "#FFF", fontSize: 20 }}>완료</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </KeyboardAvoidingView>
+      </LoadingContainer>
     );
   }
 }
