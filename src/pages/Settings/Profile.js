@@ -3,19 +3,39 @@ import { View, Text, TextInput, TouchableWithoutFeedback } from "react-native";
 
 import Image from "react-native-remote-svg";
 
+import { RadioGroup, RadioButton } from "@/components/RadioButton";
 // import DatePicker from "react-native-datepicker";
-// import RadioForm from "react-native-simple-radio-button";
+
+const genderList = [{ label: "선택 안함", value: null }, { label: "남", value: "1" }, { label: "여", value: "0" }];
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      phone: props.phone
+      phone: props.phone,
+      gender: this.convertGender(props.gender)
     };
   }
 
-  componentWillReceiveProps = nextProps => this.setState({ phone: nextProps.phone });
+  componentWillReceiveProps = nextProps => {
+    if (this.state.phone !== nextProps.phone) this.setState({ phone: nextProps.phone });
+    if (this.state.gender !== this.convertGender(nextProps.gender)) this.setState({ gender: this.convertGender(nextProps.gender) });
+  };
+
+  convertGender = gender => {
+    switch (gender) {
+      case -1:
+        return -1;
+      case "1":
+        return 1;
+      case "0":
+        return 2;
+      case null:
+      default:
+        return 0;
+    }
+  };
 
   clearPhone = () => {
     this.phone.clear();
@@ -60,12 +80,13 @@ export default class Profile extends Component {
         <View style={{ marginTop: 15, marginBottom: 5, flex: 1, flexDirection: "row" }}>
           <Text style={{ fontSize: 20 }}>성별 : </Text>
 
-          {/* <RadioForm
-            radio_props={[{ label: "선택 안함", value: 0 }, { label: "남", value: 1 }, { label: "여", value: 2 }]}
-            initial={0}
-            formHorizontal={true}
-            onPress={value => this.setState({ value: value })}
-          /> */}
+          <RadioGroup selectedIndex={this.state.gender} onSelect={(i, v) => this.props.setGender(v)} style={{ flex: 1, flexDirection: "row", marginTop: -10 }}>
+            {genderList.map((x, i) => (
+              <RadioButton key={i} value={x.value} color="#468ef7" activeColor="#000" borderColor="#bababa">
+                <Text style={{ fontSize: 20 }}>{x.label}</Text>
+              </RadioButton>
+            ))}
+          </RadioGroup>
         </View>
         <View style={{ marginTop: 5, marginBottom: 5, flex: 1, flexDirection: "row" }}>
           <Text style={{ fontSize: 20 }}>생일 : </Text>

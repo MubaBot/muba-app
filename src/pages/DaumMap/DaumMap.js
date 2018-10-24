@@ -53,7 +53,7 @@ export default class DaumMap extends Component {
             lat: this.state.latLng.jb,
             lng: this.state.latLng.ib
           });
-          Actions.settings();
+          Actions.pop({ success: 0 });
         }
       },
       { text: "아니오", onPress: () => null }
@@ -70,7 +70,7 @@ export default class DaumMap extends Component {
 
     if (data.success === -1) {
       Alert.alert("다른 검색어를 입력해주세요.");
-      Actions.settings();
+      Actions.pop({ success: -1 });
     }
   };
 
@@ -79,7 +79,7 @@ export default class DaumMap extends Component {
       <LoadingContainer requireAuth={true}>
         <KeyboardAvoidingView behavior="position" enabled>
           <View style={{ flexDirection: "row", justifyContent: "space-between", margin: 30, marginBottom: 20 }}>
-            <TouchableWithoutFeedback onPress={() => Actions.pop()}>
+            <TouchableWithoutFeedback onPress={() => Actions.popTo("settings", { success: 0 })}>
               <View>
                 <Image source={require("assets/icons/m-prev.svg")} style={{ width: 20, height: 20 }} />
               </View>

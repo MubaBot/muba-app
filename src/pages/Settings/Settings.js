@@ -18,17 +18,20 @@ export default class Settings extends Component {
       latitude: 37.50374576425619,
       longitude: 127.04485358330714,
       inputProfile: false,
-      phone: "",
+      PHONE: "",
+      GENDER: -1,
       nowAddress: ""
     };
   }
 
-  componentWillReceiveProps = nextProps => this.syncNowAddress();
+  componentWillReceiveProps = nextProps => {
+    this.syncNowAddress();
+  };
 
   componentDidMount = () => {
-    this.syncNowAddress();
     this.onSetLocation();
-    // this.getUserInfo();
+    this.syncNowAddress();
+    this.getUserInfo();
   };
 
   syncNowAddress = () =>
@@ -49,12 +52,11 @@ export default class Settings extends Component {
           longitude: position.coords.longitude,
           error: null
         }),
-      error => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      error => this.setState({ error: error.message })
     );
   };
 
-  // getUserInfo = () => UserApi.getUserInfoByServer().then(result => this.setState(result.data.user));
+  getUserInfo = () => UserApi.getUserInfoByServer().then(result => this.setState(result.data.user));
 
   focusKeyboard = (panel, mode) => {
     const enable = mode === "in" ? true : false;
@@ -65,13 +67,14 @@ export default class Settings extends Component {
     }
   };
 
-  setPhone = text => this.setState({ phone: text });
+  setPhone = text => this.setState({ PHONE: text });
+  setGender = value => this.setState({ GENDER: value });
 
   doExit = () => {
-    if (this.state.phone !== "" && !/^\d{3}-\d{3,4}-\d{4}$/.test(this.state.phone)) return Alert.alert("올바른 전화번호를 입력해 주세요.");
+    if (this.state.PHONE !== "" && !/^\d{3}-\d{3,4}-\d{4}$/.test(this.state.PHONE)) return Alert.alert("올바른 전화번호를 입력해 주세요.");
 
     // update user info
-    return UserApi.updateUserInfo({ phone: this.state.phone })
+    return UserApi.updateUserInfo({ phone: this.state.PHONE, gender: this.state.GENDER })
       .then(() => Actions.pop())
       .catch(err => alert(err));
   };
@@ -102,7 +105,14 @@ export default class Settings extends Component {
                 borderTopColor: "#ebebeb"
               }}
             >
-              <Profile focusKeyboard={this.focusKeyboard} phone={this.state.phone} setPhone={this.setPhone} inputProfile={this.state.inputProfile} />
+              <Profile
+                focusKeyboard={this.focusKeyboard}
+                phone={this.state.PHONE}
+                setPhone={this.setPhone}
+                inputProfile={this.state.inputProfile}
+                gender={this.state.GENDER}
+                setGender={this.setGender}
+              />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

@@ -24,7 +24,7 @@ export default class Location extends Component {
 
   searchAddress = () => {
     if (this.state.search === "") return Alert.alert("주소를 입력해주세요.");
-    return Actions["daumMap"]({ lat: this.props.latitude || null, lng: this.props.longitude || null, search: this.state.search });
+    return Actions.push("daumMap", { lat: this.props.latitude || null, lng: this.props.longitude || null, search: this.state.search });
   };
 
   onChangeAddressText = text => {
@@ -74,7 +74,7 @@ export default class Location extends Component {
           </View>
         </View>
 
-        <TouchableWithoutFeedback onPress={() => Actions["daumMap"]({ lat: this.props.latitude || null, lng: this.props.longitude || null })}>
+        <TouchableWithoutFeedback onPress={() => Actions.push("daumMap", { lat: this.props.latitude || null, lng: this.props.longitude || null })}>
           <View
             style={{
               marginTop: 10,

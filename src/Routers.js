@@ -63,7 +63,7 @@ export default class Muba extends Component {
           {/* <Scene key="register" component={Register} title="Register" /> */}
 
           {/* popup */}
-          <Scene key="settings" component={Settings} title="Settings" gesturesEnabled={false} />
+          <Scene key="settings" component={Settings} title="Settings" gesturesEnabled={false} onEnter={Actions.refresh} />
 
           <Scene key="daumMap" component={DaumMap} title="Daum Map" />
           {/* <Scene key="daumMapSearch" component={DaumMapSearch} title="Daum Map Search" /> */}
