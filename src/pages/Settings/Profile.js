@@ -3,33 +3,44 @@ import { View, Text, TextInput, TouchableWithoutFeedback } from "react-native";
 
 import Image from "react-native-remote-svg";
 
-import { RadioGroup, RadioButton } from "@/components/RadioButton";
-// import DatePicker from "react-native-datepicker";
+import { RadioGroup, RadioButton } from "@/components/lib/RadioButton";
+import DatePicker from "@/components/DatePicker";
 
-const genderList = [{ label: "선택 안함", value: null }, { label: "남", value: "1" }, { label: "여", value: "0" }];
+import moment from "moment";
+import "moment/locale/ko";
+
+const genderList = [{ label: "선택 안함", value: null }, { label: "남", value: true }, { label: "여", value: false }];
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      phone: props.phone,
-      gender: this.convertGender(props.gender)
+      phone: props.phone || "",
+      gender: this.convertGender(props.gender),
+      year: props.year,
+      month: props.month,
+      day: props.day
     };
   }
 
   componentWillReceiveProps = nextProps => {
-    if (this.state.phone !== nextProps.phone) this.setState({ phone: nextProps.phone });
+    if (this.state.phone !== nextProps.phone) this.setState({ phone: nextProps.phone || "" });
     if (this.state.gender !== this.convertGender(nextProps.gender)) this.setState({ gender: this.convertGender(nextProps.gender) });
+
+    if (this.state.year !== nextProps.year) this.setState({ year: nextProps.year });
+    if (this.state.month !== nextProps.month) this.setState({ month: nextProps.month });
+    if (this.state.day !== nextProps.day) this.setState({ day: nextProps.day });
   };
 
   convertGender = gender => {
+    gender = gender === "1" ? true : gender;
+    gender = gender === "0" ? false : gender;
+
     switch (gender) {
-      case -1:
-        return -1;
-      case "1":
+      case true:
         return 1;
-      case "0":
+      case false:
         return 2;
       case null:
       default:
@@ -41,6 +52,10 @@ export default class Profile extends Component {
     this.phone.clear();
     this.props.setPhone("");
   };
+
+  updateYear = year => this.props.setBirth(year, this.state.month, this.state.day);
+  updateMonth = month => this.props.setBirth(this.state.year, month, this.state.day);
+  updateDay = day => this.props.setBirth(this.state.year, this.state.month, day);
 
   render() {
     return (
@@ -90,26 +105,14 @@ export default class Profile extends Component {
         </View>
         <View style={{ marginTop: 5, marginBottom: 5, flex: 1, flexDirection: "row" }}>
           <Text style={{ fontSize: 20 }}>생일 : </Text>
-          {/* <DatePicker
-            style={{ width: 200, flex: 1 }}
-            date={this.state.date}
-            mode="date"
-            placeholder="날짜 선택"
-            format="YYYY년 MM월 DD일"
-            confirmBtnText="선택"
-            cancelBtnText="취소"
-            showIcon={false}
-            allowFontScaling={true}
-            customStyles={{
-              dateInput: { padding: 0, marginTop: -20, borderWidth: 0, justifyContent: "flex-start" },
-              placeholderText: { marginTop: 10, fontSize: 20, padding: 0, textAlign: "left" },
-              dateText: { marginTop: 10, fontSize: 20, padding: 0, textAlign: "left" },
-              btnTextConfirm: { color: "#468ef7" }
-            }}
-            onDateChange={date => {
-              this.setState({ date: date });
-            }}
-          /> */}
+          <DatePicker
+            year={this.state.year}
+            month={this.state.month}
+            day={this.state.day}
+            updateYear={this.updateYear}
+            updateMonth={this.updateMonth}
+            updateDay={this.updateDay}
+          />
         </View>
       </View>
     );

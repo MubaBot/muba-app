@@ -3,6 +3,7 @@ import { TouchableWithoutFeedback, View, ScrollView, KeyboardAvoidingView, Alert
 import { Actions } from "react-native-router-flux";
 
 import Image from "react-native-remote-svg";
+import moment from "moment";
 
 import LoadingContainer from "@/components/LoadingContainer";
 
@@ -19,14 +20,13 @@ export default class Settings extends Component {
       longitude: 127.04485358330714,
       inputProfile: false,
       PHONE: "",
-      GENDER: -1,
+      GENDER: null,
+      BIRTH: "",
       nowAddress: ""
     };
   }
 
-  componentWillReceiveProps = nextProps => {
-    this.syncNowAddress();
-  };
+  componentWillReceiveProps = nextProps => this.syncNowAddress();
 
   componentDidMount = () => {
     this.onSetLocation();
@@ -69,17 +69,24 @@ export default class Settings extends Component {
 
   setPhone = text => this.setState({ PHONE: text });
   setGender = value => this.setState({ GENDER: value });
+  setBirth = (year, month, day) => this.setState({ BIRTH: moment({ year, month: month - 1, day }).format("YYYYMMDD") });
 
   doExit = () => {
     if (this.state.PHONE !== "" && !/^\d{3}-\d{3,4}-\d{4}$/.test(this.state.PHONE)) return Alert.alert("올바른 전화번호를 입력해 주세요.");
 
     // update user info
-    return UserApi.updateUserInfo({ phone: this.state.PHONE, gender: this.state.GENDER })
+    return UserApi.updateUserInfo({ phone: this.state.PHONE, gender: this.state.GENDER, birth: this.state.BIRTH })
       .then(() => Actions.pop())
       .catch(err => alert(err));
   };
 
   render() {
+    const date = this.state.BIRTH ? String(this.state.BIRTH) : moment().format("YYYYMMDD");
+
+    const year = parseInt(moment(date).format("YYYY"));
+    const month = parseInt(moment(date).format("MM"));
+    const day = parseInt(moment(date).format("DD"));
+
     return (
       <LoadingContainer requireAuth={true}>
         <KeyboardAvoidingView behavior="position" enabled={this.state.inputProfile}>
@@ -96,9 +103,9 @@ export default class Settings extends Component {
 
             <View
               style={{
-                paddingTop: 20,
-                paddingLeft: 20,
-                paddingRight: 20,
+                paddingTop: 30,
+                paddingLeft: 30,
+                paddingRight: 30,
                 paddingBottom: 30,
                 borderTopWidth: 15,
                 backgroundColor: "#FFF",
@@ -112,6 +119,10 @@ export default class Settings extends Component {
                 inputProfile={this.state.inputProfile}
                 gender={this.state.GENDER}
                 setGender={this.setGender}
+                year={year}
+                month={month}
+                day={day}
+                setBirth={this.setBirth}
               />
             </View>
           </ScrollView>

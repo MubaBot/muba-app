@@ -40,7 +40,7 @@ export default class LoadingContainer extends Component {
       const logged = !!(await AuthApi.getAuthentication()) && (await AuthApi.isLogged());
       this.setState({ load: !logged });
 
-      // if (!logged) return Actions.pop();
+      if (!logged) return Actions.push("Login", { route: Actions.currentScene });
     }
 
     if (this.props.loading === true || this.props.loading === false) this.setState({ load: this.props.loading });
