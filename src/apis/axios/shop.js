@@ -1,5 +1,9 @@
 import * as Axios from "./index";
 
+const searchSaleShopList = async ({ lat, lng, page, time }) => {
+  return Axios.Get(["/api/shop/list/sale", page, lat, lng, time].join("/"));
+};
+
 const searchShop = async ({ keyword, page }) => {
   return Axios.Get(["/api/shop/list", page, keyword].join("/"));
 };
@@ -24,4 +28,4 @@ const orderCart = async ({ id, cart, address, require, phone }) => {
   });
 };
 
-export { searchShop, setLatlng, getShopInfo, orderCart };
+export { searchSaleShopList, searchShop, setLatlng, getShopInfo, orderCart };

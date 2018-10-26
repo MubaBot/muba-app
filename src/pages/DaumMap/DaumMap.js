@@ -112,7 +112,7 @@ export default class DaumMap extends Component {
             />
             <TouchableWithoutFeedback onPress={this.onSubmit}>
               <View style={{ backgroundColor: "#080808", marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "center", padding: 17 }}>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>완료</Text>
+                <Text style={{ color: "#FFF", fontSize: 20, fontWeight: "bold" }}>완료</Text>
               </View>
             </TouchableWithoutFeedback>
           </View>

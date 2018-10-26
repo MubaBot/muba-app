@@ -11,9 +11,9 @@ import * as OrderAxios from "./axios/order";
 import * as ShopAxios from "./axios/shop";
 
 const AuthApi = { ...AuthAxios, ...AuthStorage };
-const Shop = { ...ShopAxios };
+const ShopApi = { ...ShopAxios };
 const UserApi = { ...UserAxios, ...UserStorage };
 const CartApi = { ...CartStorage };
 const OrderApi = { ...OrderAxios };
 
-export { AuthApi, Shop, UserApi, CartApi, OrderApi };
+export { AuthApi, ShopApi, UserApi, CartApi, OrderApi };

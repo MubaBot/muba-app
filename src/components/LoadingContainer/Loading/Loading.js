@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet } from "react-native";
-// import { CircleSnail } from "react-native-progress";
+import { CircleSnail } from "react-native-progress";
 
 import HideView from "@/components/HideView";
 
@@ -27,7 +27,7 @@ export default class Loading extends Component {
     return (
       <HideView hide={this.props.hide === true ? true : false} style={styles.background}>
         <View style={styles.circle}>
-          {/* <CircleSnail color={"rgba(255,255,255,0.8)"} size={100} thickness={7} duration={750} spinDuration={1000} strokeCap={"square"} /> */}
+          <CircleSnail color={"rgba(255,255,255,0.8)"} size={100} thickness={7} duration={750} spinDuration={1000} strokeCap={"square"} />
         </View>
       </HideView>
     );

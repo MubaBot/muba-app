@@ -1,22 +1,24 @@
 // import * as Expo from "expo";
 import React, { Component } from "react";
-import { Scene, Router, Actions } from "react-native-router-flux";
+import { Scene, Router, Tabs, Actions } from "react-native-router-flux";
 
 import Main from "@/pages/Main";
-// import Chat from "@/pages/Chat";
+import Search from "@/pages/Search";
+import Chat from "@/pages/Chat";
 
 // import Order from "@/pages/Order";
-// import Search from "@/pages/Search";
 // import Recommend from "@/pages/Recommend";
 
 import Settings from "@/pages/Settings";
 import Login from "@/pages/Login";
-// import Register from "@/pages/Register";
+import Register from "@/pages/Register";
 
 import DaumMap from "@/pages/DaumMap";
 // import DaumMapSearch from "@/pages/DaumMapSearch";
 
 import { AuthApi } from "@/apis";
+
+import TabBar from "@/components/TabBar";
 
 export default class Muba extends Component {
   constructor() {
@@ -31,7 +33,7 @@ export default class Muba extends Component {
   requireAuth = async (nextState, replace) => {
     if (!(await AuthApi.isLogged())) {
       Actions.login({ route: nextState.routeName });
-    }
+    } else Actions.refresh();
   };
 
   // async loadFonts() {
@@ -51,21 +53,23 @@ export default class Muba extends Component {
     return (
       <Router hideNavBar>
         <Scene key="root" hideNavBar>
-          <Scene key="main" component={Main} title="Muba" initial={true} onEnter={this.requireAuth} />
-
-          {/* <Scene key="order" component={Order} title="Order" /> */}
-          {/* <Scene key="recommend" component={Recommend} title="Recommend" /> */}
-          {/* <Scene key="search" component={Search} title="Search" /> */}
-
-          {/* <Scene key="chat" component={Chat} title="Chat" /> */}
+          <Tabs key="main" hideTabBar={true} headerMode="screen" onEnter={this.requireAuth} navBar={TabBar}>
+            <Scene key="main" lazy={true} component={Main} title="Muba" initial={true} onEnter={this.requireAuth} />
+            <Scene key="search" lazy={true} component={Search} title="Search" />
+            {/* <Scene key="order" component={Order} title="Order" /> */}
+            {/* <Scene key="recommend" component={Recommend} title="Recommend" /> */}
+          </Tabs>
 
           <Scene key="login" component={Login} title="Login" gesturesEnabled={false} />
-          {/* <Scene key="register" component={Register} title="Register" /> */}
+          <Scene key="register" component={Register} title="Register" />
 
           {/* popup */}
-          <Scene key="settings" component={Settings} title="Settings" gesturesEnabled={false} onEnter={Actions.refresh} />
+          <Scene key="settings" component={Settings} title="Settings" gesturesEnabled={false} onEnter={this.requireAuth} />
 
           <Scene key="daumMap" component={DaumMap} title="Daum Map" />
+
+          <Scene key="chat" component={Chat} title="Chat" gesturesEnabled={false} />
+
           {/* <Scene key="daumMapSearch" component={DaumMapSearch} title="Daum Map Search" /> */}
         </Scene>
       </Router>
