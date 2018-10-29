@@ -2,7 +2,7 @@ import { AuthStorage } from "@/apis/storage";
 import axios from "axios";
 
 const apiAxios = axios.create({
-  baseURL: "http://27.35.22.168:3030",
+  baseURL: "https://api.mubabot.com",
   headers: { "Access-Control-Allow-Origin": "*" }
 });
 
