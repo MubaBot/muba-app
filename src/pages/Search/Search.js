@@ -1,139 +1,116 @@
-// import React, { Component } from "react";
-// import { View, Keyboard, ScrollView, TextInput, Alert } from "react-native";
-// import { Header, Body, Left, Right, Title, Icon, Button, Text, List } from "native-base";
-
-// import LoadingContainer from "@/components/LoadingContainer";
-// import RouteButton from "@/components/RouteButton";
-// import SearchItem from "@/components/SearchItem";
-
-// import { InfoPopup, ReviewPopup, OrderPopup, DaumMapPopup } from "@/components/PopupComponent";
-// import { Shop } from "@/apis";
-
-// export default class Search extends Component {
-//   state = {
-//     lists: [],
-//     page: 1,
-//     loading: false,
-//     scrollEnabled: true,
-//     search: false,
-//     showInfo: false,
-//     showReview: false,
-//     showOrder: false,
-//     showMap: false,
-//     keyword: "",
-//     searchKeyword: "",
-
-//     info: 0
-//   };
-
-//   getOrderLists = async () => {
-//     this.setState({ page: this.state.page + 1 });
-//     return await this.getKeywordItems();
-//   };
-
-//   appendItem = async items => this.setState({ lists: this.state.lists.concat(items), loading: false });
-//   showNextPage = async () => {
-//     if (this.state.loading === false && this.state.search === true) {
-//       this.setState({ loading: true });
-//       setTimeout(async () => this.appendItem(await this.getOrderLists()), 500);
-//     }
-//   };
-
-//   doSearch = async () => {
-//     if (this.state.keyword === "") return Alert.alert("", "검색어를 입력해 주세요.");
-//     this.setState({ searchKeyword: this.state.keyword, loading: true, search: true, page: 1 });
-//     Keyboard.dismiss();
-//     this.setState({ lists: await this.getKeywordItems(1), loading: false });
-//   };
-
-//   getKeywordItems = async page => {
-//     return Shop.searchShop({ keyword: this.state.keyword, page: page || this.state.page })
-//       .then(shops => shops.data.lists)
-//       .catch(err => []);
-//   };
-
-//   endLoading = () => this.setState({ loading: false });
-
-//   showShopInfo = async id => this.setState({ info: id, showInfo: true, loading: true });
-//   showShopReview = async id => this.setState({ showReview: true });
-//   showShopOrder = async id => this.setState({ showOrder: true });
-//   showMap = async id => this.setState({ showMap: true });
-
-//   closeEvent = () => {
-//     this.setState({ showInfo: false, showReview: false, showOrder: false, showMap: false });
-//   };
-
-//   onScroll = ({ layoutMeasurement, contentOffset, contentSize }) => {
-//     Keyboard.dismiss();
-//     if (contentSize.height - layoutMeasurement.height <= contentOffset.y + 1 && this.state.search === true) {
-//       this.setState({ loading: true });
-//       this.showNextPage();
-//     }
-//   };
-
-//   onPressMapBegin = () => this.setState({ scrollEnabled: false });
-//   onPressMapEnd = () => this.setState({ scrollEnabled: true });
-//   onChangeAddressText = text => this.setState({ keyword: text });
-
-//   render() {
-//     return (
-//       <LoadingContainer requireAuth loading={this.state.loading}>
-//         <Header>
-//           <Left>
-//             <RouteButton transparent goBack={true}>
-//               <Icon name="arrow-back" />
-//             </RouteButton>
-//           </Left>
-//           <Body>
-//             <Title>Search</Title>
-//           </Body>
-//           <Right />
-//         </Header>
-
-//         <View style={{ backgroundColor: "white", flex: 1 }}>
-//           <View>
-//             <TextInput
-//               style={{ borderBottomWidth: 1, padding: 15 }}
-//               placeholder="Search"
-//               multiline={false}
-//               onChangeText={text => this.onChangeAddressText(text)}
-//             />
-//             <Button onPress={this.doSearch}>
-//               <Text>Search</Text>
-//             </Button>
-//           </View>
-//           <ScrollView scrollEnabled={this.state.scrollEnabled} style={{ backgroundColor: "white" }} onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}>
-//             <List style={{ display: "flex" }}>
-//               {this.state.lists.map((x, i) => (
-//                 <SearchItem
-//                   key={i}
-//                   {...x}
-//                   showShopInfo={this.showShopInfo}
-//                   showShopReview={this.showShopReview}
-//                   showShopOrder={this.showShopOrder}
-//                   onPressMapBegin={this.onPressMapBegin}
-//                   onPressMap={this.showMap}
-//                   onPressMapEnd={this.onPressMapEnd}
-//                 />
-//               ))}
-//             </List>
-//           </ScrollView>
-//         </View>
-
-//         <InfoPopup id={this.state.info} hide={!this.state.showInfo} onClose={this.closeEvent} endLoading={this.endLoading} />
-//         <ReviewPopup hide={!this.state.showReview} onClose={this.closeEvent} />
-//         <OrderPopup hide={!this.state.showOrder} onClose={this.closeEvent} />
-//         {/* <DaumMapPopup hide={!this.state.showMap} onClose={this.closeEvent} /> */}
-//       </LoadingContainer>
-//     );
-//   }
-// }
-
 import React, { Component } from "react";
-import { View } from "react-native";
+import { TouchableWithoutFeedback, ScrollView, View, TextInput, Alert, Text, Keyboard } from "react-native";
+
+import Image from "react-native-remote-svg";
+import { Actions } from "react-native-router-flux";
+
+import LoadingContainer from "@/components/LoadingContainer";
+
+import Header from "./Header";
+import SearchItem from "./SearchItem";
+
+import { ShopApi } from "@/apis";
 
 export default class Search extends Component {
+  state = {
+    lists: [],
+    page: 1,
+    loading: false,
+    search: false,
+    keyword: "",
+    searchKeyword: "",
+
+    info: 0
+  };
+
+  showNextPage = async () => {
+    if (this.state.loading === false && this.state.search === true) {
+      this.setState({ loading: true });
+
+      this.getKeywordItems({ keyword: this.state.searchKeyword, page: this.state.page });
+    }
+  };
+
+  doSearch = async () => {
+    if (this.state.keyword === "") return Alert.alert("", "검색어를 입력해 주세요.");
+    this.getKeywordItems({ keyword: this.state.keyword, page: 1 });
+    this.setState({ searchKeyword: this.state.keyword, search: true });
+  };
+
+  getKeywordItems = async ({ keyword, page }) => {
+    const k = keyword || this.state.searchKeyword;
+    const p = page || this.state.page || 1;
+
+    Keyboard.dismiss();
+
+    return ShopApi.searchShop({ keyword: k, page: page || this.state.page })
+      .then(shops =>
+        this.setState({
+          lists: p === 1 ? shops.data.lists : this.state.lists.concat(shops.data.lists),
+          page: p + 1,
+          search: shops.data.lists.length === 0 ? false : true,
+          loading: false
+        })
+      )
+      .catch(err => []);
+  };
+
+  showShopInfo = async id => Actions.push("shop", { id: id });
+  // showShopReview = async id => this.setState({ showReview: true });
+  // showMap = async id => this.setState({ showMap: true });
+
+  closeEvent = () => {
+    this.setState({ showInfo: false, showReview: false, showOrder: false, showMap: false });
+  };
+
+  onScroll = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    Keyboard.dismiss();
+    if (contentSize.height - layoutMeasurement.height <= contentOffset.y + 1 && this.state.search === true) {
+      this.showNextPage();
+    }
+  };
+
+  onChangeSearchText = text => this.setState({ keyword: text });
+
   render() {
-    return <View />;
+    return (
+      <LoadingContainer requireAuth={true} header={Header} loading={this.state.loading}>
+        <ScrollView onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)} style={{ marginBottom: 70 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              borderBottomWidth: 2,
+              borderBottomColor: "#212529",
+              paddingTop: 10,
+              paddingBottom: 10,
+              marginTop: 30,
+              marginLeft: 30,
+              marginRight: 30
+            }}
+          >
+            <View style={{ flex: 4 }}>
+              <TextInput
+                style={{ fontSize: 30 }}
+                onChangeText={this.onChangeSearchText}
+                value={this.state.keyword}
+                placeholder="상점 이름을 입력하세요"
+                onEndEditing={this.doSearch}
+              />
+            </View>
+            <View style={{ flex: 1, marginRight: -45, marginTop: 3 }}>
+              <TouchableWithoutFeedback onPress={this.doSearch}>
+                <View>
+                  <Image source={require("assets/icons/m-address-search.svg")} />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </View>
+
+          {this.state.lists.map((v, i) => (
+            <SearchItem key={v._id} length={this.state.lists.length} now={i + 1} {...v} showShopInfo={this.showShopInfo} />
+          ))}
+        </ScrollView>
+      </LoadingContainer>
+    );
   }
 }

@@ -9,12 +9,14 @@ import Chat from "@/pages/Chat";
 // import Order from "@/pages/Order";
 // import Recommend from "@/pages/Recommend";
 
-import Settings from "@/pages/Settings";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 
-import DaumMap from "@/pages/DaumMap";
+import Settings from "@/pages/Settings";
+import DaumMapSetting from "@/pages/DaumMapSetting";
 // import DaumMapSearch from "@/pages/DaumMapSearch";
+
+import Shop from "@/pages/Shop";
 
 import { AuthApi } from "@/apis";
 
@@ -65,10 +67,11 @@ export default class Muba extends Component {
 
           {/* popup */}
           <Scene key="settings" component={Settings} title="Settings" gesturesEnabled={false} onEnter={this.requireAuth} />
+          <Scene key="daumMapSetting" component={DaumMapSetting} title="Daum Map" />
 
-          <Scene key="daumMap" component={DaumMap} title="Daum Map" />
+          <Scene key="shop" component={Shop} title="Shop Information" />
 
-          <Scene key="chat" component={Chat} title="Chat" gesturesEnabled={false} />
+          <Scene key="chat" component={Chat} title="Chat" />
 
           {/* <Scene key="daumMapSearch" component={DaumMapSearch} title="Daum Map Search" /> */}
         </Scene>

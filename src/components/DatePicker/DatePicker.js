@@ -32,6 +32,7 @@ export default class DatePicker extends Component {
     return (
       <View style={{ flexDirection: "row" }}>
         <PickerSelect
+          doneText="확인"
           placeholder={{ label: `${maxYear}년`, value: maxYear }}
           items={range(1900, maxYear)
             .reverse()
@@ -43,6 +44,7 @@ export default class DatePicker extends Component {
         </PickerSelect>
 
         <PickerSelect
+          doneText="확인"
           placeholder={{ label: "12월", value: 12 }}
           items={range(1, 12)
             .reverse()
@@ -54,6 +56,7 @@ export default class DatePicker extends Component {
         </PickerSelect>
 
         <PickerSelect
+          doneText="확인"
           placeholder={{ label: "31일", value: 31 }}
           items={range(1, 31)
             .reverse()

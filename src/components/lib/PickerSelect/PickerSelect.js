@@ -337,15 +337,15 @@ const defaultStyles = StyleSheet.create({
     height: 15,
     backgroundColor: "transparent",
     borderTopWidth: 1.5,
-    borderTopColor: "#D0D4DB",
+    borderTopColor: "#EFF1F2",
     borderRightWidth: 1.5,
-    borderRightColor: "#D0D4DB"
+    borderRightColor: "#EFF1F2"
   },
   chevronUp: { transform: [{ translateY: 17 }, { rotate: "-45deg" }] },
   chevronDown: { transform: [{ translateY: 8 }, { rotate: "135deg" }] },
   chevronActive: {
-    borderTopColor: "#007AFE",
-    borderRightColor: "#007AFE"
+    borderTopColor: "#EFF1F2",
+    borderRightColor: "#EFF1F2"
   },
   icon: {
     position: "absolute",
@@ -379,6 +379,7 @@ const defaultStyles = StyleSheet.create({
   done: {
     color: "#007AFE",
     fontWeight: "bold",
+    marginTop: 3,
     padding: 10,
     fontSize: 18
   },

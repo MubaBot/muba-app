@@ -20,33 +20,71 @@ module.exports = (name, address, lat, lng) =>
   String((name, address, plat, plng) => {
     if (plat === 0 && plng === 0) {
       var geocoder = new daum.maps.services.Geocoder();
+      var ps = new daum.maps.services.Places();
 
-      // 주소로 좌표를 검색합니다
       geocoder.addressSearch(address, function(result, status) {
         if (status == daum.maps.services.Status.OK) {
-          setMap(result[0].y, result[0].x);
+          showMap(result[0].y, result[0].x);
           window.postMessage(JSON.stringify({ lat: result[0].y, lng: result[0].x }));
+        } else {
+          ps.keywordSearch(address, function(result, status) {
+            if (status == daum.maps.services.Status.OK) {
+              showMap(result[0].y, result[0].x);
+              window.postMessage(JSON.stringify({ lat: result[0].y, lng: result[0].x }));
+            } else {
+              alert(address);
+              window.postMessage(JSON.stringify({ status: -1 }));
+            }
+          });
         }
       });
     } else {
-      setMap(plat, plng);
+      showMap(plat, plng);
+    }
+
+    function showMap(t, g) {
+      setTimeout(function() {
+        if (typeof daum !== "undefined") setMap(t, g);
+        else showMap(t, g);
+      }, 100);
     }
 
     function setMap(lat, lng) {
+      const latLng = new daum.maps.LatLng(lat, lng); // 지도의 중심좌표
       var mapContainer = document.getElementById("map"), // 지도를 표시할 div
         mapOption = {
-          center: new daum.maps.LatLng(lat - 0.15, lng), // 지도의 중심좌표
-          level: 3 // 지도의 확대 레벨
+          center: latLng,
+          level: 1 // 지도의 확대 레벨
         };
 
       // 지도를 생성합니다
       var map = new daum.maps.Map(mapContainer, mapOption);
+      map.setDraggable(false);
 
       // 주소-좌표 변환 객체를 생성합니다
       var geocoder = new daum.maps.services.Geocoder();
 
-      var marker = new daum.maps.Marker(), // 클릭한 위치를 표시할 마커입니다
-        infowindow = new daum.maps.InfoWindow({ zindex: 1 }); // 클릭한 위치에 대한 주소를 표시할 인포윈도우입니다
+      var imageSrc = "http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png", // 마커이미지의 주소입니다
+        imageSize = new daum.maps.Size(64, 69), // 마커이미지의 크기입니다
+        imageOption = { offset: new daum.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+      // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+      var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+      var marker = new daum.maps.Marker({
+        // image: markerImage // 마커이미지 설정
+      });
+
+      // var infowindow = new daum.maps.InfoWindow({ zindex: -1 }); // 클릭한 위치에 대한 주소를 표시할 인포윈도우입니다
+
+      var content = '<div class ="label">' + name + "</div>";
+
+      // 마커 위에 커스텀오버레이를 표시합니다
+      // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
+      var customOverlay = new daum.maps.CustomOverlay({
+        position: latLng,
+        content: content
+      });
 
       // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
       searchAddrFromCoords(map.getCenter(), displayCenterInfo);
@@ -81,32 +119,30 @@ module.exports = (name, address, lat, lng) =>
         }
       }
 
-      // 지도에 마커와 인포윈도우를 표시하는 함수입니다
-      function displayMarker(locPosition, message) {
-        // 마커를 생성합니다
-        var marker = new daum.maps.Marker({
-          map: map,
-          position: locPosition
-        });
-
-        var iwContent = message, // 인포윈도우에 표시할 내용
-          iwRemoveable = true;
-
-        // 인포윈도우를 생성합니다
-        var infowindow = new daum.maps.InfoWindow({
-          content: iwContent,
-          removable: iwRemoveable
-        });
-
-        // 인포윈도우를 마커위에 표시합니다
-        infowindow.open(map, marker);
+      function panTo(moveLatLon) {
+        map.panTo(moveLatLon);
       }
 
-      var locPosition = new daum.maps.LatLng(lat, lng); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-      var message = '<div style="padding:5px;">' + name + "</div>"; // 인포윈도우에 표시될 내용입니다
+      searchDetailAddrFromCoords(latLng, function(result, status) {
+        if (status === daum.maps.services.Status.OK) {
+          // 마커를 클릭한 위치에 표시합니다
+          marker.setPosition(latLng);
+          marker.setMap(map);
 
-      // 마커와 인포윈도우를 표시합니다
-      displayMarker(locPosition, message);
+          // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
+          customOverlay.setMap(map);
+
+          panTo(latLng);
+
+          window.postMessage(
+            JSON.stringify({
+              road_address: !!result[0].road_address ? result[0].road_address.address_name : "",
+              address_name: result[0].address.address_name,
+              latLng: latLng
+            })
+          );
+        }
+      });
     }
   }) +
   `)("${name}", "${address}", ${lat}, ${lng});`;

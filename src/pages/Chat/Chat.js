@@ -8,7 +8,7 @@ import { GiftedChat } from "react-native-gifted-chat";
 import querystring from "querystring";
 import "moment/locale/ko";
 
-import RouteButton from "@/components/RouteButton";
+// import RouteButton from "@/components/RouteButton";
 import LoadingContainer from "@/components/LoadingContainer";
 
 const TYPE_NORMAL = 0;
@@ -200,17 +200,17 @@ export default class Chat extends Component {
       <LoadingContainer requireAuth={true}>
         <Header>
           <Left>
-            <RouteButton transparent goBack={true}>
+            {/* <RouteButton transparent goBack={true}>
               <Icon name="arrow-back" />
-            </RouteButton>
+            </RouteButton> */}
           </Left>
           <Body>
             <Title>Muba Chat</Title>
           </Body>
           <Right>
-            <RouteButton transparent onPress={this.clearChat}>
+            {/* <RouteButton transparent onPress={this.clearChat}>
               <Icon name="trash" style={{ color: "#000" }} />
-            </RouteButton>
+            </RouteButton> */}
           </Right>
         </Header>
 

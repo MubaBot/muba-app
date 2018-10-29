@@ -1,19 +1,14 @@
 import React, { Component } from "react";
+import { View, Alert, Text, TextInput, TouchableWithoutFeedback } from "react-native";
 import { Actions } from "react-native-router-flux";
-import { Alert, Text } from "react-native";
-import { Container, Header, Body, Left, Right, Button, Title, Icon, Input, Content, Form, Item, Label } from "native-base";
 
-import RouteButton from "@/components/RouteButton";
+import LoadingContainer from "@/components/LoadingContainer";
 
 import { AuthApi } from "@/apis";
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
-    // if (!props.navigation.state.params.route) {
-    //   alert("error");
-    //   Actions.pop();
-    // }
 
     this.state = {
       id: "",
@@ -48,34 +43,53 @@ export default class Login extends Component {
 
   render() {
     return (
-      <Container>
-        <Header>
-          <Left />
-          <Body>
-            <Title>Login</Title>
-          </Body>
-          <Right />
-        </Header>
+      <LoadingContainer loading={false} header={<Text style={{ fontSize: 25, fontWeight: "bold", color: "#212529" }}>로그인</Text>}>
+        <View>
+          <TextInput
+            style={{
+              fontSize: 24,
+              paddingTop: 10,
+              paddingBottom: 10,
+              marginTop: 40,
+              marginLeft: 30,
+              marginRight: 30,
+              borderBottomWidth: 1,
+              borderBottomColor: "#ced4da"
+            }}
+            autoFocus
+            placeholder="아이디 또는 이메일"
+            onChangeText={text => this.onChangeText("id", text)}
+          />
+          <TextInput
+            style={{
+              fontSize: 24,
+              paddingTop: 10,
+              paddingBottom: 10,
+              marginTop: 20,
+              marginLeft: 30,
+              marginRight: 30,
+              borderBottomWidth: 1,
+              borderBottomColor: "#ced4da"
+            }}
+            placeholder="비밀번호"
+            secureTextEntry={true}
+            onChangeText={text => this.onChangeText("password", text)}
+          />
+          <TouchableWithoutFeedback onPress={this.doLogin}>
+            <View
+              style={{ marginLeft: 30, marginRight: 30, marginTop: 60, backgroundColor: "#468ef7", paddingTop: 15, paddingBottom: 15, alignItems: "center" }}
+            >
+              <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 20 }}>로그인</Text>
+            </View>
+          </TouchableWithoutFeedback>
 
-        <Content style={{ backgroundColor: "white" }}>
-          <Form>
-            <Item stackedLabel>
-              <Label>ID or Email</Label>
-              <Input ref={this.id} autoFocus onChangeText={text => this.onChangeText("id", text)} />
-            </Item>
-            <Item stackedLabel last>
-              <Label>Password</Label>
-              <Input ref={this.password} secureTextEntry={true} password={true} onChangeText={text => this.onChangeText("password", text)} />
-            </Item>
-            <RouteButton link="register">
-              <Text>Register</Text>
-            </RouteButton>
-            <Button onPress={this.doLogin}>
-              <Text>Submit</Text>
-            </Button>
-          </Form>
-        </Content>
-      </Container>
+          <TouchableWithoutFeedback onPress={() => Actions.push("register")}>
+            <View style={{ marginLeft: 30, marginRight: 30, marginTop: 15, paddingTop: 15, paddingBottom: 15, alignItems: "center" }}>
+              <Text style={{ color: "#468ef7", fontWeight: "bold", fontSize: 20 }}>회원가입</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </LoadingContainer>
     );
   }
 }

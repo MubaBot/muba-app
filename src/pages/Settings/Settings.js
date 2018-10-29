@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { TouchableWithoutFeedback, View, ScrollView, KeyboardAvoidingView, Alert } from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, Alert, TouchableWithoutFeedback, Text } from "react-native";
 import { Actions } from "react-native-router-flux";
 
-import Image from "react-native-remote-svg";
 import moment from "moment";
 
 import LoadingContainer from "@/components/LoadingContainer";
 
+import Header from "./Header";
 import Location from "./Location";
 import Profile from "./Profile";
 
@@ -88,16 +88,10 @@ export default class Settings extends Component {
     const day = parseInt(moment(date).format("DD"));
 
     return (
-      <LoadingContainer requireAuth={true}>
+      <LoadingContainer requireAuth={true} header={Header}>
         <KeyboardAvoidingView behavior="position" enabled={this.state.inputProfile}>
           <ScrollView>
-            <View style={{ paddingTop: 30, paddingLeft: 30, paddingRight: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#dadada" }}>
-              <TouchableWithoutFeedback onPress={this.doExit}>
-                <View>
-                  <Image source={require("assets/icons/m-close.svg")} style={{ width: 20, height: 20 }} />
-                </View>
-              </TouchableWithoutFeedback>
-
+            <View style={{ paddingTop: 10, paddingLeft: 30, paddingRight: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#dadada" }}>
               <Location syncAddress={this.syncNowAddress} nowAddress={this.state.nowAddress} latitude={this.state.latitude} longitude={this.state.longitude} />
             </View>
 
@@ -125,6 +119,25 @@ export default class Settings extends Component {
                 setBirth={this.setBirth}
               />
             </View>
+
+            <TouchableWithoutFeedback onPress={() => this.doExit()}>
+              <View style={{ width: "100%", marginBottom: 30, paddingLeft: 30, paddingRight: 30 }}>
+                <Text
+                  style={{
+                    backgroundColor: "#468ef7",
+                    color: "#FFF",
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    paddingTop: 15,
+                    paddingBottom: 15,
+                    width: "100%",
+                    textAlign: "center"
+                  }}
+                >
+                  완료
+                </Text>
+              </View>
+            </TouchableWithoutFeedback>
           </ScrollView>
         </KeyboardAvoidingView>
       </LoadingContainer>

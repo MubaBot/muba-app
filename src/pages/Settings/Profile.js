@@ -60,12 +60,46 @@ export default class Profile extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
+        {/* <Text style={{ fontSize: 30 }}>이름을 입력하세요</Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+            borderBottomWidth: 2,
+            borderBottomColor: "#212529",
+            paddingTop: 10,
+            paddingBottom: 10,
+            marginTop: 5,
+            marginBottom: 15
+          }}
+        >
+          <View style={{ flex: 4 }}>
+            <TextInput
+              ref={ref => (this.phone = ref)}
+              style={{ fontSize: 30 }}
+              onFocus={() => this.props.focusKeyboard("profile", "in")}
+              onBlur={() => this.props.focusKeyboard("profile", "out")}
+              onChangeText={this.props.setPhone}
+              value={this.state.phone}
+              placeholder="무바봇"
+            />
+          </View>
+          <View style={{ flex: 1, marginRight: -45, display: this.state.phone !== "" ? "flex" : "none" }}>
+            <TouchableWithoutFeedback onPress={this.clearPhone}>
+              <View>
+                <Image source={require("assets/icons/m-close.svg")} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </View> */}
+
         <Text style={{ fontSize: 30 }}>전화번호를 입력하세요</Text>
 
         <View
           style={{
             flexDirection: "row",
             borderBottomWidth: 2,
+            borderBottomColor: "#212529",
             paddingTop: 10,
             paddingBottom: 10,
             marginTop: 5

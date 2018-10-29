@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 });
 
 const MyStatusBar = ({ backgroundColor, ...props }) => (
-  <View style={[styles.statusBar, { backgroundColor }]}>
+  <View style={[styles.statusBar, { backgroundColor, zIndex: 99999 }]}>
     <StatusBar translucent backgroundColor={backgroundColor} {...props} />
   </View>
 );
@@ -57,8 +57,25 @@ export default class LoadingContainer extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: "white" }}>
         <MyStatusBar backgroundColor="#FFF" color barStyle="dark-content" />
+        {this.props.header ? (
+          <View
+            style={{
+              height: 50,
+              width: "100%",
+              alignItems: "center",
+              paddingTop: 15,
+              paddingBottom: 10,
+              borderBottomWidth: 1,
+              borderBottomColor: "#e9ecef",
+              backgroundColor: "#FFF",
+              zIndex: 999
+            }}
+          >
+            {this.props.header ? this.props.header : null}
+          </View>
+        ) : null}
 
-        <View style={{ flex: 1, backgroundColor: "white", ...this.props.style }} {...this.props}>
+        <View style={[{ flex: 1, backgroundColor: "white" }, this.props.style]} {...this.props}>
           {this.props.children}
         </View>
         <Loading hide={!this.state.load} />
