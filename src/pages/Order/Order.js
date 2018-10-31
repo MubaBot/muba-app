@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { ScrollView } from "react-native";
-import { Header, Body, Left, Right, Title, Icon, Label, List } from "native-base";
+import { ScrollView, Text } from "react-native";
 
 import LoadingContainer from "@/components/LoadingContainer";
-import RouteButton from "@/components/RouteButton";
-import { OrderPopup } from "@/components/PopupComponent";
 
 import OrderItem from "./OrderItem";
+
+import Header from "./Header";
 
 import { OrderApi } from "@/apis";
 
@@ -14,72 +13,48 @@ export default class Order extends Component {
   state = {
     lists: [],
     page: 0,
-    loading: false,
-    showOrder: false
+    loading: true,
+    next: true
   };
 
-  getOrderLists = async () => {
-    this.setState({ page: this.state.page + 1 });
-    return this.getOrderList();
+  componentDidMount = () => {
+    this.getOrderList(1);
   };
 
   getOrderList = async page => {
-    return OrderApi.getOrderList({ page: this.state.page })
-      .then(shops => shops.data.lists)
+    const p = page || this.state.page || 1;
+    return OrderApi.getOrderList({ page: p })
+      .then(shops =>
+        this.setState({
+          lists: p === 1 ? shops.data.lists : this.state.lists.concat(shops.data.lists),
+          page: p + 1,
+          loading: false,
+          next: shops.data.lists.length !== 0
+        })
+      )
       .catch(err => []);
-  };
-
-  appendItem = async items => this.setState({ lists: this.state.lists.concat(items), loading: false });
-  showNextPage = async () => {
-    if (this.state.loading === false) {
-      this.setState({ loading: true });
-      setTimeout(async () => this.appendItem(await this.getOrderLists()), 500);
-    }
   };
 
   onScroll = ({ layoutMeasurement, contentOffset, contentSize }) => {
     if (contentSize.height - layoutMeasurement.height <= contentOffset.y) {
+      if (!this.state.next) return null;
       this.setState({ loading: true });
-      this.showNextPage();
+      this.getOrderList();
     }
   };
 
-  showShopOrder = async id => {
-    this.setState({ showOrder: true, loading: true });
-    this.showNextPage();
-  };
-
-  closeEvent = () => {
-    this.setState({ showOrder: false });
-  };
-
-  componentDidMount = () => this.showNextPage();
-
   render() {
     return (
-      <LoadingContainer requireAuth={true} loading={this.state.loading}>
-        <Header>
-          <Left>
-            <RouteButton transparent goBack={true}>
-              <Icon name="arrow-back" />
-            </RouteButton>
-          </Left>
-          <Body>
-            <Title>Order</Title>
-          </Body>
-          <Right />
-        </Header>
+      <LoadingContainer requireAuth={true} header={Header} loading={this.state.loading}>
+        <ScrollView style={{ marginBottom: 70 }} onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}>
+          {this.state.lists.map((x, i) => (
+            <OrderItem key={i} {...x} />
+          ))}
 
-        <ScrollView style={{ backgroundColor: "white" }} onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}>
-          <Label>주문 목록</Label>
-          <List>
-            {this.state.lists.map((x, i) => (
-              <OrderItem key={i} {...x} showShopOrder={this.showShopOrder} />
-            ))}
-          </List>
+          {this.state.lists.length === 0 ? (
+            <Text style={{ width: "100%", textAlign: "center", marginTop: 50, fontSize: 27, color: "#212529" }}>주문 기록이 없습니다.</Text>
+          ) : null}
         </ScrollView>
-
-        <OrderPopup hide={!this.state.showOrder} onClose={this.closeEvent} />
       </LoadingContainer>
     );
   }

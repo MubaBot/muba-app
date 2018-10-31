@@ -4,10 +4,8 @@ import { Scene, Router, Tabs, Actions } from "react-native-router-flux";
 
 import Main from "@/pages/Main";
 import Search from "@/pages/Search";
-import Chat from "@/pages/Chat";
-
-// import Order from "@/pages/Order";
-// import Recommend from "@/pages/Recommend";
+import Order from "@/pages/Order";
+import Cart from "@/pages/Cart";
 
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
@@ -17,6 +15,9 @@ import DaumMapSetting from "@/pages/DaumMapSetting";
 // import DaumMapSearch from "@/pages/DaumMapSearch";
 
 import Shop from "@/pages/Shop";
+import CartItem from "@/pages/CartItem";
+
+import Chat from "@/pages/Chat";
 
 import { AuthApi } from "@/apis";
 
@@ -55,21 +56,22 @@ export default class Muba extends Component {
     return (
       <Router hideNavBar>
         <Scene key="root" hideNavBar>
-          <Tabs key="main" hideTabBar={true} headerMode="screen" onEnter={this.requireAuth} navBar={TabBar}>
-            <Scene key="main" lazy={true} component={Main} title="Muba" initial={true} onEnter={this.requireAuth} />
-            <Scene key="search" lazy={true} component={Search} title="Search" />
-            {/* <Scene key="order" component={Order} title="Order" /> */}
-            {/* <Scene key="recommend" component={Recommend} title="Recommend" /> */}
+          <Tabs key="tabs" hideTabBar={true} headerMode="screen" onEnter={this.requireAuth} navBar={TabBar}>
+            <Scene key="main" lazy={true} component={Main} title="Muba" onEnter={this.requireAuth} initial={true} />
+            <Scene key="search" lazy={true} component={Search} title="Search" onEnter={this.requireAuth} />
+            <Scene key="order" lazy={true} component={Order} title="Order" onEnter={this.requireAuth} />
+            <Scene key="cart" lazy={true} component={Cart} title="Cart" onEnter={this.requireAuth} />
           </Tabs>
 
           <Scene key="login" component={Login} title="Login" gesturesEnabled={false} />
           <Scene key="register" component={Register} title="Register" />
 
           {/* popup */}
-          <Scene key="settings" component={Settings} title="Settings" gesturesEnabled={false} onEnter={this.requireAuth} />
+          <Scene key="settings" component={Settings} title="Settings" onEnter={this.requireAuth} />
           <Scene key="daumMapSetting" component={DaumMapSetting} title="Daum Map" />
 
-          <Scene key="shop" component={Shop} title="Shop Information" />
+          <Scene key="shop" component={Shop} title="Shop Information" onEnter={this.requireAuth} />
+          <Scene key="cartItem" component={CartItem} title="Shop Cart Information" />
 
           <Scene key="chat" component={Chat} title="Chat" />
 

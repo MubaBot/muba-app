@@ -56,12 +56,6 @@ export default class Search extends Component {
   };
 
   showShopInfo = async id => Actions.push("shop", { id: id });
-  // showShopReview = async id => this.setState({ showReview: true });
-  // showMap = async id => this.setState({ showMap: true });
-
-  closeEvent = () => {
-    this.setState({ showInfo: false, showReview: false, showOrder: false, showMap: false });
-  };
 
   onScroll = ({ layoutMeasurement, contentOffset, contentSize }) => {
     Keyboard.dismiss();

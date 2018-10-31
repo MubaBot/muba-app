@@ -5,7 +5,7 @@ import StorageKeys from "./index";
 const addShopCart = async (shop, item) => {
   if (item.SOLD) return false;
   let cart = await getShopCart(shop);
-  cart.push({ id: await getCartCount(), item: item });
+  cart.push({ id: await getCartCount(), item: item, count: 1 });
 
   return updateCartByShop(shop, cart);
 };
@@ -15,6 +15,40 @@ const updateCartByShop = async (shop, items) => {
   cart[shop] = items;
 
   return AsyncStorage.setItem(StorageKeys.cartStorageKey, JSON.stringify(cart));
+};
+
+const updateItemByCartInShop = async (shop, item, value) => {
+  let cart = await getAllCart();
+  let items = cart[shop] || [];
+
+  for (var i in items) if (items[i].id === item) items[i] = value;
+
+  cart[shop] = items;
+  return AsyncStorage.setItem(StorageKeys.cartStorageKey, JSON.stringify(cart));
+};
+
+const updateCountByCartInShop = async (shop, item, count) => {
+  let cart = await getAllCart();
+  let items = (cart[shop] || []).filter((v, i) => v.id === item);
+
+  if (items.length === 0) return null;
+
+  items[0].count = count;
+  return updateItemByCartInShop(shop, item, items[0]);
+};
+
+const updateOptionByCartInShop = async (shop, item, option) => {
+  let cart = await getAllCart();
+  let items = (cart[shop] || []).filter((v, i) => v.id === item);
+
+  if (items.length === 0) return null;
+
+  let options = items[0].options || {};
+  options[option] = options[option] ? false : true;
+
+  items[0].options = options;
+
+  return updateItemByCartInShop(shop, item, items[0]);
 };
 
 const getShopCart = async shop => {
@@ -49,4 +83,4 @@ const resetCart = async () => {
   return AsyncStorage.removeItem(StorageKeys.cartStorageKey);
 };
 
-export { addShopCart, getShopCart, removeShopCartMenu, clearCart };
+export { addShopCart, updateCountByCartInShop, updateOptionByCartInShop, getAllCart, getShopCart, removeShopCartMenu, clearCart };

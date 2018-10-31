@@ -74,7 +74,7 @@ export default class Main extends Component {
             borderBottomColor: "#e9ecef"
           }}
         >
-          <Image source={require("assets/logo.svg")} style={{ marginLeft: 20, height: 25 }} />
+          <Image source={require("assets/logo.svg")} style={{ marginLeft: 10, height: 25 }} />
 
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginRight: 20 }}>
             <Text style={{ color: "#212529", fontSize: 22, marginRight: 7 }}>{this.state.location || "장소를 선택해 주세요."}</Text>

@@ -7,7 +7,7 @@ import SvgImage from "react-native-remote-svg";
 export default class MainItem extends Component {
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => Actions.push("shop", { id: this.props._id })}>
+      <TouchableWithoutFeedback onPress={() => Actions.push("shop", { id: this.props.shop._id })}>
         <View
           style={{ marginTop: 20, width: "49%", marginRight: this.props.position % 2 === 0 ? "1%" : 0, marginLeft: this.props.position % 2 === 0 ? 0 : "1%" }}
         >

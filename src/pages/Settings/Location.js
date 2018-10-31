@@ -33,7 +33,7 @@ export default class Location extends Component {
 
   doLogout = async () => {
     AuthApi.doLogout()
-      .then(() => Actions.popTo("main"))
+      .then(() => Actions.pop())
       .catch(() => null);
   };
 

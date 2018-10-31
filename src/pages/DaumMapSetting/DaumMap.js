@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, WebView, View, Alert, TouchableWithoutFeedback, Text, TextInput, KeyboardAvoidingView } from "react-native";
+
 import { Actions } from "react-native-router-flux";
-
 import Image from "react-native-remote-svg";
-// import KeyboardSpacer from "react-native-keyboard-spacer";
 
-// import RouteButton from "@/components/RouteButton";
 import LoadingContainer from "@/components/LoadingContainer";
+
+import Header from "./Header";
 
 import { UserApi } from "@/apis";
 
@@ -76,19 +76,9 @@ export default class DaumMap extends Component {
 
   render() {
     return (
-      <LoadingContainer requireAuth={true}>
+      <LoadingContainer requireAuth={true} header={Header}>
         <KeyboardAvoidingView behavior="position" enabled>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", margin: 30, marginBottom: 20 }}>
-            <TouchableWithoutFeedback onPress={() => Actions.popTo("settings", { success: 0 })}>
-              <View>
-                <Image source={require("assets/icons/m-prev.svg")} style={{ width: 20, height: 20 }} />
-              </View>
-            </TouchableWithoutFeedback>
-            <Text style={{ fontSize: 30, marginTop: -5 }}>배달받을 주소</Text>
-            <View style={{ width: 20, height: 20 }} />
-          </View>
-
-          <View style={{ height: "50%" }}>
+          <View style={{ height: "65%", marginTop: -10 }}>
             <WebView
               style={styles.webView}
               source={require("assets/html/daum.map.html")}
