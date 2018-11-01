@@ -38,8 +38,18 @@ module.exports = (lat, lng, search) =>
       // 주소-좌표 변환 객체를 생성합니다
       var geocoder = new daum.maps.services.Geocoder();
 
-      var marker = new daum.maps.Marker(), // 클릭한 위치를 표시할 마커입니다
-        infowindow = new daum.maps.InfoWindow({ zindex: -1 }); // 클릭한 위치에 대한 주소를 표시할 인포윈도우입니다
+      var imageSrc = "https://api.mubabot.com/static/public/img/icon-pin.png"; // 마커이미지의 주소입니다
+      var imageSize = new window.daum.maps.Size(27, 30); // 마커이미지의 크기입니다
+      var imageOption = { offset: new window.daum.maps.Point(13, 30) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+      // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+      var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+      var marker = new daum.maps.Marker({
+        image: markerImage // 마커이미지 설정
+      });
+
+      var marker = new daum.maps.Marker(); // 클릭한 위치를 표시할 마커입니다
 
       // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
       searchAddrFromCoords(map.getCenter(), displayCenterInfo);
@@ -48,18 +58,8 @@ module.exports = (lat, lng, search) =>
       daum.maps.event.addListener(map, "click", function(mouseEvent) {
         searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
           if (status === daum.maps.services.Status.OK) {
-            var detailAddr = !!result[0].road_address ? "<div>도로명주소 : " + result[0].road_address.address_name + "</div>" : "";
-            detailAddr += "<div>지번 주소 : " + result[0].address.address_name + "</div>";
-
-            var content = '<div class="bAddr">' + '<span class="title">법정동 주소정보</span>' + detailAddr + "</div>";
-
-            // 마커를 클릭한 위치에 표시합니다
             marker.setPosition(mouseEvent.latLng);
             marker.setMap(map);
-
-            // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
-            // infowindow.setContent(content);
-            // infowindow.open(map, marker);
 
             panTo(mouseEvent.latLng);
 
@@ -110,18 +110,8 @@ module.exports = (lat, lng, search) =>
 
       searchDetailAddrFromCoords(latLng, function(result, status) {
         if (status === daum.maps.services.Status.OK) {
-          // var detailAddr = !!result[0].road_address ? "<div>도로명주소 : " + result[0].road_address.address_name + "</div>" : "";
-          // detailAddr += "<div>지번 주소 : " + result[0].address.address_name + "</div>";
-
-          // var content = '<div class="bAddr">' + '<span class="title">법정동 주소정보</span>' + detailAddr + "</div>";
-
-          // 마커를 클릭한 위치에 표시합니다
           marker.setPosition(latLng);
           marker.setMap(map);
-
-          // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
-          // infowindow.setContent(content);
-          // infowindow.open(map, marker);
 
           panTo(latLng);
 
