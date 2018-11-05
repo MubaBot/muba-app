@@ -13,7 +13,7 @@ export default class MainItem extends Component {
         >
           <Image
             style={{ width: "100%", height: 140, borderRadius: 3 }}
-            source={{ uri: this.props.shop_menu.URL || "https://placeholdit.imgix.net/~text?txtsize=33&txt=No%20Image&w=200&h=140" }}
+            source={{ uri: "https://api.mubabot.com/static/" + (this.props.shop_menu.URL ? "menu/" + this.props.shop_menu.URL : "public/img/noimage.png") }}
           />
           <View
             style={{

@@ -15,7 +15,7 @@ export default class Menus extends Component {
         >
           <Image
             style={{ width: 70, height: 70, borderRadius: 3 }}
-            source={{ uri: this.props.URL || "https://placeholdit.imgix.net/~text?txtsize=33&txt=No%20Image&w=200&h=140" }}
+            source={{ uri: "https://api.mubabot.com/static/" + (this.props.URL ? "menu/" + this.props.URL : "public/img/noimage.png") }}
           />
 
           <View style={{ marginLeft: 20 }}>

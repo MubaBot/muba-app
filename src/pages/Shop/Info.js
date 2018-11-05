@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { TouchableWithoutFeedback, View, Text, StyleSheet, Linking } from "react-native";
+
+import call from "react-native-phone-call";
 
 const style = StyleSheet.create({
   view: {
@@ -27,14 +29,18 @@ export default class Info extends Component {
         {this.props.ADDRESS ? (
           <View style={[style.view, { marginTop: 20 }]}>
             <Text style={style.leftText}>주소</Text>
-            <Text style={style.rightText}>{this.props.ADDRESS}</Text>
+            <Text style={style.rightText}>{[this.props.ADDRESS, this.props.ADDRESSDETAIL].join(" ")}</Text>
           </View>
         ) : null}
 
         {this.props.PHONE ? (
           <View style={[style.view]}>
             <Text style={style.leftText}>전화번호</Text>
-            <Text style={style.rightText}>{this.props.PHONE}</Text>
+            <TouchableWithoutFeedback onPress={() => call({ number: this.props.PHONE, prompt: true })}>
+              <View>
+                <Text style={style.rightText}>{this.props.PHONE}</Text>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         ) : null}
 
@@ -45,12 +51,16 @@ export default class Info extends Component {
           </View>
         ) : null} */}
 
-        {/* {this.props.HOMEPAGE ? (
+        {this.props.HOMEPAGE ? (
           <View style={[style.view]}>
             <Text style={style.leftText}>홈페이지</Text>
-            <Text style={style.rightText}>{this.props.HOMEPAGE}</Text>
+            <TouchableWithoutFeedback onPress={() => Linking.openURL(this.props.HOMEPAGE)}>
+              <View>
+                <Text style={style.rightText}>{this.props.HOMEPAGE}</Text>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        ) : null} */}
+        ) : null}
       </View>
     );
   }

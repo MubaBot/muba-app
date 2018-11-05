@@ -5,9 +5,11 @@ import StorageKeys from "./index";
 const addShopCart = async (shop, item) => {
   if (item.SOLD) return false;
   let cart = await getShopCart(shop);
-  cart.push({ id: await getCartCount(), item: item, count: 1 });
+  const newItem = { id: await getCartCount(), item: item, count: 1 };
+  cart.push(newItem);
 
-  return updateCartByShop(shop, cart);
+  await updateCartByShop(shop, cart);
+  return newItem;
 };
 
 const updateCartByShop = async (shop, items) => {

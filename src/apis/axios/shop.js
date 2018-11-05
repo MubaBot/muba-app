@@ -4,8 +4,8 @@ const searchSaleShopList = async ({ lat, lng, page, time }) => {
   return Axios.Get(["/api/shop/list/sale", page, lat, lng, time].join("/"));
 };
 
-const searchShop = async ({ keyword, page }) => {
-  return Axios.Get(["/api/shop/list", page, keyword].join("/"));
+const searchShop = async ({ keyword, page, lat, lng }) => {
+  return Axios.Get(["/api/shop/list", page, lat, lng, keyword].join("/"));
 };
 
 const getShopInfo = async ({ id }) => {
@@ -19,12 +19,16 @@ const setLatlng = async ({ id, lat, lng }) => {
   }).catch(() => null);
 };
 
-const orderCart = async ({ id, cart, address, require, phone }) => {
+const orderCart = async ({ id, cart, address, address_detail, require, phone, visit, lat, lng }) => {
   return Axios.Post(["/api/shop", id, "order"].join("/"), {
     cart,
     address,
+    address_detail,
     require,
-    phone
+    phone,
+    visit,
+    lat,
+    lng
   });
 };
 

@@ -12,6 +12,7 @@ import Register from "@/pages/Register";
 
 import Settings from "@/pages/Settings";
 import DaumMapSetting from "@/pages/DaumMapSetting";
+import DaumMapShop from "@/pages/DaumMapShop";
 // import DaumMapSearch from "@/pages/DaumMapSearch";
 
 import Shop from "@/pages/Shop";
@@ -69,7 +70,8 @@ export default class Muba extends Component {
           {/* popup */}
           <Scene key="settings" component={Settings} title="Settings" onEnter={this.requireAuth} />
           <Scene key="daumMapSetting" component={DaumMapSetting} title="Daum Map" />
-
+          <Scene key="daumMapShop" component={DaumMapShop} title="Daum Map" />
+          
           <Scene key="shop" component={Shop} title="Shop Information" onEnter={this.requireAuth} />
           <Scene key="cartItem" component={CartItem} title="Shop Cart Information" />
 

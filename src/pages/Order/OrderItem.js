@@ -3,17 +3,77 @@ import { TouchableWithoutFeedback, View, Text } from "react-native";
 
 import accounting from "accounting-js";
 import moment from "moment";
+import { Actions } from "react-native-router-flux";
+
+import { OrderApi, CartApi } from "@/apis";
 
 export default class Order extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ADMISSION: props.ADMISSION
+    };
+  }
+
+  reOrder = async () => {
+    await CartApi.clearCart(this.props.SHOPID);
+
+    for (var i in this.props.order_menus) {
+      const menu = this.props.order_menus[i];
+
+      const cartItem = await CartApi.addShopCart(this.props.SHOPID, menu.MENUID);
+      await CartApi.updateCountByCartInShop(this.props.SHOPID, cartItem.id, menu.COUNT);
+
+      for (var o in menu.order_menu_options) {
+        const option = menu.order_menu_options[o];
+        await CartApi.updateOptionByCartInShop(this.props.SHOPID, cartItem.id, option.shop_menu_option.shop_option._id);
+      }
+    }
+
+    Actions.push("cartItem", { id: this.props.SHOPID });
+  };
+
   displayAdmission = admission => {
     switch (admission) {
-      case true:
-        return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#468ef7" }}>승인됨</Text>;
-      case false:
+      case 0:
         return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#e75d5d" }}>거절됨</Text>;
+      case 1:
+        return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#468ef7" }}>승인됨</Text>;
+      case 2:
+        return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#e75d5d" }}>취소함</Text>;
       case null:
         return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#77dd77" }}>대기중</Text>;
     }
+  };
+
+  cancelMenu = () => {
+    OrderApi.cancelMenu({ order: this.props._id })
+      .then(() => this.setState({ ADMISSION: 2 }))
+      .catch(err => alert(JSON.stringify(err)));
+  };
+
+  getOptionPrice = menu => {
+    if (menu.order_menu_options.length === 0) return 0;
+
+    var price = 0;
+    for (var i in menu.order_menu_options) {
+      const option = menu.order_menu_options[i];
+      price += option.shop_menu_option.shop_option.PRICE;
+    }
+
+    return price;
+  };
+
+  getOptionNames = menu => {
+    if (menu.order_menu_options.length === 0) return "";
+
+    var options = [];
+    for (var i in menu.order_menu_options) {
+      const option = menu.order_menu_options[i];
+      options.push(option.shop_menu_option.shop_option.OPTIONNAME);
+    }
+
+    return " / " + options.join(", ");
   };
 
   render() {
@@ -21,7 +81,7 @@ export default class Order extends Component {
       <View style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#dee2e6" }}>
         <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" }}>
           <Text style={{ color: "#212529", fontSize: 14 }}>{moment(this.props.createdAt).fromNow()}</Text>
-          {this.displayAdmission(this.props.ADMISSION)}
+          {this.displayAdmission(this.state.ADMISSION)}
         </View>
         <Text style={{ color: "#212529", fontWeight: "bold", fontSize: 24, marginTop: 5 }}>{this.props.shop.SHOPNAME}</Text>
         <Text style={{ color: "#868e96", fontSize: 16, marginTop: 5 }}>{this.props.ADDRESS}</Text>
@@ -31,9 +91,12 @@ export default class Order extends Component {
         >
           {this.props.order_menus.map((v, i) => (
             <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 7 }}>
-              <Text style={{ fontSize: 18, color: "#212529", marginRight: 5 }}>{v.shop_menu.MENUNAME}</Text>
+              <Text style={{ fontSize: 18, color: "#212529", marginRight: 5 }}>
+                {v.shop_menu.MENUNAME}
+                {this.getOptionNames(v)}
+              </Text>
               <Text style={{ fontSize: 18, fontWeight: "bold", color: "#212529", marginRight: 1 }}>
-                {accounting.formatMoney(v.PRICE, { symbol: "원", format: "%v%s", precision: 0 })}
+                {accounting.formatMoney(v.PRICE + this.getOptionPrice(v), { symbol: "원", format: "%v%s", precision: 0 })}
               </Text>
               <Text style={{ fontSize: 10, color: "#212529", marginRight: 1 }}>∙</Text>
               <Text style={{ fontSize: 18, color: "#212529" }}>{v.COUNT}개</Text>
@@ -42,18 +105,17 @@ export default class Order extends Component {
         </View>
 
         <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6" }}>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={this.reOrder}>
             <View style={{ width: "50%", alignItems: "center", borderRightWidth: 1, borderRightColor: "#dee2e6" }}>
               <Text style={{ paddingTop: 15, paddingBottom: 15, color: "#212529" }}>재주문</Text>
             </View>
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={this.state.ADMISSION === null ? this.cancelMenu : null}>
             <View style={{ width: "50%", alignItems: "center" }}>
-              <Text style={{ paddingTop: 15, paddingBottom: 15, color: this.props.ADMISSION === null ? "#212529" : "#adb5bd" }}>주문취소</Text>
+              <Text style={{ paddingTop: 15, paddingBottom: 15, color: this.state.ADMISSION === null ? "#212529" : "#adb5bd" }}>주문취소</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
-        {/* <Text>{JSON.stringify(this.props)}</Text> */}
       </View>
     );
   }

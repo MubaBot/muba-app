@@ -4,14 +4,15 @@ import { Actions } from "react-native-router-flux";
 
 import Image from "react-native-remote-svg";
 
-import { AuthApi } from "@/apis";
+import { AuthApi, UserApi } from "@/apis";
 
 export default class Location extends Component {
   constructor(props) {
     super(props);
     this.state = {
       search: "",
-      showAddress: false
+      showAddress: false,
+      picker: null
     };
   }
 
@@ -27,14 +28,34 @@ export default class Location extends Component {
     return Actions.push("daumMapSetting", { lat: this.props.latitude || null, lng: this.props.longitude || null, search: this.state.search });
   };
 
-  onChangeAddressText = text => {
-    this.setState({ search: text });
-  };
+  onChangeAddressText = text => this.setState({ search: text });
+  onChangeAddressPicker = id => this.setState({ picker: id });
 
   doLogout = async () => {
     AuthApi.doLogout()
       .then(() => Actions.pop())
       .catch(() => null);
+  };
+
+  updateAddressByPicker = () => {
+    if (this.state.showAddress === true) {
+      if (this.state.picker !== null) {
+        const address = this.props.user_addresses[this.state.picker];
+
+        UserApi.setAddressForDevice({
+          road_address: address.ADDRESS1,
+          address_name: "",
+          detail_address: address.ADDRESS2,
+          lat: address.LAT,
+          lng: address.LNG
+        });
+
+        this.props.syncNowAddress();
+      }
+
+      this.setState({ picker: null });
+    }
+    this.setState({ showAddress: !this.state.showAddress });
   };
 
   displayAddress = text => (text.length > 21 ? text.substring(0, 21 - 3) + "..." : text === "" ? "주소를 선택해주세요." : text);
@@ -93,7 +114,7 @@ export default class Location extends Component {
           </View>
         </TouchableWithoutFeedback>
 
-        <TouchableWithoutFeedback onPress={() => this.setState({ showAddress: !this.state.showAddress })}>
+        <TouchableWithoutFeedback onPress={this.updateAddressByPicker}>
           <View
             style={{
               flex: 1,
@@ -123,14 +144,14 @@ export default class Location extends Component {
           }}
         >
           <Picker
-            selectedValue={this.state.language}
+            selectedValue={this.state.picker}
             itemStyle={{ fontSize: 13 }}
-            onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}
+            onValueChange={(itemValue, itemIndex) => this.onChangeAddressPicker(itemValue)}
           >
-            <Picker.Item label="선택 안함" value="none" />
-            {/* <map> */}
-            {/*   <Picker.Item label={this.props.nowAddress} value="1" /> */}
-            {/* </map> */}
+            <Picker.Item label="선택 안함" value={null} />
+            {this.props.user_addresses.map((v, i) => (
+              <Picker.Item key={v._id} label={[v.ADDRESS1, v.ADDRESS2].join(" ")} value={i} />
+            ))}
           </Picker>
         </View>
 

@@ -9,6 +9,7 @@ import LoadingContainer from "@/components/LoadingContainer";
 import Header from "./Header";
 import Info from "./Info";
 import Menus from "./Menus";
+import DaumMap from "./DaumMap";
 
 import { ShopApi, CartApi } from "@/apis";
 
@@ -23,8 +24,10 @@ export default class Shop extends Component {
 
       MENUS: [],
       ADDRESS: "",
+      ADDRESSDETAIL: "",
       SHOPNAME: "",
-      PHONE: ""
+      PHONE: "",
+      shop_address: {}
     };
   }
 
@@ -47,6 +50,7 @@ export default class Shop extends Component {
       this.setState({
         ...res.data.shop,
         ADDRESS: res.data.shop.shop_address.ADDRESS,
+        ADDRESSDETAIL: res.data.shop.shop_address.ADDRESSDETAIL,
         MENUS: res.data.shop.shop_menus,
         loading: false
       });
@@ -73,6 +77,28 @@ export default class Shop extends Component {
           <View style={{ marginTop: 30, paddingLeft: 20, paddingRight: 20, paddingBottom: 25, borderBottomColor: "#dee2e6", borderBottomWidth: 1 }}>
             <Info {...this.state} />
           </View>
+
+          {this.state.shop_address.ADDRESS ? (
+            <TouchableWithoutFeedback
+              onPress={() =>
+                Actions.push("daumMapShop", {
+                  name: this.state.SHOPNAME,
+                  address: this.state.shop_address.ADDRESS,
+                  lat: this.state.shop_address.ADDRLAT,
+                  lng: this.state.shop_address.ADDRLNG
+                })
+              }
+            >
+              <View style={{ width: "100%", height: 200, borderBottomColor: "#dee2e6", borderBottomWidth: 1 }}>
+                <DaumMap
+                  name={this.state.SHOPNAME}
+                  address={this.state.shop_address.ADDRESS}
+                  lat={this.state.shop_address.ADDRLAT}
+                  lng={this.state.shop_address.ADDRLNG}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          ) : null}
 
           <View style={{ marginTop: 30, paddingLeft: 20, paddingRight: 20 }}>
             {this.state.MENUS.map((v, i) => (

@@ -3,9 +3,8 @@ import { ScrollView, Text } from "react-native";
 
 import LoadingContainer from "@/components/LoadingContainer";
 
-import OrderItem from "./OrderItem";
-
 import Header from "./Header";
+import OrderItem from "./OrderItem";
 
 import { OrderApi } from "@/apis";
 
@@ -17,9 +16,8 @@ export default class Order extends Component {
     next: true
   };
 
-  componentDidMount = () => {
-    this.getOrderList(1);
-  };
+  componentDidMount = () => this.getOrderList(1);
+  componentWillReceiveProps = () => this.getOrderList(1);
 
   getOrderList = async page => {
     const p = page || this.state.page || 1;
@@ -43,12 +41,28 @@ export default class Order extends Component {
     }
   };
 
+  onScrollEndDrag = ({ contentOffset }) => {
+    if (contentOffset.y < -100) {
+      this.setState({
+        lists: [],
+        page: 0,
+        loading: true,
+        next: true
+      });
+      this.getOrderList(1);
+    }
+  };
+
   render() {
     return (
       <LoadingContainer requireAuth={true} header={Header} loading={this.state.loading}>
-        <ScrollView style={{ marginBottom: 70 }} onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}>
+        <ScrollView
+          style={{ marginBottom: 70 }}
+          onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}
+          onScrollEndDrag={({ nativeEvent }) => this.onScrollEndDrag(nativeEvent)}
+        >
           {this.state.lists.map((x, i) => (
-            <OrderItem key={i} {...x} />
+            <OrderItem key={x._id} {...x} />
           ))}
 
           {this.state.lists.length === 0 ? (

@@ -4,4 +4,8 @@ const getOrderList = async ({ page }) => {
   return Axios.Get("/api/user/order/" + page);
 };
 
-export { getOrderList };
+const cancelMenu = async ({ order }) => {
+  return Axios.Delete("/api/user/order/" + order);
+};
+
+export { getOrderList, cancelMenu };

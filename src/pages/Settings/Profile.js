@@ -6,9 +6,6 @@ import Image from "react-native-remote-svg";
 import { RadioGroup, RadioButton } from "@/components/lib/RadioButton";
 import DatePicker from "@/components/DatePicker";
 
-import moment from "moment";
-import "moment/locale/ko";
-
 const genderList = [{ label: "선택 안함", value: null }, { label: "남", value: true }, { label: "여", value: false }];
 
 export default class Profile extends Component {
@@ -17,6 +14,7 @@ export default class Profile extends Component {
 
     this.state = {
       phone: props.phone || "",
+      name: props.name || "",
       gender: this.convertGender(props.gender),
       year: props.year,
       month: props.month,
@@ -26,6 +24,7 @@ export default class Profile extends Component {
 
   componentWillReceiveProps = nextProps => {
     if (this.state.phone !== nextProps.phone) this.setState({ phone: nextProps.phone || "" });
+    if (this.state.name !== nextProps.name) this.setState({ name: nextProps.name || "" });
     if (this.state.gender !== this.convertGender(nextProps.gender)) this.setState({ gender: this.convertGender(nextProps.gender) });
 
     if (this.state.year !== nextProps.year) this.setState({ year: nextProps.year });
@@ -53,6 +52,11 @@ export default class Profile extends Component {
     this.props.setPhone("");
   };
 
+  clearName = () => {
+    this.name.clear();
+    this.props.setName("");
+  };
+
   updateYear = year => this.props.setBirth(year, this.state.month, this.state.day);
   updateMonth = month => this.props.setBirth(this.state.year, month, this.state.day);
   updateDay = day => this.props.setBirth(this.state.year, this.state.month, day);
@@ -60,7 +64,7 @@ export default class Profile extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        {/* <Text style={{ fontSize: 30 }}>이름을 입력하세요</Text>
+        <Text style={{ fontSize: 30 }}>이름을 입력하세요</Text>
 
         <View
           style={{
@@ -75,23 +79,23 @@ export default class Profile extends Component {
         >
           <View style={{ flex: 4 }}>
             <TextInput
-              ref={ref => (this.phone = ref)}
+              ref={ref => (this.name = ref)}
               style={{ fontSize: 30 }}
               onFocus={() => this.props.focusKeyboard("profile", "in")}
               onBlur={() => this.props.focusKeyboard("profile", "out")}
-              onChangeText={this.props.setPhone}
-              value={this.state.phone}
+              onChangeText={this.props.setName}
+              value={this.state.name}
               placeholder="무바봇"
             />
           </View>
-          <View style={{ flex: 1, marginRight: -45, display: this.state.phone !== "" ? "flex" : "none" }}>
-            <TouchableWithoutFeedback onPress={this.clearPhone}>
+          <View style={{ flex: 1, marginRight: -45, display: this.state.name !== "" ? "flex" : "none" }}>
+            <TouchableWithoutFeedback onPress={this.clearName}>
               <View>
                 <Image source={require("assets/icons/m-close.svg")} />
               </View>
             </TouchableWithoutFeedback>
           </View>
-        </View> */}
+        </View>
 
         <Text style={{ fontSize: 30 }}>전화번호를 입력하세요</Text>
 

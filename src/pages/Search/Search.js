@@ -9,7 +9,7 @@ import LoadingContainer from "@/components/LoadingContainer";
 import Header from "./Header";
 import SearchItem from "./SearchItem";
 
-import { ShopApi } from "@/apis";
+import { UserApi, ShopApi } from "@/apis";
 
 export default class Search extends Component {
   state = {
@@ -20,8 +20,13 @@ export default class Search extends Component {
     keyword: "",
     searchKeyword: "",
 
-    info: 0
+    info: 0,
+    lat: 0,
+    lng: 0
   };
+
+  componentDidMount = () => this.syncNowAddress();
+  componentWillReceiveProps = () => this.syncNowAddress();
 
   showNextPage = async () => {
     if (this.state.loading === false && this.state.search === true) {
@@ -30,6 +35,25 @@ export default class Search extends Component {
       this.getKeywordItems({ keyword: this.state.searchKeyword, page: this.state.page });
     }
   };
+
+  syncNowAddress = async () =>
+    UserApi.getAddressForDevice().then(address => {
+      if (!address) return null;
+
+      const addr = address.road_address !== "" ? address.road_address : address.address_name;
+
+      const state = {
+        location: addr
+          .split(" ")
+          .filter((v, i) => !(i === 0 || i === 1))
+          .join(" "),
+        lat: address.lat,
+        lng: address.lng
+      };
+
+      this.setState(state);
+      return state;
+    });
 
   doSearch = async () => {
     if (this.state.keyword === "") return Alert.alert("", "검색어를 입력해 주세요.");
@@ -43,19 +67,21 @@ export default class Search extends Component {
 
     Keyboard.dismiss();
 
-    return ShopApi.searchShop({ keyword: k, page: page || this.state.page })
+    return ShopApi.searchShop({ keyword: k, page: page || this.state.page, lat: this.state.lat, lng: this.state.lng })
       .then(shops =>
         this.setState({
           lists: p === 1 ? shops.data.lists : this.state.lists.concat(shops.data.lists),
           page: p + 1,
           search: shops.data.lists.length === 0 ? false : true,
-          loading: false
+          loading: false,
+          // test: alert(JSON.stringify(shops.data.lists))
         })
       )
       .catch(err => []);
   };
 
   showShopInfo = async id => Actions.push("shop", { id: id });
+  showShopMap = async (name, address, lat, lng) => Actions.push("daumMapShop", { name, address, lat, lng });
 
   onScroll = ({ layoutMeasurement, contentOffset, contentSize }) => {
     Keyboard.dismiss();
@@ -101,7 +127,7 @@ export default class Search extends Component {
           </View>
 
           {this.state.lists.map((v, i) => (
-            <SearchItem key={v._id} length={this.state.lists.length} now={i + 1} {...v} showShopInfo={this.showShopInfo} />
+            <SearchItem key={v._id} length={this.state.lists.length} now={i + 1} {...v} showShopInfo={this.showShopInfo} showShopMap={this.showShopMap} />
           ))}
         </ScrollView>
       </LoadingContainer>

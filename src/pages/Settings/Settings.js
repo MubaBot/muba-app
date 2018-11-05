@@ -19,10 +19,12 @@ export default class Settings extends Component {
       latitude: 37.50374576425619,
       longitude: 127.04485358330714,
       inputProfile: false,
+      USERNAME: "",
       PHONE: "",
       GENDER: null,
       BIRTH: "",
-      nowAddress: ""
+      nowAddress: "",
+      user_addresses: []
     };
   }
 
@@ -56,7 +58,16 @@ export default class Settings extends Component {
     );
   };
 
-  getUserInfo = () => UserApi.getUserInfoByServer().then(result => this.setState(result.data.user));
+  getUserInfo = () =>
+    UserApi.getUserInfoByServer().then(result =>
+      this.setState({
+        USERNAME: result.data.user.USERNAME || "",
+        PHONE: result.data.user.PHONE || "",
+        GENDER: result.data.user.GENDER || null,
+        BIRTH: result.data.user.BIRTH || null,
+        user_addresses: result.data.user.user_addresses || []
+      })
+    );
 
   focusKeyboard = (panel, mode) => {
     const enable = mode === "in" ? true : false;
@@ -68,6 +79,7 @@ export default class Settings extends Component {
   };
 
   setPhone = text => this.setState({ PHONE: text });
+  setName = text => this.setState({ USERNAME: text });
   setGender = value => this.setState({ GENDER: value });
   setBirth = (year, month, day) => this.setState({ BIRTH: moment({ year, month: month - 1, day }).format("YYYYMMDD") });
 
@@ -75,7 +87,7 @@ export default class Settings extends Component {
     if (this.state.PHONE !== "" && !/^\d{3}-\d{3,4}-\d{4}$/.test(this.state.PHONE)) return Alert.alert("올바른 전화번호를 입력해 주세요.");
 
     // update user info
-    return UserApi.updateUserInfo({ phone: this.state.PHONE, gender: this.state.GENDER, birth: this.state.BIRTH })
+    return UserApi.updateUserInfo({ name: this.state.USERNAME, phone: this.state.PHONE, gender: this.state.GENDER, birth: this.state.BIRTH })
       .then(() => Actions.pop())
       .catch(err => alert(err));
   };
@@ -92,7 +104,14 @@ export default class Settings extends Component {
         <KeyboardAvoidingView behavior="position" enabled={this.state.inputProfile}>
           <ScrollView>
             <View style={{ paddingTop: 10, paddingLeft: 30, paddingRight: 30, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: "#dadada" }}>
-              <Location syncAddress={this.syncNowAddress} nowAddress={this.state.nowAddress} latitude={this.state.latitude} longitude={this.state.longitude} />
+              <Location
+                syncAddress={this.syncNowAddress}
+                nowAddress={this.state.nowAddress}
+                latitude={this.state.latitude}
+                longitude={this.state.longitude}
+                user_addresses={this.state.user_addresses}
+                syncNowAddress={this.syncNowAddress}
+              />
             </View>
 
             <View
@@ -108,6 +127,8 @@ export default class Settings extends Component {
             >
               <Profile
                 focusKeyboard={this.focusKeyboard}
+                name={this.state.USERNAME}
+                setName={this.setName}
                 phone={this.state.PHONE}
                 setPhone={this.setPhone}
                 inputProfile={this.state.inputProfile}

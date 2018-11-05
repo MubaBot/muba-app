@@ -21,7 +21,7 @@ export default class CartItem extends Component {
       loading: true
     };
 
-    this.state = { cart: [], MENUS: [], price: 0, nowAddress: "", PHONE: "", require: "", visit: false };
+    this.state = { cart: [], MENUS: [], price: 0, nowAddress: "", PHONE: "", require: "", visit: false, OPEN: true };
   }
 
   shouldComponentUpdate = (nextProps, nextState) => {
@@ -50,6 +50,12 @@ export default class CartItem extends Component {
   };
 
   componentDidUpdate = () => {
+    if (!this.state.OPEN) {
+      Alert.alert("지금 영업중이지 않습니다.");
+      Actions.pop({ id: this.props.id });
+      return false;
+    }
+
     if (this.state.MENUS.length === 0) return null;
     if (this.state.cart.length === 0) return null;
 
@@ -72,13 +78,19 @@ export default class CartItem extends Component {
 
       const addr = address.road_address !== "" ? address.road_address : address.address_name;
 
-      this.setState({ nowAddress: addr, detail_address: address.detail_address });
+      this.setState({ nowAddress: addr, detail_address: address.detail_address, lat: address.lat, lng: address.lng });
     });
 
   updateShopInfo = () =>
-    ShopApi.getShopInfo({ id: this.props.id }).then(res => {
-      this.setState({ MENUS: res.data.shop.shop_menus, loading: false });
-    });
+    ShopApi.getShopInfo({ id: this.props.id }).then(res =>
+      this.setState({
+        OPEN: res.data.shop.OPEN,
+        DELIVERY: res.data.shop.DELIVERY,
+        MENUS: res.data.shop.shop_menus,
+        visit: res.data.shop.DELIVERY ? false : true,
+        loading: false
+      })
+    );
 
   updateCartInfo = () =>
     CartApi.getShopCart(this.props.id).then(result => {
@@ -128,9 +140,13 @@ export default class CartItem extends Component {
     ShopApi.orderCart({
       id: this.props.id,
       cart: this.state.cart,
-      address: [this.state.nowAddress, this.state.detail_address].join(" "),
+      address: this.state.nowAddress,
+      address_detail: this.state.detail_address,
       require: this.state.require,
-      phone: this.state.PHONE
+      phone: this.state.PHONE,
+      visit: this.state.visit,
+      lat: this.state.lat,
+      lng: this.state.lng
     })
       .then(res => {
         if (res.data.price !== this.state.price) Alert.alert("", "가격이 변동되었습니다. 주문목록에서 상세 정보를 확인하세요.");
@@ -140,7 +156,7 @@ export default class CartItem extends Component {
       .catch(err => alert(JSON.stringify(err)));
   };
 
-  orderVisit = () => this.setState({ visit: !this.state.visit });
+  orderVisit = () => this.setState({ visit: this.state.DELIVERY ? !this.state.visit : true });
 
   render() {
     return (
@@ -149,7 +165,7 @@ export default class CartItem extends Component {
           <ScrollView>
             {this.state.cart.map((v, i) => (
               <CartMenu
-                key={v.id}
+                key={v._id}
                 {...v}
                 shop={this.props.id}
                 menu={this.state.MENUS.filter(menu => v.item === menu._id)[0]}
@@ -176,28 +192,32 @@ export default class CartItem extends Component {
               <View>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 20 }}>
                   <Text style={{ color: "#212529", fontSize: 18 }}>방문포장</Text>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text style={{ color: "#868e96", marginRight: 5, display: this.state.DELIVERY ? "none" : "flex" }}>배달을 하지 않는 가게입니다.</Text>
 
-                  <TouchableWithoutFeedback onPress={this.orderVisit}>
-                    <View
-                      style={{
-                        borderWidth: 1,
-                        width: 18,
-                        height: 18,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderColor: this.state.visit ? "#468ef7" : "#dee2e6"
-                      }}
-                    >
-                      <SvgImage
-                        source={require("assets/icons/icon-check-select.svg")}
-                        style={{ width: 10, height: 10, display: !this.state.visit ? "none" : "flex" }}
-                      />
-                      <SvgImage
-                        source={require("assets/icons/icon-check.svg")}
-                        style={{ width: 10, height: 10, display: this.state.visit ? "none" : "flex" }}
-                      />
-                    </View>
-                  </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={this.orderVisit}>
+                      <View
+                        style={{
+                          display: "flex",
+                          borderWidth: 1,
+                          width: 18,
+                          height: 18,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderColor: this.state.visit ? "#468ef7" : "#dee2e6"
+                        }}
+                      >
+                        <SvgImage
+                          source={require("assets/icons/icon-check-select.svg")}
+                          style={{ width: 10, height: 10, display: !this.state.visit ? "none" : "flex" }}
+                        />
+                        <SvgImage
+                          source={require("assets/icons/icon-check.svg")}
+                          style={{ width: 10, height: 10, display: this.state.visit ? "none" : "flex" }}
+                        />
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
                 </View>
 
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>

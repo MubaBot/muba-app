@@ -11,7 +11,7 @@ import { CartApi } from "@/apis";
 export default class Cart extends Component {
   state = {
     lists: [],
-    loading: false
+    loading: true
   };
 
   componentDidMount = () => this.getCartListItems();
@@ -23,15 +23,27 @@ export default class Cart extends Component {
     let lists = [];
     for (var i in carts) lists.push({ shop: i, cart: carts[i] });
 
-    this.setState({ lists: lists.filter(v => v.cart.length !== 0) });
+    this.setState({ lists: lists.filter(v => v.cart.length !== 0), loading: false });
+  };
+
+  onScrollEndDrag = ({ contentOffset }) => {
+    if (contentOffset.y < -100) {
+      this.setState({
+        lists: [],
+        page: 0,
+        loading: true,
+        next: true
+      });
+      this.getCartListItems();
+    }
   };
 
   render() {
     return (
       <LoadingContainer requireAuth={true} header={Header} loading={this.state.loading}>
-        <ScrollView style={{ marginBottom: 70 }}>
+        <ScrollView style={{ marginBottom: 70 }} onScrollEndDrag={({ nativeEvent }) => this.onScrollEndDrag(nativeEvent)}>
           {this.state.lists.map((v, i) => (
-            <CartItem key={v._id} end={this.state.lists.length === i + 1} {...v} />
+            <CartItem key={v.shop} end={this.state.lists.length === i + 1} {...v} />
           ))}
 
           {this.state.lists.length === 0 ? (

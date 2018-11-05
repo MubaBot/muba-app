@@ -20,9 +20,7 @@ export default class CartMenu extends Component {
     };
   }
 
-  componentWillReceiveProps = nextProps => {
-    this.setState({ ...nextProps.menu, count: nextProps.count, options: nextProps.options || [] });
-  };
+  componentWillReceiveProps = nextProps => this.setState({ ...nextProps.menu, count: nextProps.count, options: nextProps.options || [] });
 
   countMenu = count => {
     const c = this.updateMenuCount(count);
@@ -53,7 +51,7 @@ export default class CartMenu extends Component {
         <View style={{ padding: 20, borderBottomColor: "#dee2e6", borderBottomWidth: 1, flexDirection: "row" }}>
           <Image
             style={{ width: 70, height: 70, borderRadius: 3, marginRight: 15 }}
-            source={{ uri: this.state.URL || "https://placeholdit.imgix.net/~text?txtsize=33&txt=No%20Image&w=200&h=140" }}
+            source={{ uri: "https://api.mubabot.com/static/" + (this.state.URL ? "menu/" + this.props.shop_menu.URL : "public/img/noimage.png") }}
           />
 
           <View style={{ width: "100%" }}>

@@ -32,15 +32,11 @@ export default class SearchItem extends Component {
           </TouchableWithoutFeedback>
         </View>
 
-        <View style={{ backgroundColor: "#000", width: "100%", height: 250, marginTop: 10, marginBottom: 10 }}>
-          <DaumMap
-            name={this.props.SHOPNAME}
-            id={this.props._id}
-            address={this.props.shop_address.ADDRESS}
-            lat={this.props.shop_address.ADDRLAT}
-            lng={this.props.shop_address.ADDRLNG}
-          />
-        </View>
+        <TouchableWithoutFeedback onPress={() => this.props.showShopMap(this.props.SHOPNAME, this.props.ADDRESS, this.props.ADDRLAT, this.props.ADDRLNG)}>
+          <View style={{ backgroundColor: "#000", width: "100%", height: 250, marginTop: 10, marginBottom: 10 }}>
+            <DaumMap name={this.props.SHOPNAME} id={this.props._id} address={this.props.ADDRESS} lat={this.props.ADDRLAT} lng={this.props.ADDRLNG} />
+          </View>
+        </TouchableWithoutFeedback>
 
         <TouchableWithoutFeedback onPress={() => call({ number: this.props.PHONE, prompt: true })}>
           <View style={{ alignItems: "center", backgroundColor: "#468ef7" }}>
