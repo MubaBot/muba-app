@@ -169,7 +169,7 @@ export default class CartItem extends Component {
           <ScrollView>
             {this.state.cart.map((v, i) => (
               <CartMenu
-                key={v._id}
+                key={v.id}
                 {...v}
                 shop={this.props.id}
                 menu={this.state.MENUS.filter(menu => v.item === menu._id)[0]}

@@ -51,7 +51,7 @@ export default class CartMenu extends Component {
         <View style={{ padding: 20, borderBottomColor: "#dee2e6", borderBottomWidth: 1, flexDirection: "row" }}>
           <Image
             style={{ width: 70, height: 70, borderRadius: 3, marginRight: 15 }}
-            source={{ uri: "https://api.mubabot.com/static/" + (this.state.URL ? "menu/" + this.props.shop_menu.URL : "public/img/noimage.png") }}
+            source={{ uri: "https://api.mubabot.com/static/" + (this.state.URL ? "menu/" + this.state.URL : "public/img/noimage.png") }}
           />
 
           <View style={{ width: "100%" }}>
