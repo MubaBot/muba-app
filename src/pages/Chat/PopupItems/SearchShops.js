@@ -53,7 +53,7 @@ export default class SearchShops extends Component {
         nextButton={this.rightArrow()}
       >
         {this.state.lists.map((v, i) => (
-          <View style={{ width: "100%", alignItems: "center", justifyContent: "center", paddingTop: 10 }}>
+          <View key={v._id} style={{ width: "100%", alignItems: "center", justifyContent: "center", paddingTop: 10 }}>
             <View style={{ width: "70%", backgroundColor: "#FFF" }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#212529", fontSize: 18, fontWeight: "bold" }}>{v.SHOPNAME}</Text>

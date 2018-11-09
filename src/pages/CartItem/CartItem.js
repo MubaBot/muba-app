@@ -49,13 +49,17 @@ export default class CartItem extends Component {
     this.getUserInfo();
   };
 
-  componentDidUpdate = () => {
-    if (!this.state.OPEN) {
+  shouldComponentUpdate = (nextProps, nextState) => {
+    if (this.state.OPEN === true && nextState.OPEN === false) {
       Alert.alert("지금 영업중이지 않습니다.");
       Actions.pop({ id: this.props.id });
       return false;
     }
 
+    return true;
+  };
+
+  componentDidUpdate = () => {
     if (this.state.MENUS.length === 0) return null;
     if (this.state.cart.length === 0) return null;
 

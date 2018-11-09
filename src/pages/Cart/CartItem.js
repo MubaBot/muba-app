@@ -81,7 +81,7 @@ export default class CartItem extends Component {
 
         <View style={{ backgroundColor: "#f8f9fa", borderColor: "#dee2e6", borderWidth: 1, padding: 20, paddingBottom: 13, marginTop: 20 }}>
           {this.props.cart.map((v, i) => (
-            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 7 }}>
+            <View key={v.id} style={{ flexDirection: "row", alignItems: "center", marginBottom: 7 }}>
               <Text style={{ fontSize: 18, color: "#212529", marginRight: 5 }}>
                 {this.getMenu(v.item).MENUNAME}
                 {this.getOptionNames(v.item, v.options)}
