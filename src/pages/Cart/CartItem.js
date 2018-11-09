@@ -63,7 +63,7 @@ export default class CartItem extends Component {
       <View style={{ paddingLeft: 30, paddingRight: 30, marginTop: 30 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={{ color: "#212529", fontSize: 23, fontWeight: "bold", marginRight: 5 }}>{this.state.SHOPNAME}</Text>
-          <Rating startingValue={3.0} readonly={true} style={{ paddingVertical: 10, marginBottom: 2 }} imageSize={18} />
+          {/* <Rating startingValue={3.0} readonly={true} style={{ paddingVertical: 10, marginBottom: 2 }} imageSize={18} /> */}
         </View>
 
         <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6", marginTop: 7 }}>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ScrollView, Text } from "react-native";
+import { TouchableWithoutFeedback, View, ScrollView, Text } from "react-native";
 
 import LoadingContainer from "@/components/LoadingContainer";
 
@@ -38,6 +38,10 @@ export default class Cart extends Component {
     }
   };
 
+  removeAllCart = () => {
+    CartApi.resetCart().then(() => this.getCartListItems());
+  };
+
   render() {
     return (
       <LoadingContainer requireAuth={true} header={Header} loading={this.state.loading}>
@@ -48,7 +52,15 @@ export default class Cart extends Component {
 
           {this.state.lists.length === 0 ? (
             <Text style={{ width: "100%", textAlign: "center", marginTop: 50, fontSize: 27, color: "#212529" }}>장바구니가 비었습니다.</Text>
-          ) : null}
+          ) : (
+            <TouchableWithoutFeedback onPress={this.removeAllCart}>
+              <View>
+                <Text style={{ width: "100%", marginBottom: 30, textAlign: "center", marginTop: 50, fontSize: 27, color: "#212529" }}>
+                  장바구니 전체 비우기
+                </Text>
+              </View>
+            </TouchableWithoutFeedback>
+          )}
         </ScrollView>
       </LoadingContainer>
     );

@@ -7,10 +7,6 @@ import call from "react-native-phone-call";
 import DaumMap from "./DaumMap";
 
 export default class SearchItem extends Component {
-  // componentWillReceiveProps = nextProps => {
-  //   if (nextProps._id !== this.props._id) this.forceUpdate();
-  // };
-
   render() {
     return (
       <View style={{ paddingLeft: 30, paddingRight: 30, marginTop: 30 }}>

@@ -99,7 +99,7 @@ export default class CartItem extends Component {
       this.setState({ cart: result, price: PRICE });
     });
 
-  getUserInfo = () => UserApi.getUserInfoByServer().then(result => this.setState(result.data.user));
+  getUserInfo = () => UserApi.getUserInfoByServer().then(user => this.setState(user));
 
   clearCart = () => CartApi.clearCart(this.props.id).then(() => Actions.pop());
 

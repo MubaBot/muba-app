@@ -85,4 +85,4 @@ const resetCart = async () => {
   return AsyncStorage.removeItem(StorageKeys.cartStorageKey);
 };
 
-export { addShopCart, updateCountByCartInShop, updateOptionByCartInShop, getAllCart, getShopCart, removeShopCartMenu, clearCart };
+export { addShopCart, updateCountByCartInShop, updateOptionByCartInShop, getAllCart, getShopCart, removeShopCartMenu, clearCart, resetCart };

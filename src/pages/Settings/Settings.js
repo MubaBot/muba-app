@@ -59,13 +59,13 @@ export default class Settings extends Component {
   };
 
   getUserInfo = () =>
-    UserApi.getUserInfoByServer().then(result =>
+    UserApi.getUserInfoByServer().then(user =>
       this.setState({
-        USERNAME: result.data.user.USERNAME || "",
-        PHONE: result.data.user.PHONE || "",
-        GENDER: result.data.user.GENDER || null,
-        BIRTH: result.data.user.BIRTH || null,
-        user_addresses: result.data.user.user_addresses || []
+        USERNAME: user.USERNAME || "",
+        PHONE: user.PHONE || "",
+        GENDER: user.GENDER || null,
+        BIRTH: user.BIRTH || null,
+        user_addresses: user.user_addresses || []
       })
     );
 

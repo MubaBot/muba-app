@@ -6,7 +6,9 @@ const StorageKeys = {
   userStorageKey: "user",
   addressStorageKey: "address",
   cartStorageKey: "cart",
-  cartCountStorageKey: "cartCount"
+  cartCountStorageKey: "cartCount",
+  chatStorageKey: "chat",
+  chatCountStorageKey: "chatCount"
 };
 
 const clearAllData = async () => {

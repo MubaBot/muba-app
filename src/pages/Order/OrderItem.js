@@ -4,6 +4,7 @@ import { TouchableWithoutFeedback, View, Text } from "react-native";
 import accounting from "accounting-js";
 import moment from "moment";
 import { Actions } from "react-native-router-flux";
+import SvgImage from "react-native-remote-svg";
 
 import { OrderApi, CartApi } from "@/apis";
 
@@ -36,7 +37,11 @@ export default class Order extends Component {
   displayAdmission = admission => {
     switch (admission) {
       case 0:
-        return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#e75d5d" }}>거절됨</Text>;
+        return (
+          <Text style={{ fontSize: 18, fontWeight: "bold", color: "#e75d5d" }}>
+            {this.props.order_refuse_message ? this.props.order_refuse_message.NAME : "거절됨"}
+          </Text>
+        );
       case 1:
         return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#468ef7" }}>승인됨</Text>;
       case 2:
@@ -116,6 +121,13 @@ export default class Order extends Component {
             </View>
           </TouchableWithoutFeedback>
         </View>
+
+        {this.props.order_refuse_message && this.props.order_refuse_message.MESSAGE ? (
+          <View style={{ flexDirection: "row", alignItems: "center", marginTop: 15 }}>
+            <SvgImage source={require("assets/icons/icon-alert-triangle.svg")} style={{ width: 13, height: 13 }} />
+            <Text style={{ color: "#e75d5d", marginTop: 2, marginLeft: 2 }}>{this.props.order_refuse_message.MESSAGE}</Text>
+          </View>
+        ) : null}
       </View>
     );
   }

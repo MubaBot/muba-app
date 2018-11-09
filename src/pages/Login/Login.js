@@ -74,6 +74,7 @@ export default class Login extends Component {
             placeholder="비밀번호"
             secureTextEntry={true}
             onChangeText={text => this.onChangeText("password", text)}
+            onEndEditing={this.doLogin}
           />
           <TouchableWithoutFeedback onPress={this.doLogin}>
             <View

@@ -1,235 +1,173 @@
-// import "prop-types"; // Supported builtin module
-
 import React, { Component } from "react";
-import { Platform, View, TouchableWithoutFeedback, Keyboard, AsyncStorage, Alert } from "react-native";
-import { Header, Body, Left, Right, Text, Title, Icon, Spinner } from "native-base";
+import { TouchableWithoutFeedback, Platform, View, Keyboard } from "react-native";
+import { Body, Left, Right, Text, Title, Icon, Spinner } from "native-base";
 import KeyboardSpacer from "react-native-keyboard-spacer";
-import { GiftedChat } from "react-native-gifted-chat";
-import querystring from "querystring";
-import "moment/locale/ko";
 
-// import RouteButton from "@/components/RouteButton";
+import GiftedChat from "./GiftedChatComponents/GiftedChat";
+import Composer from "./GiftedChatComponents/Composer";
+import InputToolbar from "./GiftedChatComponents/InputToolbar";
+import Send from "./GiftedChatComponents/Send";
+import Message from "./GiftedChatComponents/Message";
+import Day from "./GiftedChatComponents/Day";
+
+import Header from "./Header";
+import SearchShops from "./PopupItems/SearchShops";
+
 import LoadingContainer from "@/components/LoadingContainer";
 
-const TYPE_NORMAL = 0;
-const TYPE_LOADING = 1;
+import { ChatApi, UserApi } from "@/apis";
 
 export default class Chat extends Component {
-  state = { messages: [] };
-
+  state = { messages: [], keyboard: false, id: null, loading: true, lat: 0, lng: 0 };
+  chat = { focusTextInput: () => null };
   /**
    * Lifecycle
    */
-  componentWillMount = () => {
-    this.getChatMessage().then(messages => {
-      this.setState({
-        messages: messages,
-        intent_history: 1,
-        scenario: -1,
-        argv: JSON.stringify({ user: "say2" })
-      });
+  componentDidMount = async () => {
+    const messages = await ChatApi.getChatMessage();
+    const user = await UserApi.getUserInfoByServer();
+    const address = await UserApi.getAddressForDevice();
+
+    this.setState({
+      messages: messages,
+      intent_history: 1,
+      scenario: -1,
+      loading: false,
+      argv: JSON.stringify({ user: JSON.stringify(user._id) }),
+      id: user._id,
+      lat: address.lat,
+      lng: address.lng
     });
+
+    this.keyboardWillShowListener = Keyboard.addListener("keyboardWillShow", this.keyboardWillShow);
+    this.keyboardWillHideListener = Keyboard.addListener("keyboardWillHide", this.keyboardWillHide);
   };
+
+  componentWillReceiveProps = async nextProps => {
+    // this.setState({ loading: true });
+    const messages = await ChatApi.getChatMessage();
+    const user = await UserApi.getUserInfoByServer();
+    const address = await UserApi.getAddressForDevice();
+
+    this.setState({
+      messages: messages,
+      intent_history: 1,
+      scenario: -1,
+      loading: false,
+      argv: JSON.stringify({ user: JSON.stringify(user._id) }),
+      id: user._id,
+      lat: address.lat,
+      lng: address.lng
+    });
+
+    // this.chat.focusTextInput();
+    this.chat.refreshScreen();
+    // this.forceUpdate();
+  };
+
+  // componentWillUnmount = () => {
+  //   this.keyboardWillShowListener.remove();
+  //   this.keyboardWillHideListener.remove();
+  // };
+
+  keyboardWillShow = () => this.setState({ keyboard: true });
+  keyboardWillHide = () => this.setState({ keyboard: false });
 
   /**
    * Methods
    */
   async onSend(messages = []) {
     if (messages.length === 0) return;
+    if (messages[0].text === "") return;
 
-    await this.saveMessage(messages[0].text);
+    await ChatApi.saveMessage(this.state.id, messages[0].text).then(chat => this.setState(() => ({ messages: GiftedChat.append(this.state.messages, chat) })));
 
-    const chat = await this.saveMessage("", { bot: true, type: TYPE_LOADING });
+    const chat = await ChatApi.saveMessage(ChatApi.CONFIG.BOT_ID, "", ChatApi.CONFIG.TYPE_LOADING).then(chat => {
+      this.setState({ messages: GiftedChat.append(this.state.messages, chat) });
+      return chat;
+    });
 
-    fetch(
-      "https://chat.mubabot.com/chatbot/api/get_message?" +
-        querystring.stringify({
-          text: messages[0].text,
-          scenario: this.state.scenario,
-          intent_history: this.state.intent_history,
-          argv: this.state.argv
-        })
-    )
-      .then(response => response.json())
-      .then(async responseJson => {
+    ChatApi.doChat({ text: messages[0].text, scenario: this.state.scenario, intent_history: this.state.intent_history, argv: this.state.argv }).then(
+      async response => {
         this.setState({
-          intent_history: responseJson.intent_history,
-          scenario: responseJson.scenario,
-          argv: responseJson.argv
+          intent_history: response.intent_history,
+          scenario: response.scenario,
+          argv: response.argv
         });
-        await this.removeChatMessage(chat._id);
-        this.saveMessage(responseJson.msg, { bot: true });
-      })
-      .catch(err => console.log(err));
-  }
+        const messages = await ChatApi.removeChatMessage(chat._id);
 
-  parsePatterns(linkStyle) {
-    return [
-      {
-        pattern: /#(\w+)/,
-        style: { ...linkStyle, color: "lightgreen" },
-        onPress: props => alert(`press on ${props}`)
+        this.setState({ messages: messages });
+
+        var type = ChatApi.CONFIG.TYPE_NORMAL;
+        if (this.checkSearch(response.msg)) type = ChatApi.CONFIG.TYPE_SERACH;
+
+        ChatApi.saveMessage(ChatApi.CONFIG.BOT_ID, response.msg, type).then(chat =>
+          this.setState(() => ({ messages: GiftedChat.append(this.state.messages, chat) }))
+        );
       }
-    ];
-  }
-
-  async makeChat({ text, userId, name, createdAt, type }) {
-    const chatId = await this.getChatCount();
-    return {
-      _id: chatId,
-      text: text,
-      createdAt: createdAt,
-      user: {
-        _id: userId,
-        name: name
-      },
-      type: type
-    };
-  }
-
-  async saveMessage(text, { bot, createdAt, type } = { bot: false, createdAt: new Date(), type: TYPE_NORMAL }) {
-    let msg = await this.getChatMessage();
-
-    var id = 1;
-    var name = "User";
-
-    if (bot) {
-      id = 0;
-      name = "무바 봇";
-    }
-
-    const chat = await this.makeChat({
-      text,
-      userId: id,
-      name,
-      createdAt: createdAt ? createdAt : new Date(),
-      type: type ? type : TYPE_NORMAL
-    });
-    const c = [chat].concat(msg);
-
-    return AsyncStorage.setItem("chat", JSON.stringify(c))
-      .then(() => {
-        this.setState(() => ({ messages: GiftedChat.append(this.state.messages, chat) }));
-        return chat;
-      })
-      .catch(() => false);
-  }
-
-  async getChatCount() {
-    const count = await AsyncStorage.getItem("chatCount");
-    let c = 0;
-    if (count) c = JSON.parse(count) + 1;
-
-    AsyncStorage.setItem("chatCount", JSON.stringify(c));
-    return c;
-  }
-
-  async getChatMessage() {
-    return AsyncStorage.getItem("chat").then(msg => {
-      if (msg) return JSON.parse(msg).filter((i, n) => i.type !== TYPE_LOADING);
-      return [];
-    });
-  }
-
-  async removeChatMessage(id) {
-    let exist = false;
-    const messages = (await this.getChatMessage()).filter((i, n) => {
-      const e = i._id === id;
-      if (e) exist = true;
-      return !e;
-    });
-
-    return AsyncStorage.setItem("chat", JSON.stringify(messages))
-      .then(() => this.setState({ messages: messages }))
-      .then(() => exist)
-      .catch(() => false);
-  }
-
-  clearChat = () => {
-    Alert.alert(
-      "",
-      "채팅 기록을 지우시겠습니까?",
-      [
-        {
-          text: "예",
-          onPress: async () => {
-            await AsyncStorage.removeItem("chatCount");
-            await AsyncStorage.removeItem("chat");
-            this.setState({ messages: [] });
-          }
-        },
-        { text: "아니오", onPress: () => null }
-      ],
-      { cancelable: false }
     );
+  }
+
+  checkSearch = message => {
+    if (!/^근처의/.test(message)) return false;
+    if (!/판매점입니다$/.test(message)) return false;
+    const test = message.split("근처의 ")[1].split(" 판매점입니다")[0];
+    return true;
+  };
+
+  getSearchKeyword = message => {
+    if (!/^근처의/.test(message)) return null;
+    if (!/판매점입니다$/.test(message)) return null;
+    const test = message.split("근처의 ")[1].split(" 판매점입니다")[0];
+    return test;
   };
 
   /**
    * UI
    */
-  renderSend(props) {
-    return (
-      <Send {...props}>
-        <View style={{ marginRight: 10, marginBottom: 5 }}>
-          <Text>SendTest</Text>
-        </View>
-      </Send>
-    );
-  }
 
-  renderCustomView(props) {
+  renderCustomView = props => {
     switch (props.currentMessage.type) {
-      case TYPE_LOADING:
+      case ChatApi.CONFIG.TYPE_SERACH:
+        return <SearchShops search={this.getSearchKeyword(props.currentMessage.text)} lat={this.state.lat} lng={this.state.lng} />;
+      case ChatApi.CONFIG.TYPE_LOADING:
         return <Spinner size="small" style={{ height: 30, width: 50 }} />;
-      case TYPE_NORMAL:
+      case ChatApi.CONFIG.TYPE_NORMAL:
       default:
         return null;
     }
-  }
-
-  renderDay(props) {
-    console.log(props);
-    return <Text>123</Text>;
-  }
+  };
 
   render() {
-    const Spacer = Platform.OS === "ios" ? null : <KeyboardSpacer />;
+    // const Spacer = Platform.OS === "ios" ? null : <KeyboardSpacer />;
 
     return (
-      // <LoadingContainer>
-      <LoadingContainer requireAuth={true}>
-        <Header>
-          <Left>
-            {/* <RouteButton transparent goBack={true}>
-              <Icon name="arrow-back" />
-            </RouteButton> */}
-          </Left>
-          <Body>
-            <Title>Muba Chat</Title>
-          </Body>
-          <Right>
-            {/* <RouteButton transparent onPress={this.clearChat}>
-              <Icon name="trash" style={{ color: "#000" }} />
-            </RouteButton> */}
-          </Right>
-        </Header>
-
+      <LoadingContainer requireAuth={true} header={Header} loading={this.state.loading}>
         <TouchableWithoutFeedback
           onPress={() => {
             Keyboard.dismiss();
           }}
         >
-          <View style={[{ flex: 1, backgroundColor: "white" }]}>
+          <View style={{ flex: 1, backgroundColor: "#f1f6f9", marginBottom: this.state.keyboard ? 214 : 70 }}>
+            {/* {this.state.id ? ( */}
             <GiftedChat
+              ref={ref => (this.chat = ref)}
+              loadEarlier={false}
+              isLoadingEarlier={false}
               messages={this.state.messages}
-              user={{ _id: 1 }}
-              placeholder="입력해주세요."
+              user={{ _id: this.state.id }}
               parsePatterns={this.parsePatterns}
               onSend={messages => this.onSend(messages)}
               renderCustomView={this.renderCustomView}
-              // renderDay={this.renderDay}
+              placeholder="입력해주세요."
+              renderInputToolbar={props => <InputToolbar {...props} />}
+              renderComposer={props => <Composer {...props} />}
+              renderSend={props => <Send {...props} />}
+              renderMessage={props => <Message {...props} />}
+              renderDay={props => <Day {...props} />}
             />
-            {Spacer}
+            {/* ) : null} */}
+            {/* {Spacer} */}
           </View>
         </TouchableWithoutFeedback>
       </LoadingContainer>

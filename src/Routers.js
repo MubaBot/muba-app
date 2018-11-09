@@ -62,6 +62,7 @@ export default class Muba extends Component {
             <Scene key="search" lazy={true} component={Search} title="Search" onEnter={this.requireAuth} />
             <Scene key="order" lazy={true} component={Order} title="Order" onEnter={this.requireAuth} />
             <Scene key="cart" lazy={true} component={Cart} title="Cart" onEnter={this.requireAuth} />
+            <Scene key="chat" lazy={true} component={Chat} title="Chat" onEnter={this.requireAuth} />
           </Tabs>
 
           <Scene key="login" component={Login} title="Login" gesturesEnabled={false} />
@@ -71,11 +72,9 @@ export default class Muba extends Component {
           <Scene key="settings" component={Settings} title="Settings" onEnter={this.requireAuth} />
           <Scene key="daumMapSetting" component={DaumMapSetting} title="Daum Map" />
           <Scene key="daumMapShop" component={DaumMapShop} title="Daum Map" />
-          
+
           <Scene key="shop" component={Shop} title="Shop Information" onEnter={this.requireAuth} />
           <Scene key="cartItem" component={CartItem} title="Shop Cart Information" />
-
-          <Scene key="chat" component={Chat} title="Chat" />
 
           {/* <Scene key="daumMapSearch" component={DaumMapSearch} title="Daum Map Search" /> */}
         </Scene>
