@@ -18,7 +18,7 @@ export default class Shop extends Component {
     super(props);
 
     this.state = {
-      id: props.navigation.state.params.id || 0,
+      id: props.navigation.state.params.id || -1,
       loading: true,
       cartLength: 0,
 
@@ -32,14 +32,14 @@ export default class Shop extends Component {
   }
 
   componentWillReceiveProps = nextProps => {
-    if (nextProps.navigation.state.params.id === 0) Actions.pop();
+    if (!nextProps.navigation.state.params.id && this.state.id === -1) Actions.pop();
     else {
       this.updateShopInfo();
     }
   };
 
   componentDidMount = () => {
-    if (this.state.id === 0) Actions.pop();
+    if (this.state.id === -1) Actions.pop();
     else {
       this.updateShopInfo();
     }

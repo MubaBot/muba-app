@@ -58,7 +58,7 @@ export default class CartMenu extends Component {
             <Text style={{ color: "#212529", fontSize: 22, lineHeight: 35 }}>{this.state.MENUNAME}</Text>
             <View style={this.state.shop_menu_options.length !== 0 ? { borderBottomColor: "#dee2e6", borderBottomWidth: 1, paddingBottom: 20 } : {}}>
               <View>
-                <View style={{ flexDirection: "row", lineHeight: 24, height: 35, alignItems: "center" }}>
+                <View style={{ flexDirection: "row", height: 35, alignItems: "center" }}>
                   <Text
                     style={[
                       this.state.sales[0]
@@ -83,7 +83,7 @@ export default class CartMenu extends Component {
 
             <View style={{ marginTop: this.state.shop_menu_options.length === 0 ? 0 : 20 }}>
               {this.state.shop_menu_options.map((v, i) => (
-                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 7 }}>
+                <View key={v._id} style={{ flexDirection: "row", alignItems: "center", marginTop: 7 }}>
                   <TouchableWithoutFeedback onPress={() => this.selectOption(v._id)}>
                     <View
                       style={{

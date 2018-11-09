@@ -20,7 +20,7 @@ export default class Menus extends Component {
 
           <View style={{ marginLeft: 20 }}>
             <Text style={{ color: "#212529", fontSize: 20, lineHeight: 35 }}>{this.props.MENUNAME}</Text>
-            <View style={[{ flexDirection: "row", lineHeight: 24, alignItems: "center" }, this.props.sales[0] ? {} : { marginTop: 10 }]}>
+            <View style={[{ flexDirection: "row", alignItems: "center" }, this.props.sales[0] ? {} : { marginTop: 10 }]}>
               <Text
                 style={[
                   { fontSize: 16 },
@@ -40,15 +40,7 @@ export default class Menus extends Component {
 
           <View style={{ position: "absolute", right: 0 }}>
             <TouchableWithoutFeedback onPress={() => (this.props.SOLD ? null : this.props.addCart(this.props._id))}>
-              <View
-                style={
-                  this.props.SOLD
-                    ? {}
-                    : {
-                        /*width: 23, height: 23, alignItems: "center", justifyContent: "center"*/
-                      }
-                }
-              >
+              <View>
                 <Text style={{ fontWeight: "bold", fontSize: 22, textAlign: "center", color: this.props.SOLD ? "#adb5bd" : "#468ef7" }}>
                   {this.props.SOLD ? "품절" : "추가"}
                 </Text>

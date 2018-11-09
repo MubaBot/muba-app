@@ -60,7 +60,7 @@ export default class SearchShops extends Component {
               </View>
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Rating startingValue={3.0} readonly={true} style={{ paddingVertical: 10, backgroundColor: "none" }} imageSize={14} />
+                <Rating startingValue={3.0} readonly={true} style={{ paddingVertical: 10 }} imageSize={14} />
               </View>
 
               <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6", marginTop: 4 }}>
