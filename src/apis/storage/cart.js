@@ -22,7 +22,7 @@ const updateCartByShop = async (shop, items) => {
 
 const updateItemByCartInShop = async (shop, item, value) => {
   let cart = await getAllCart();
-  let carts = cart[shop] ? cart[shop].cart : [];
+  let carts = cart[shop] && cart[shop].cart ? cart[shop].cart : [];
 
   for (var i in carts) if (carts[i].id === item) carts[i] = value;
 
@@ -33,7 +33,7 @@ const updateItemByCartInShop = async (shop, item, value) => {
 
 const updateCountByCartInShop = async (shop, item, count) => {
   let cart = await getAllCart();
-  let items = (cart[shop] ? cart[shop].cart : []).filter((v, i) => v.id === item);
+  let items = (cart[shop] && cart[shop].cart ? cart[shop].cart : []).filter((v, i) => v.id === item);
 
   if (items.length === 0) return null;
 
