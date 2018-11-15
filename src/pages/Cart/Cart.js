@@ -31,7 +31,7 @@ export default class Cart extends Component {
 
     lists.sort(this.listCompare);
 
-    this.setState({ lists: lists.filter(v => v.cart.length !== 0), loading: false });
+    this.setState({ lists: lists.filter(v => (v.cart ? v.cart.length !== 0 : false)), loading: false });
   };
 
   onScrollEndDrag = ({ contentOffset }) => {

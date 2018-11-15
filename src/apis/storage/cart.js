@@ -58,7 +58,7 @@ const updateOptionByCartInShop = async (shop, item, option) => {
 const getShopCart = async shop => {
   const cart = await getAllCart();
 
-  return cart[shop] ? cart[shop].cart : [];
+  return cart[shop] && cart[shop].cart ? cart[shop].cart : [];
 };
 
 const getAllCart = async () => {

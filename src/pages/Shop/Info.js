@@ -29,7 +29,7 @@ export default class Info extends Component {
         <Text style={{ color: "#212529", fontWeight: "bold", fontSize: 24 }}>{this.props.SHOPNAME}</Text>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-            {this.props.POINT ? (
+            {this.props.POINT !== null ? (
               <Rating startingValue={this.props.POINT} readonly={true} style={{ paddingVertical: 10, marginBottom: 2 }} imageSize={18} />
             ) : null}
             <Text style={{ marginBottom: 13, marginLeft: 4 }}>({this.props.reviews.length}개)</Text>

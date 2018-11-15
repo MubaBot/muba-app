@@ -24,6 +24,7 @@ export default class Shop extends Component {
 
       reviews: [],
 
+      POINT: null,
       MENUS: [],
       ADDRESS: "",
       ADDRESSDETAIL: "",
