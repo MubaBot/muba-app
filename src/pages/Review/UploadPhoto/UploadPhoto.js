@@ -71,7 +71,7 @@ export default class UploadPhoto extends Component {
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", paddingLeft: 30, paddingRight: 30 }}>
             <TouchableWithoutFeedback onPress={this.props.closeUploadPopup}>
               <View>
-                <Svg source={require("assets/icons/m-close.svg")} style={{ width: 20, height: 20 }} />
+                <Svg source={require("assets/icons/m-prev.svg")} style={{ width: 20, height: 20 }} />
               </View>
             </TouchableWithoutFeedback>
 

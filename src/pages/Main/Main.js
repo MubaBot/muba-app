@@ -8,7 +8,7 @@ import LoadingContainer from "@/components/LoadingContainer";
 
 import MainItem from "./MainItem";
 
-import { UserApi, ShopApi } from "@/apis";
+import { AuthApi, UserApi, ShopApi } from "@/apis";
 
 export default class Main extends Component {
   state = {
@@ -23,9 +23,13 @@ export default class Main extends Component {
   componentWillReceiveProps = nextProps => this.reloadSaleShopList();
 
   reloadSaleShopList = () =>
-    this.syncNowAddress().then(address => {
-      this.updateSaleShopList(address.lat, address.lng, 1, 0).then(() => this.setState({ page: 2 }));
-    });
+    AuthApi.isLogged().then(isLogin =>
+      isLogin === true
+        ? this.syncNowAddress().then(address => {
+            this.updateSaleShopList(address.lat, address.lng, 1, 0).then(() => this.setState({ page: 2 }));
+          })
+        : null
+    );
 
   syncNowAddress = async () =>
     UserApi.getAddressForDevice().then(address => {
@@ -57,7 +61,17 @@ export default class Main extends Component {
       page: p,
       time: time || this.state.time || 0
     })
-      .then(shops => this.setState({ loading: false, lists: p === 1 ? shops.data.lists : this.state.lists.concat(shops.data.lists) }))
+      .then(shops => {
+        let lists = [];
+        for (var i in shops.data.lists) {
+          const items = shops.data.lists[i];
+          for (var j in items.shop_menus) {
+            lists.push({ ...items.shop_menus[j], SHOPNAME: items.SHOPNAME });
+          }
+        }
+
+        this.setState({ loading: false, lists: p === 1 ? lists : this.state.lists.concat(lists) });
+      })
       .catch(err => []);
   };
 

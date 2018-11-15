@@ -3,17 +3,18 @@ import { TouchableWithoutFeedback, View, Text, Image } from "react-native";
 
 import { Actions } from "react-native-router-flux";
 import SvgImage from "react-native-remote-svg";
+import accounting from "accounting-js";
 
 export default class MainItem extends Component {
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => Actions.push("shop", { id: this.props.shop._id })}>
+      <TouchableWithoutFeedback onPress={() => Actions.push("shop", { id: this.props.SHOPID })}>
         <View
           style={{ marginTop: 20, width: "49%", marginRight: this.props.position % 2 === 0 ? "1%" : 0, marginLeft: this.props.position % 2 === 0 ? 0 : "1%" }}
         >
           <Image
             style={{ width: "100%", height: 140, borderRadius: 3 }}
-            source={{ uri: "https://api.mubabot.com/static/" + (this.props.shop_menu.URL ? "menu/" + this.props.shop_menu.URL : "public/img/noimage.png") }}
+            source={{ uri: "https://api.mubabot.com/static/" + (this.props.URL ? "menu/" + this.props.URL : "public/img/noimage.png") }}
           />
           <View
             style={{
@@ -29,7 +30,7 @@ export default class MainItem extends Component {
               top: 115
             }}
           >
-            <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 14 }}>{this.props.COUNT}개 남음</Text>
+            <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 14 }}>{this.props.sales[0].COUNT}개 남음</Text>
           </View>
 
           <View style={{ flexDirection: "row", marginTop: 10 }}>
@@ -37,10 +38,14 @@ export default class MainItem extends Component {
             <Text style={{ color: "#468ef7", fontSize: 14 }}>지금 할인중</Text>
           </View>
 
-          <Text style={{ color: "#212529", fontSize: 20, marginTop: 7 }}>{this.props.shop_menu.MENUNAME}</Text>
-          <Text style={{ textDecorationLine: "line-through", color: "#868e96", fontSize: 16, marginTop: 5 }}>{this.props.shop_menu.PRICE}원</Text>
-          <Text style={{ fontSize: 20, color: "#212529", fontWeight: "bold" }}>{this.props.PRICE}원</Text>
-          <Text style={{ color: "#212529", fontSize: 16, marginTop: 3 }}>{this.props.shop.SHOPNAME}</Text>
+          <Text style={{ color: "#212529", fontSize: 16, marginTop: 3 }}>{this.props.SHOPNAME}</Text>
+          <Text style={{ color: "#212529", fontSize: 20, marginTop: 7 }}>{this.props.MENUNAME}</Text>
+          <Text style={{ textDecorationLine: "line-through", color: "#868e96", fontSize: 16, marginTop: 5 }}>
+            {accounting.formatMoney(this.props.PRICE, { symbol: "원", format: "%v%s", precision: 0 })}
+          </Text>
+          <Text style={{ fontSize: 20, color: "#212529", fontWeight: "bold" }}>
+            {accounting.formatMoney(this.props.sales[0].PRICE, { symbol: "원", format: "%v%s", precision: 0 })}
+          </Text>
         </View>
       </TouchableWithoutFeedback>
     );
