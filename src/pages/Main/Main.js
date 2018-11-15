@@ -34,7 +34,7 @@ export default class Main extends Component {
   syncNowAddress = async () =>
     UserApi.getAddressForDevice().then(address => {
       if (!address) {
-        alert("주소를 선택해주세요.");
+        Alert.alert("주소를 선택해주세요.");
         return Actions.push("settings");
       }
 

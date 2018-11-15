@@ -28,7 +28,7 @@ export default class Order extends Component {
 
       for (var o in menu.order_menu_options) {
         const option = menu.order_menu_options[o];
-        await CartApi.updateOptionByCartInShop(this.props.SHOPID, cartItem.id, option.shop_menu_option.shop_option._id);
+        await CartApi.updateOptionByCartInShop(this.props.SHOPID, cartItem.id, option.shop_menu_option._id);
       }
     }
 
