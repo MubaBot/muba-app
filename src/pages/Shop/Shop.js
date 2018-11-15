@@ -22,12 +22,13 @@ export default class Shop extends Component {
       loading: true,
       cartLength: 0,
 
+      reviews: [],
+
       MENUS: [],
       ADDRESS: "",
       ADDRESSDETAIL: "",
       SHOPNAME: "",
-      PHONE: "",
-      shop_address: {}
+      PHONE: ""
     };
   }
 
@@ -49,8 +50,8 @@ export default class Shop extends Component {
     ShopApi.getShopInfo({ id: this.state.id }).then(res => {
       this.setState({
         ...res.data.shop,
-        ADDRESS: res.data.shop.shop_address.ADDRESS,
-        ADDRESSDETAIL: res.data.shop.shop_address.ADDRESSDETAIL,
+        ADDRESS: res.data.shop.ADDRESS,
+        ADDRESSDETAIL: res.data.shop.ADDRESSDETAIL,
         MENUS: res.data.shop.shop_menus,
         loading: false
       });
@@ -78,24 +79,19 @@ export default class Shop extends Component {
             <Info {...this.state} />
           </View>
 
-          {this.state.shop_address.ADDRESS ? (
+          {this.state.ADDRESS !== "" ? (
             <TouchableWithoutFeedback
               onPress={() =>
                 Actions.push("daumMapShop", {
                   name: this.state.SHOPNAME,
-                  address: this.state.shop_address.ADDRESS,
-                  lat: this.state.shop_address.ADDRLAT,
-                  lng: this.state.shop_address.ADDRLNG
+                  address: this.state.ADDRESS,
+                  lat: this.state.ADDRLAT,
+                  lng: this.state.ADDRLNG
                 })
               }
             >
               <View style={{ width: "100%", height: 200, borderBottomColor: "#dee2e6", borderBottomWidth: 1 }}>
-                <DaumMap
-                  name={this.state.SHOPNAME}
-                  address={this.state.shop_address.ADDRESS}
-                  lat={this.state.shop_address.ADDRLAT}
-                  lng={this.state.shop_address.ADDRLNG}
-                />
+                <DaumMap name={this.state.SHOPNAME} address={this.state.ADDRESS} lat={this.state.ADDRLAT} lng={this.state.ADDRLNG} />
               </View>
             </TouchableWithoutFeedback>
           ) : null}

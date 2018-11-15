@@ -6,7 +6,7 @@ import { Rating } from "react-native-elements";
 
 import Image from "react-native-remote-svg";
 
-import DaumMap from "./DaumMap";
+// import DaumMap from "./DaumMap";
 
 import Swiper from "@/components/lib/Swiper";
 import { ShopApi } from "@/apis";
@@ -23,6 +23,7 @@ export default class SearchShops extends Component {
 
   showShopInfo = async id => Actions.push("shop", { id: id });
   showShopMap = async (name, address, lat, lng) => Actions.push("daumMapShop", { name, address, lat, lng });
+  showReview = async id => Actions.push("review", { id: id });
 
   leftArrow = () => (
     <View style={{ width: 25, height: 25, alignItems: "center", justifyContent: "center" }}>
@@ -60,7 +61,7 @@ export default class SearchShops extends Component {
               </View>
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Rating startingValue={3.0} readonly={true} style={{ paddingVertical: 10 }} imageSize={14} />
+                <Rating startingValue={v.POINT} readonly={true} style={{ paddingVertical: 10 }} imageSize={14} />
               </View>
 
               <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6", marginTop: 4 }}>
@@ -69,18 +70,18 @@ export default class SearchShops extends Component {
                     <Text style={{ color: "#212529", fontSize: 16, paddingTop: 10, paddingBottom: 10 }}>메뉴/정보</Text>
                   </View>
                 </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => this.showReview(v._id)}>
                   <View style={{ width: "50%", alignItems: "center", borderLeftWidth: 1, borderLeftColor: "#dee2e6" }}>
-                    <Text style={{ color: "#212529", fontSize: 16, paddingTop: 10, paddingBottom: 10 }}>리뷰</Text>
+                    <Text style={{ color: "#212529", fontSize: 16, paddingTop: 10, paddingBottom: 10 }}>리뷰 ({v.reviews ? v.reviews.length : 0}개)</Text>
                   </View>
                 </TouchableWithoutFeedback>
               </View>
 
-              <TouchableWithoutFeedback onPress={() => this.showShopMap(v.SHOPNAME, v.ADDRESS, v.ADDRLAT, v.ADDRLNG)}>
+              {/* <TouchableWithoutFeedback onPress={() => this.showShopMap(v.SHOPNAME, v.ADDRESS, v.ADDRLAT, v.ADDRLNG)}>
                 <View style={{ backgroundColor: "#000", width: "100%", height: 0, marginTop: 7, marginBottom: 10 }}>
                   <DaumMap name={v.SHOPNAME} id={v._id} address={v.ADDRESS} lat={v.ADDRLAT} lng={v.ADDRLNG} />
                 </View>
-              </TouchableWithoutFeedback>
+              </TouchableWithoutFeedback> */}
 
               {/* <TouchableWithoutFeedback onPress={() => call({ number: this.props.PHONE, prompt: true })}>
                 <View style={{ alignItems: "center", backgroundColor: "#468ef7" }}>

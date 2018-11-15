@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { TouchableWithoutFeedback, View, Text, StyleSheet, Linking } from "react-native";
 
-import { Actions } from "react-native-router-flux";
 import { Rating } from "react-native-elements";
 import call from "react-native-phone-call";
 
@@ -26,20 +25,12 @@ export default class Info extends Component {
   render() {
     return (
       <View>
-        <Text style={{ color: "#212529", fontWeight: "bold", fontSize: 24 }}>{this.props.SHOPNAME}</Text>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-            {this.props.POINT ? (
-              <Rating startingValue={this.props.POINT} readonly={true} style={{ paddingVertical: 10, marginBottom: 2 }} imageSize={18} />
-            ) : null}
-            <Text style={{ marginBottom: 13, marginLeft: 4 }}>({this.props.reviews.length}개)</Text>
-          </View>
-
-          <TouchableWithoutFeedback onPress={() => Actions.push("review", { id: this.props._id })}>
-            <View>
-              <Text style={{ color: "#468ef7", fontWeight: "bold", fontSize: 20 }}>리뷰</Text>
-            </View>
-          </TouchableWithoutFeedback>
+        <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+          <Text style={{ color: "#212529", fontWeight: "bold", fontSize: 24 }}>{this.props.SHOPNAME}</Text>
+          {this.props.POINT === null ? null : (
+            <Rating startingValue={this.props.POINT} readonly={true} style={{ marginLeft: 7, marginBottom: 3 }} imageSize={16} />
+          )}
+          <Text style={{ marginBottom: 3, marginLeft: 4 }}>({this.props.reviews.length}개)</Text>
         </View>
 
         {this.props.ADDRESS ? (

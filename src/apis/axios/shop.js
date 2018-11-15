@@ -12,6 +12,10 @@ const getShopInfo = async ({ id }) => {
   return Axios.Get("/api/shop/" + id);
 };
 
+const getShopMenus = async ({ id }) => {
+  return Axios.Get(["/api/shop", id, "menus", "sales"].join("/"));
+};
+
 const setLatlng = async ({ id, lat, lng }) => {
   return Axios.Put(["/api/shop", id, "latlng"].join("/"), {
     lat: lat,
@@ -32,4 +36,12 @@ const orderCart = async ({ id, cart, address, address_detail, require, phone, vi
   });
 };
 
-export { searchSaleShopList, searchShop, setLatlng, getShopInfo, orderCart };
+const writeReview = async ({ shop, id, data }) => {
+  return Axios.Post(["/api/shop", shop, "order", id, "review"].join("/"), data);
+};
+
+const getReview = async ({ shop, page }) => {
+  return Axios.Get(["/api/shop", shop, "review", page].join("/")).then(res => res.data.reviews);
+};
+
+export { searchSaleShopList, searchShop, setLatlng, getShopInfo, getShopMenus, orderCart, writeReview, getReview };

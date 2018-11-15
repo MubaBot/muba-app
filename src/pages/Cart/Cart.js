@@ -17,11 +17,19 @@ export default class Cart extends Component {
   componentDidMount = () => this.getCartListItems();
   componentWillReceiveProps = () => this.getCartListItems();
 
+  listCompare = (a, b) => {
+    if (a.time < b.time) return 1;
+    if (a.time > b.time) return -1;
+    return 0;
+  };
+
   getCartListItems = async () => {
     const carts = await CartApi.getAllCart();
 
     let lists = [];
-    for (var i in carts) lists.push({ shop: i, cart: carts[i] });
+    for (var i in carts) lists.push({ shop: i, cart: carts[i].cart, time: carts[i].time });
+
+    lists.sort(this.listCompare);
 
     this.setState({ lists: lists.filter(v => v.cart.length !== 0), loading: false });
   };
@@ -47,7 +55,7 @@ export default class Cart extends Component {
       <LoadingContainer requireAuth={true} header={Header} loading={this.state.loading}>
         <ScrollView style={{ marginBottom: 70 }} onScrollEndDrag={({ nativeEvent }) => this.onScrollEndDrag(nativeEvent)}>
           {this.state.lists.map((v, i) => (
-            <CartItem key={v.shop} end={this.state.lists.length === i + 1} {...v} />
+            <CartItem key={v.shop} end={this.state.lists.length === i + 1} cart={v.cart} {...v} />
           ))}
 
           {this.state.lists.length === 0 ? (

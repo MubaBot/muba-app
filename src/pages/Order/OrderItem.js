@@ -12,7 +12,8 @@ export default class Order extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ADMISSION: props.ADMISSION
+      ADMISSION: props.ADMISSION,
+      review: !!props.review
     };
   }
 
@@ -57,6 +58,12 @@ export default class Order extends Component {
       .catch(err => alert(JSON.stringify(err)));
   };
 
+  writeReview = () => {
+    if (this.state.ADMISSION === 1 && !this.state.review) {
+      Actions.push("review", { id: this.props.SHOPID, order: this.props._id });
+    }
+  };
+
   getOptionPrice = menu => {
     if (menu.order_menu_options.length === 0) return 0;
 
@@ -81,6 +88,16 @@ export default class Order extends Component {
     return " / " + options.join(", ");
   };
 
+  getCancelAndWriteReviewButton = () => {
+    if (this.state.ADMISSION === null) return <Text style={{ paddingTop: 15, paddingBottom: 15, color: "#212529" }}>주문취소</Text>;
+    if (this.state.ADMISSION === 1) {
+      if (this.state.review) return <Text style={{ paddingTop: 15, paddingBottom: 15, color: "#adb5bd" }}>리뷰작성</Text>;
+      return <Text style={{ paddingTop: 15, paddingBottom: 15, color: "#212529" }}>리뷰작성</Text>;
+    }
+
+    return <Text style={{ paddingTop: 15, paddingBottom: 15, color: "#adb5bd" }}>주문취소</Text>;
+  };
+
   render() {
     return (
       <View style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#dee2e6" }}>
@@ -91,11 +108,9 @@ export default class Order extends Component {
         <Text style={{ color: "#212529", fontWeight: "bold", fontSize: 24, marginTop: 5 }}>{this.props.shop.SHOPNAME}</Text>
         <Text style={{ color: "#868e96", fontSize: 16, marginTop: 5 }}>{this.props.ADDRESS}</Text>
 
-        <View
-          style={{ backgroundColor: "#f8f9fa", borderColor: "#dee2e6", borderWidth: 1, borderBottomWidth: 0, padding: 20, paddingBottom: 13, marginTop: 20 }}
-        >
+        <View style={{ backgroundColor: "#FFF", borderColor: "#dee2e6", borderWidth: 1, borderBottomWidth: 0, padding: 20, paddingBottom: 13, marginTop: 20 }}>
           {this.props.order_menus.map((v, i) => (
-            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 7 }}>
+            <View key={v._id} style={{ flexDirection: "row", alignItems: "center", marginBottom: 7 }}>
               <Text style={{ fontSize: 18, color: "#212529", marginRight: 5 }}>
                 {v.shop_menu.MENUNAME}
                 {this.getOptionNames(v)}
@@ -109,16 +124,14 @@ export default class Order extends Component {
           ))}
         </View>
 
-        <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6" }}>
+        <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6", backgroundColor: "#f8f9fa" }}>
           <TouchableWithoutFeedback onPress={this.reOrder}>
             <View style={{ width: "50%", alignItems: "center", borderRightWidth: 1, borderRightColor: "#dee2e6" }}>
               <Text style={{ paddingTop: 15, paddingBottom: 15, color: "#212529" }}>재주문</Text>
             </View>
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.state.ADMISSION === null ? this.cancelMenu : null}>
-            <View style={{ width: "50%", alignItems: "center" }}>
-              <Text style={{ paddingTop: 15, paddingBottom: 15, color: this.state.ADMISSION === null ? "#212529" : "#adb5bd" }}>주문취소</Text>
-            </View>
+          <TouchableWithoutFeedback onPress={this.state.ADMISSION === null ? this.cancelMenu : this.writeReview}>
+            <View style={{ width: "50%", alignItems: "center" }}>{this.getCancelAndWriteReviewButton()}</View>
           </TouchableWithoutFeedback>
         </View>
 

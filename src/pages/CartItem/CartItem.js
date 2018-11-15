@@ -5,11 +5,14 @@ import { Actions } from "react-native-router-flux";
 import accounting from "accounting-js";
 import { isEqual } from "lodash";
 import SvgImage from "react-native-remote-svg";
+import moment from "moment";
 
 import LoadingContainer from "@/components/LoadingContainer";
 
 import Header from "./Header";
 import CartMenu from "./CartMenu";
+import Info from "./Info";
+import DaumMap from "./DaumMap";
 
 import { UserApi, ShopApi, CartApi } from "@/apis";
 
@@ -17,15 +20,27 @@ export default class CartItem extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      loading: true
-    };
-
-    this.state = { cart: [], MENUS: [], price: 0, nowAddress: "", PHONE: "", require: "", visit: false, OPEN: true };
+    this.state = { loading: true, cart: [], MENUS: [], price: 0, nowAddress: "", PHONE: "", require: "", visit: false, OPEN: true, ENDDATE: null, ADDRESS: "" };
   }
 
   shouldComponentUpdate = (nextProps, nextState) => {
     if (nextState.cart.length === 0) {
+      Actions.pop({ id: this.props.id });
+      return false;
+    }
+
+    if (
+      moment(nextState.ENDDATE)
+        .add(1, "days")
+        .unix() < moment().unix()
+    ) {
+      Alert.alert("현재 무바 서비스를 이용하지 않는 업체입니다.");
+      Actions.pop({ id: this.props.id });
+      return false;
+    }
+
+    if (this.state.OPEN === true && nextState.OPEN === false) {
+      Alert.alert("지금 영업중이지 않습니다.");
       Actions.pop({ id: this.props.id });
       return false;
     }
@@ -47,16 +62,6 @@ export default class CartItem extends Component {
     this.updateCartInfo();
     this.syncNowAddress();
     this.getUserInfo();
-  };
-
-  shouldComponentUpdate = (nextProps, nextState) => {
-    if (this.state.OPEN === true && nextState.OPEN === false) {
-      Alert.alert("지금 영업중이지 않습니다.");
-      Actions.pop({ id: this.props.id });
-      return false;
-    }
-
-    return true;
   };
 
   componentDidUpdate = () => {
@@ -88,11 +93,14 @@ export default class CartItem extends Component {
   updateShopInfo = () =>
     ShopApi.getShopInfo({ id: this.props.id }).then(res =>
       this.setState({
+        ...res.data.shop,
+        ENDDATE: res.data.shop.ENDDATE,
         OPEN: res.data.shop.OPEN,
         DELIVERY: res.data.shop.DELIVERY,
         MENUS: res.data.shop.shop_menus,
         visit: res.data.shop.DELIVERY ? false : true,
         loading: false
+        // test: alert(JSON.stringify(res.data.shop.ENDDATE))
       })
     );
 
@@ -157,7 +165,15 @@ export default class CartItem extends Component {
         else Alert.alert("", "주문되었습니다.");
         this.clearCart();
       })
-      .catch(err => alert(JSON.stringify(err)));
+      .catch(err => {
+        if (!err || !err.response || !err.response.data) return Alert.alert("죄송합니다. 잠시 후 다시시도해주세요.");
+        switch (err.response.data.success) {
+          case -1:
+            return Alert.alert("", "상품은 1개 이상 주문해주세요.");
+          default:
+            return Alert.alert("죄송합니다. 잠시 후 다시시도해주세요.");
+        }
+      });
   };
 
   orderVisit = () => this.setState({ visit: this.state.DELIVERY ? !this.state.visit : true });
@@ -167,6 +183,29 @@ export default class CartItem extends Component {
       <LoadingContainer requireAuth={true} header={Header} loading={this.state.loading}>
         <KeyboardAvoidingView behavior="position">
           <ScrollView>
+            <View style={{ borderBottomColor: "#f1f3f5", borderBottomWidth: 10 }}>
+              <View style={{ marginTop: 30, paddingLeft: 20, paddingRight: 20, paddingBottom: 25, borderBottomColor: "#dee2e6", borderBottomWidth: 1 }}>
+                <Info {...this.state} />
+              </View>
+
+              {this.state.ADDRESS !== "" ? (
+                <TouchableWithoutFeedback
+                  onPress={() =>
+                    Actions.push("daumMapShop", {
+                      name: this.state.SHOPNAME,
+                      address: this.state.ADDRESS,
+                      lat: this.state.ADDRLAT,
+                      lng: this.state.ADDRLNG
+                    })
+                  }
+                >
+                  <View style={{ width: "100%", height: 200, borderBottomColor: "#dee2e6", borderBottomWidth: 1 }}>
+                    <DaumMap name={this.state.SHOPNAME} address={this.state.ADDRESS} lat={this.state.ADDRLAT} lng={this.state.ADDRLNG} />
+                  </View>
+                </TouchableWithoutFeedback>
+              ) : null}
+            </View>
+
             {this.state.cart.map((v, i) => (
               <CartMenu
                 key={v.id}

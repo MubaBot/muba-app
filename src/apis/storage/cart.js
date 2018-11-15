@@ -1,4 +1,5 @@
 import { AsyncStorage } from "react-native";
+import moment from "moment";
 
 import StorageKeys from "./index";
 
@@ -14,24 +15,25 @@ const addShopCart = async (shop, item) => {
 
 const updateCartByShop = async (shop, items) => {
   let cart = await getAllCart();
-  cart[shop] = items;
+  cart[shop] = { time: moment().unix(), cart: items };
 
   return AsyncStorage.setItem(StorageKeys.cartStorageKey, JSON.stringify(cart));
 };
 
 const updateItemByCartInShop = async (shop, item, value) => {
   let cart = await getAllCart();
-  let items = cart[shop] || [];
+  let carts = cart[shop] ? cart[shop].cart : [];
 
-  for (var i in items) if (items[i].id === item) items[i] = value;
+  for (var i in carts) if (carts[i].id === item) carts[i] = value;
 
-  cart[shop] = items;
+  cart[shop] = { time: moment().unix(), cart: carts };
+
   return AsyncStorage.setItem(StorageKeys.cartStorageKey, JSON.stringify(cart));
 };
 
 const updateCountByCartInShop = async (shop, item, count) => {
   let cart = await getAllCart();
-  let items = (cart[shop] || []).filter((v, i) => v.id === item);
+  let items = (cart[shop] ? cart[shop].cart : []).filter((v, i) => v.id === item);
 
   if (items.length === 0) return null;
 
@@ -41,7 +43,7 @@ const updateCountByCartInShop = async (shop, item, count) => {
 
 const updateOptionByCartInShop = async (shop, item, option) => {
   let cart = await getAllCart();
-  let items = (cart[shop] || []).filter((v, i) => v.id === item);
+  let items = (cart[shop] ? cart[shop].cart : []).filter((v, i) => v.id === item);
 
   if (items.length === 0) return null;
 
@@ -56,7 +58,7 @@ const updateOptionByCartInShop = async (shop, item, option) => {
 const getShopCart = async shop => {
   const cart = await getAllCart();
 
-  return cart[shop] || [];
+  return cart[shop] ? cart[shop].cart : [];
 };
 
 const getAllCart = async () => {

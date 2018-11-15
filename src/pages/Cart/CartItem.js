@@ -10,7 +10,9 @@ import { ShopApi } from "@/apis";
 export default class CartItem extends Component {
   state = {
     SHOPNAME: "",
-    shop_menus: []
+    shop_menus: [],
+    POINT: null,
+    reviews: []
   };
 
   componentDidMount = () => {
@@ -18,6 +20,7 @@ export default class CartItem extends Component {
   };
 
   showShop = () => Actions.push("shop", { id: this.props.shop });
+  showReview = () => Actions.push("review", { id: this.props.shop });
   doOrder = () => Actions.push("cartItem", { id: this.props.shop });
 
   getMenu = id => {
@@ -63,7 +66,9 @@ export default class CartItem extends Component {
       <View style={{ paddingLeft: 30, paddingRight: 30, marginTop: 30 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={{ color: "#212529", fontSize: 23, fontWeight: "bold", marginRight: 5 }}>{this.state.SHOPNAME}</Text>
-          {/* <Rating startingValue={3.0} readonly={true} style={{ paddingVertical: 10, marginBottom: 2 }} imageSize={18} /> */}
+          {this.state.POINT !== null ? (
+            <Rating startingValue={this.state.POINT} readonly={true} style={{ paddingVertical: 10, marginBottom: 2 }} imageSize={18} />
+          ) : null}
         </View>
 
         <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6", marginTop: 7 }}>
@@ -72,14 +77,14 @@ export default class CartItem extends Component {
               <Text style={{ color: "#212529", fontSize: 20, paddingTop: 15, paddingBottom: 15 }}>메뉴/정보</Text>
             </View>
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={this.showReview}>
             <View style={{ width: "50%", alignItems: "center", borderLeftWidth: 1, borderLeftColor: "#dee2e6" }}>
-              <Text style={{ color: "#212529", fontSize: 20, paddingTop: 15, paddingBottom: 15 }}>리뷰</Text>
+              <Text style={{ color: "#212529", fontSize: 20, paddingTop: 15, paddingBottom: 15 }}>리뷰 ({this.state.reviews.length}개)</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
 
-        <View style={{ backgroundColor: "#f8f9fa", borderColor: "#dee2e6", borderWidth: 1, padding: 20, paddingBottom: 13, marginTop: 20 }}>
+        <View style={{ backgroundColor: "#FFF", borderColor: "#dee2e6", borderWidth: 1, padding: 20, paddingBottom: 13, marginTop: 20 }}>
           {this.props.cart.map((v, i) => (
             <View key={v.id} style={{ flexDirection: "row", alignItems: "center", marginBottom: 7 }}>
               <Text style={{ fontSize: 18, color: "#212529", marginRight: 5 }}>
@@ -96,7 +101,7 @@ export default class CartItem extends Component {
         </View>
 
         <TouchableWithoutFeedback onPress={this.doOrder}>
-          <View style={{ alignItems: "center", backgroundColor: "#FFF", borderWidth: 1, borderColor: "#dee2e6", borderTopWidth: 0 }}>
+          <View style={{ alignItems: "center", backgroundColor: "#f8f9fa", borderWidth: 1, borderColor: "#dee2e6", borderTopWidth: 0 }}>
             <Text style={{ color: "#212529", fontSize: 20, fontWeight: "bold", paddingTop: 15, paddingBottom: 15 }}>{this.props.cart.length}개 주문하기</Text>
           </View>
         </TouchableWithoutFeedback>

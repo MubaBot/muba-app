@@ -17,7 +17,10 @@ export default class Order extends Component {
   };
 
   componentDidMount = () => this.getOrderList(1);
-  componentWillReceiveProps = () => this.getOrderList(1);
+  componentWillReceiveProps = () => {
+    this.setState({ lists: [], page: 0, loading: true, next: true });
+    this.getOrderList(1);
+  };
 
   getOrderList = async page => {
     const p = page || this.state.page || 1;

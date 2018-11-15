@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { TouchableWithoutFeedback, View, Text, StyleSheet, Linking } from "react-native";
 
-import { Actions } from "react-native-router-flux";
-import { Rating } from "react-native-elements";
 import call from "react-native-phone-call";
 
 const style = StyleSheet.create({
@@ -27,20 +25,6 @@ export default class Info extends Component {
     return (
       <View>
         <Text style={{ color: "#212529", fontWeight: "bold", fontSize: 24 }}>{this.props.SHOPNAME}</Text>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-            {this.props.POINT ? (
-              <Rating startingValue={this.props.POINT} readonly={true} style={{ paddingVertical: 10, marginBottom: 2 }} imageSize={18} />
-            ) : null}
-            <Text style={{ marginBottom: 13, marginLeft: 4 }}>({this.props.reviews.length}개)</Text>
-          </View>
-
-          <TouchableWithoutFeedback onPress={() => Actions.push("review", { id: this.props._id })}>
-            <View>
-              <Text style={{ color: "#468ef7", fontWeight: "bold", fontSize: 20 }}>리뷰</Text>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
 
         {this.props.ADDRESS ? (
           <View style={[style.view, { marginTop: 20 }]}>

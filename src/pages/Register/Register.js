@@ -126,6 +126,7 @@ export default class Register extends Component {
             placeholder="비밀번호 확인"
             secureTextEntry={true}
             onChangeText={text => this.onChangeText("repassword", text)}
+            onSubmitEditing={this.doRegister}
           />
 
           <TouchableWithoutFeedback onPress={this.doRegister}>

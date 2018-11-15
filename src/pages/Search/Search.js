@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TouchableWithoutFeedback, ScrollView, View, TextInput, Alert, Text, Keyboard } from "react-native";
+import { TouchableWithoutFeedback, ScrollView, View, TextInput, Alert, Text, Keyboard, Dimensions } from "react-native";
 
 import Image from "react-native-remote-svg";
 import { Actions } from "react-native-router-flux";
@@ -22,7 +22,9 @@ export default class Search extends Component {
 
     info: 0,
     lat: 0,
-    lng: 0
+    lng: 0,
+
+    deviceWidth: Dimensions.get("window").width
   };
 
   componentDidMount = () => this.syncNowAddress();
@@ -73,7 +75,7 @@ export default class Search extends Component {
           lists: p === 1 ? shops.data.lists : this.state.lists.concat(shops.data.lists),
           page: p + 1,
           search: shops.data.lists.length === 0 ? false : true,
-          loading: false,
+          loading: false
           // test: alert(JSON.stringify(shops.data.lists))
         })
       )
@@ -81,6 +83,8 @@ export default class Search extends Component {
   };
 
   showShopInfo = async id => Actions.push("shop", { id: id });
+  showReview = async id => Actions.push("review", { id: id });
+
   showShopMap = async (name, address, lat, lng) => Actions.push("daumMapShop", { name, address, lat, lng });
 
   onScroll = ({ layoutMeasurement, contentOffset, contentSize }) => {
@@ -114,7 +118,7 @@ export default class Search extends Component {
                 onChangeText={this.onChangeSearchText}
                 value={this.state.keyword}
                 placeholder="상점 이름을 입력하세요"
-                onEndEditing={this.doSearch}
+                onSubmitEditing={this.doSearch}
               />
             </View>
             <View style={{ flex: 1, marginRight: -45, marginTop: 3 }}>
@@ -127,7 +131,17 @@ export default class Search extends Component {
           </View>
 
           {this.state.lists.map((v, i) => (
-            <SearchItem key={v._id} length={this.state.lists.length} now={i + 1} {...v} showShopInfo={this.showShopInfo} showShopMap={this.showShopMap} />
+            // <Text>{JSON.stringify(v)}</Text>
+            <SearchItem
+              key={v._id}
+              length={this.state.lists.length}
+              now={i + 1}
+              {...v}
+              showShopInfo={this.showShopInfo}
+              showReview={this.showReview}
+              showShopMap={this.showShopMap}
+              deviceWidth={this.state.deviceWidth}
+            />
           ))}
         </ScrollView>
       </LoadingContainer>
