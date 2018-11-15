@@ -149,6 +149,8 @@ export default class CartItem extends Component {
   };
 
   doOrder = () => {
+    if (this.state.PHONE === "") return Alert.alert("휴대번호를 입력해주세요.");
+
     ShopApi.orderCart({
       id: this.props.id,
       cart: this.state.cart,
