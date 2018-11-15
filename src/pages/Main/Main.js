@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Text, TouchableWithoutFeedback } from "react-native";
+import { View, ScrollView, Text, TouchableWithoutFeedback, Alert } from "react-native";
 import { Actions } from "react-native-router-flux";
 
 import Image from "react-native-remote-svg";
@@ -29,7 +29,7 @@ export default class Main extends Component {
 
   syncNowAddress = async () =>
     UserApi.getAddressForDevice().then(address => {
-      if (!address) return null;
+      if (address.lat === 0 && address.lng === 0) return null;
 
       const addr = address.road_address !== "" ? address.road_address : address.address_name;
 

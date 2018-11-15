@@ -7,7 +7,7 @@ const setUserInfo = async user => {
 };
 
 const getUserInfo = async () => {
-  return JSON.parse((await AsyncStorage.getItem(StorageKeys.userStorageKey)) || { road_address: "", address_name: "", detail_address: "", lat: 0, lng: 0 });
+  return JSON.parse(await AsyncStorage.getItem(StorageKeys.userStorageKey));
 };
 
 const removeUserInfo = async () => {
@@ -19,7 +19,9 @@ const setAddressForDevice = async ({ road_address, address_name, detail_address,
 };
 
 const getAddressForDevice = async () => {
-  return JSON.parse(await AsyncStorage.getItem(StorageKeys.addressStorageKey));
+  return JSON.parse(
+    (await AsyncStorage.getItem(StorageKeys.addressStorageKey)) || JSON.stringify({ road_address: "", address_name: "", detail_address: "", lat: 0, lng: 0 })
+  );
 };
 
 export { setUserInfo, getUserInfo, removeUserInfo, setAddressForDevice, getAddressForDevice };
