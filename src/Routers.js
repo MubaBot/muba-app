@@ -1,6 +1,6 @@
 // import * as Expo from "expo";
 import React, { Component } from "react";
-import { Scene, Router, Tabs, Actions } from "react-native-router-flux";
+import { Scene, Router, Tabs, Actions, Alert } from "react-native-router-flux";
 
 import Main from "@/pages/Main";
 import Search from "@/pages/Search";
@@ -36,13 +36,8 @@ export default class Muba extends Component {
   // componentWillMount = () => this.loadFonts();
 
   requireAuth = async (nextState, replace) => {
-    const address = await UserApi.getAddressForDevice();
-
     if (!(await AuthApi.isLogged())) {
       Actions.login({ route: nextState.routeName });
-    } else if (address.lat === 0 && address.lng === 0) {
-      Alert.alert("주소를 선택해주세요.");
-      Actions.push("settings");
     } else Actions.refresh();
   };
 

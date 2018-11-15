@@ -29,7 +29,10 @@ export default class Main extends Component {
 
   syncNowAddress = async () =>
     UserApi.getAddressForDevice().then(address => {
-      if (address.lat === 0 && address.lng === 0) return null;
+      if (!address) {
+        alert("주소를 선택해주세요.");
+        return Actions.push("settings");
+      }
 
       const addr = address.road_address !== "" ? address.road_address : address.address_name;
 
