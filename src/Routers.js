@@ -36,8 +36,13 @@ export default class Muba extends Component {
   // componentWillMount = () => this.loadFonts();
 
   requireAuth = async (nextState, replace) => {
+    const address = await UserApi.getAddressForDevice();
+
     if (!(await AuthApi.isLogged())) {
       Actions.login({ route: nextState.routeName });
+    } else if (address.lat === 0 && address.lng === 0) {
+      Alert.alert("주소를 선택해주세요.");
+      Actions.push("settings");
     } else Actions.refresh();
   };
 
@@ -73,7 +78,7 @@ export default class Muba extends Component {
           <Scene key="settings" component={Settings} title="Settings" onEnter={this.requireAuth} />
           <Scene key="daumMapSetting" component={DaumMapSetting} title="Daum Map" />
           <Scene key="daumMapShop" component={DaumMapShop} title="Daum Map" />
-          
+
           <Scene key="review" component={Review} title="Review" />
           <Scene key="shop" component={Shop} title="Shop Information" onEnter={this.requireAuth} />
           <Scene key="cartItem" component={CartItem} title="Shop Cart Information" />

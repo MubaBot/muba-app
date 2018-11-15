@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { StyleSheet, View, StatusBar, Platform } from "react-native";
 
+import { Actions } from "react-native-router-flux";
+
 import Loading from "./Loading";
+
 import { AuthApi } from "apis";
 
 // import KeyboardSpacer from "react-native-keyboard-spacer";
