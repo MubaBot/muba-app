@@ -16,6 +16,8 @@ import DaumMap from "./DaumMap";
 
 import { UserApi, ShopApi, CartApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class CartItem extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +32,7 @@ export default class CartItem extends Component {
     }
 
     if (
+      nextState.ENDDATE !== this.state.ENDDATE &&
       moment(nextState.ENDDATE)
         .add(1, "days")
         .unix() < moment().unix()
@@ -229,14 +232,14 @@ export default class CartItem extends Component {
                   borderBottomWidth: 1
                 }}
               >
-                <Text style={{ color: "#212529", fontSize: 18 }}>총 금액</Text>
-                <Text style={{ color: "#468ef7", fontSize: 30, fontWeight: "bold" }}>
+                <Text style={{ color: "#212529", fontSize: textResizing(18) }}>총 금액</Text>
+                <Text style={{ color: "#468ef7", fontSize: textResizing(30), fontWeight: "bold" }}>
                   {accounting.formatMoney(this.state.price, { symbol: "원", format: "%v %s", precision: 0 })}
                 </Text>
               </View>
               <View>
-                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 20 }}>
-                  <Text style={{ color: "#212529", fontSize: 18 }}>방문포장</Text>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: marginResizing(20) }}>
+                  <Text style={{ color: "#212529", fontSize: textResizing(18) }}>방문포장</Text>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Text style={{ color: "#868e96", marginRight: 5, display: this.state.DELIVERY ? "none" : "flex" }}>배달을 하지 않는 가게입니다.</Text>
 
@@ -265,22 +268,34 @@ export default class CartItem extends Component {
                   </View>
                 </View>
 
-                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: marginResizing(10) }}>
                   <Text
-                    style={{ color: this.state.visit ? "#adb5bd" : "#212529", fontSize: 18, textDecorationLine: this.state.visit ? "line-through" : "none" }}
+                    style={{
+                      color: this.state.visit ? "#adb5bd" : "#212529",
+                      fontSize: textResizing(18),
+                      textDecorationLine: this.state.visit ? "line-through" : "none"
+                    }}
                   >
                     주소
                   </Text>
                   <Text
-                    style={{ color: this.state.visit ? "#adb5bd" : "#868e96", fontSize: 18, textDecorationLine: this.state.visit ? "line-through" : "none" }}
+                    style={{
+                      color: this.state.visit ? "#adb5bd" : "#868e96",
+                      fontSize: textResizing(18),
+                      textDecorationLine: this.state.visit ? "line-through" : "none"
+                    }}
                   >
                     {this.state.nowAddress}
                   </Text>
                 </View>
 
-                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: marginResizing(10) }}>
                   <Text
-                    style={{ color: this.state.visit ? "#adb5bd" : "#212529", fontSize: 18, textDecorationLine: this.state.visit ? "line-through" : "none" }}
+                    style={{
+                      color: this.state.visit ? "#adb5bd" : "#212529",
+                      fontSize: textResizing(18),
+                      textDecorationLine: this.state.visit ? "line-through" : "none"
+                    }}
                   >
                     상세주소
                   </Text>
@@ -288,42 +303,49 @@ export default class CartItem extends Component {
                     <TextInput
                       style={{
                         color: this.state.visit ? "#adb5bd" : "#868e96",
-                        fontSize: 18,
+                        fontSize: textResizing(18),
                         minWidth: 100,
                         textAlign: "right",
-                        textDecorationLine: this.state.visit ? "line-through" : "none"
+                        textDecorationLine: this.state.visit ? "line-through" : "none",
+                        padding: 0,
+                        margin: 0
                       }}
                       editable={!this.state.visit}
                       onChangeText={this.onChangeAddress}
+                      underlineColorAndroid="transparent"
                       placeholder="101호"
                       value={this.state.detail_address}
                     />
                   </View>
                 </View>
 
-                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>
-                  <Text style={{ color: "#212529", fontSize: 18 }}>전화번호</Text>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: marginResizing(10) }}>
+                  <Text style={{ color: "#212529", fontSize: textResizing(18) }}>전화번호</Text>
                   <TextInput
-                    style={{ color: "#868e96", fontSize: 18, minWidth: 100, textAlign: "right" }}
+                    style={{ color: "#868e96", fontSize: textResizing(18), minWidth: 100, textAlign: "right", padding: 0, margin: 0 }}
                     onChangeText={this.onChangePhone}
+                    underlineColorAndroid="transparent"
                     placeholder="010-1234-5678"
                     value={this.state.PHONE}
                   />
                 </View>
 
-                <View style={{ alignItems: "flex-start", marginTop: 10 }}>
-                  <Text style={{ color: "#212529", fontSize: 18 }}>요구사항</Text>
+                <View style={{ alignItems: "flex-start", marginTop: marginResizing(10) }}>
+                  <Text style={{ color: "#212529", fontSize: textResizing(18) }}>요구사항</Text>
                   <TextInput
                     style={{
                       color: "#212529",
-                      fontSize: 18,
-                      marginTop: 15,
+                      fontSize: textResizing(18),
+                      marginTop: marginResizing(15),
                       width: "100%",
                       borderBottomColor: "#dee2e6",
                       borderBottomWidth: 1,
-                      paddingBottom: 5
+                      paddingBottom: 5,
+                      padding: 0,
+                      margin: 0
                     }}
                     placeholder="요구사항을 입력해주세요."
+                    underlineColorAndroid="transparent"
                     onChangeText={this.onChangeRequire}
                     value={this.state.require}
                   />
@@ -331,13 +353,13 @@ export default class CartItem extends Component {
 
                 <TouchableWithoutFeedback onPress={this.doOrder}>
                   <View style={{ backgroundColor: "#468ef7", alignItems: "center", marginTop: 30 }}>
-                    <Text style={{ color: "#FFF", paddingTop: 15, paddingBottom: 15, fontSize: 20 }}>주문하기</Text>
+                    <Text style={{ color: "#FFF", paddingTop: 15, paddingBottom: 15, fontSize: textResizing(20) }}>주문하기</Text>
                   </View>
                 </TouchableWithoutFeedback>
 
                 <TouchableWithoutFeedback onPress={this.clearCart}>
                   <View style={{ borderColor: "#dee2e6", borderWidth: 1, alignItems: "center", marginTop: 20 }}>
-                    <Text style={{ color: "#212529", paddingTop: 15, paddingBottom: 15, fontSize: 20 }}>장바구니 비우기</Text>
+                    <Text style={{ color: "#212529", paddingTop: 15, paddingBottom: 15, fontSize: textResizing(20) }}>장바구니 비우기</Text>
                   </View>
                 </TouchableWithoutFeedback>
               </View>

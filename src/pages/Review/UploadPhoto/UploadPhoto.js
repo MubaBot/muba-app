@@ -8,6 +8,8 @@ import LoadingContainer from "@/components/LoadingContainer";
 const deviceWidth = Dimensions.get("window").width;
 const pageCount = 18;
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class UploadPhoto extends Component {
   state = { count: 0, photos: [], page: 1, selectedPhotos: {} };
 
@@ -75,7 +77,7 @@ export default class UploadPhoto extends Component {
               </View>
             </TouchableWithoutFeedback>
 
-            <Text style={{ fontSize: 25, fontWeight: "bold", color: "#212529" }}>모든 사진</Text>
+            <Text style={{ fontSize: textResizing(25), fontWeight: "bold", color: "#212529" }}>모든 사진</Text>
 
             <TouchableWithoutFeedback onPress={this.uploadPhotos}>
               <View>

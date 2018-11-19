@@ -11,6 +11,8 @@ import Image from "react-native-remote-svg";
 import Swiper from "@/components/lib/Swiper";
 import { ShopApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class SearchShops extends Component {
   state = { lists: [] };
 
@@ -57,7 +59,7 @@ export default class SearchShops extends Component {
           <View key={v._id} style={{ width: "100%", alignItems: "center", justifyContent: "center", paddingTop: 10 }}>
             <View style={{ width: "70%", backgroundColor: "#FFF" }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ color: "#212529", fontSize: 18, fontWeight: "bold" }}>{v.SHOPNAME}</Text>
+                <Text style={{ color: "#212529", fontSize: textResizing(18), fontWeight: "bold" }}>{v.SHOPNAME}</Text>
               </View>
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -67,12 +69,14 @@ export default class SearchShops extends Component {
               <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6", marginTop: 4 }}>
                 <TouchableWithoutFeedback onPress={() => this.showShopInfo(v._id)}>
                   <View style={{ width: "50%", alignItems: "center" }}>
-                    <Text style={{ color: "#212529", fontSize: 16, paddingTop: 10, paddingBottom: 10 }}>메뉴/정보</Text>
+                    <Text style={{ color: "#212529", fontSize: textResizing(16), paddingTop: 10, paddingBottom: 10 }}>메뉴/정보</Text>
                   </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={() => this.showReview(v._id)}>
                   <View style={{ width: "50%", alignItems: "center", borderLeftWidth: 1, borderLeftColor: "#dee2e6" }}>
-                    <Text style={{ color: "#212529", fontSize: 16, paddingTop: 10, paddingBottom: 10 }}>리뷰 ({v.reviews ? v.reviews.length : 0}개)</Text>
+                    <Text style={{ color: "#212529", fontSize: textResizing(16), paddingTop: 10, paddingBottom: 10 }}>
+                      리뷰 ({v.reviews ? v.reviews.length : 0}개)
+                    </Text>
                   </View>
                 </TouchableWithoutFeedback>
               </View>
@@ -85,7 +89,7 @@ export default class SearchShops extends Component {
 
               {/* <TouchableWithoutFeedback onPress={() => call({ number: this.props.PHONE, prompt: true })}>
                 <View style={{ alignItems: "center", backgroundColor: "#468ef7" }}>
-                  <Text style={{ color: "#FFF", fontSize: 20, fontWeight: "bold", paddingTop: 15, paddingBottom: 15 }}>전화 주문하기</Text>
+                  <Text style={{ color: "#FFF", fontSize: textResizing(20), fontWeight: "bold", paddingTop: 15, paddingBottom: 15 }}>전화 주문하기</Text>
                 </View>
               </TouchableWithoutFeedback> */}
 

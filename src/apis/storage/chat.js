@@ -5,7 +5,8 @@ import StorageKeys from "./index";
 const CONFIG = {
   TYPE_LOADING: -1,
   TYPE_NORMAL: 0,
-  TYPE_SERACH: 1,
+  TYPE_SERACH_FOOD: 1,
+  TYPE_SHOP_MENU: 2,
 
   BOT_ID: -1,
   BOT_NAME: "무 바"

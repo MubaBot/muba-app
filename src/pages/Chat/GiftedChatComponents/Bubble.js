@@ -11,6 +11,8 @@ import Color from "./Color";
 
 import { isSameUser, isSameDay } from "./utils";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Bubble extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -114,6 +116,13 @@ export default class Bubble extends React.PureComponent {
     return null;
   }
 
+  renderCustomInnerView = () => {
+    if (this.props.renderCustomInnerView) {
+      return this.props.renderCustomInnerView(this.props);
+    }
+    return null;
+  };
+
   render() {
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
@@ -122,7 +131,8 @@ export default class Bubble extends React.PureComponent {
         >
           <TouchableWithoutFeedback onLongPress={this.onLongPress} accessibilityTraits="text" {...this.props.touchableProps}>
             <View>
-              {this.renderCustomView()}
+              {/* {this.renderCustomView()} */}
+              {this.renderCustomInnerView()}
               {this.renderMessageImage()}
               {this.renderMessageText()}
               <View style={[styles.bottom, this.props.bottomContainerStyle[this.props.position]]}>
@@ -185,7 +195,7 @@ const styles = {
     justifyContent: "flex-end"
   },
   tick: {
-    fontSize: 10,
+    fontSize: textResizing(10),
     backgroundColor: Color.backgroundTransparent,
     color: Color.white
   },

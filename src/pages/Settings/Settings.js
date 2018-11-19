@@ -12,6 +12,8 @@ import Profile from "./Profile";
 
 import { UserApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Settings extends Component {
   constructor(props) {
     super(props);
@@ -147,7 +149,7 @@ export default class Settings extends Component {
                   style={{
                     backgroundColor: "#468ef7",
                     color: "#FFF",
-                    fontSize: 20,
+                    fontSize: textResizing(20),
                     fontWeight: "bold",
                     paddingTop: 15,
                     paddingBottom: 15,

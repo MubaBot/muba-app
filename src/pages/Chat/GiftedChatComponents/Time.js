@@ -10,6 +10,8 @@ import "moment/locale/ko";
 import Color from "./Color";
 import { TIME_FORMAT } from "./Constant";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default function Time({ position, containerStyle, currentMessage, timeFormat, textStyle }, context) {
   return (
     <View style={[styles[position].container, containerStyle[position]]}>
@@ -30,7 +32,7 @@ const containerStyle = {
 };
 
 const textStyle = {
-  fontSize: 10,
+  fontSize: textResizing(10),
   backgroundColor: "transparent",
   textAlign: "right"
 };

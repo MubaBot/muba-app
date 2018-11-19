@@ -13,6 +13,8 @@ import DaumMap from "./DaumMap";
 
 import { ShopApi, CartApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Shop extends Component {
   constructor(props) {
     super(props);
@@ -106,7 +108,7 @@ export default class Shop extends Component {
         <View style={{ position: "absolute", bottom: 0, width: "100%", zIndex: 9999, height: 50 }}>
           <TouchableWithoutFeedback onPress={this.doOrder}>
             <View style={{ backgroundColor: "#468ef7", height: "100%", alignItems: "center", justifyContent: "center" }}>
-              <Text style={{ color: "#FFF", fontSize: 20, fontWeight: "bold" }}>{this.state.cartLength}개 주문하기</Text>
+              <Text style={{ color: "#FFF", fontSize: textResizing(20), fontWeight: "bold" }}>{this.state.cartLength}개 주문하기</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -115,7 +117,7 @@ export default class Shop extends Component {
           ref="toast"
           positionValue={175}
           style={{ backgroundColor: "rgba(0,0,0,0.7)", borderRadius: 5, padding: 10, paddingLeft: 20, paddingRight: 20 }}
-          textStyle={{ fontSize: 20, fontWeight: "bold", color: "#FFF" }}
+          textStyle={{ fontSize: textResizing(20), fontWeight: "bold", color: "#FFF" }}
         />
       </LoadingContainer>
     );

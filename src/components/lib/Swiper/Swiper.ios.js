@@ -6,6 +6,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Text, View, ViewPropTypes, ScrollView, Dimensions, TouchableOpacity, ViewPagerAndroid, Platform, ActivityIndicator } from "react-native";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 /**
  * Default styles
  * @type {StyleSheetPropType}
@@ -80,7 +82,7 @@ const styles = {
   },
 
   buttonText: {
-    fontSize: 50,
+    fontSize: textResizing(50),
     color: "#007aff"
   }
 };

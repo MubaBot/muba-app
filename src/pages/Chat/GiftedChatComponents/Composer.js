@@ -5,6 +5,8 @@ import { Platform, StyleSheet, TextInput } from "react-native";
 import { MIN_COMPOSER_HEIGHT, DEFAULT_PLACEHOLDER } from "./Constant";
 import Color from "./Color";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Composer extends React.Component {
   state = {
     focus: false
@@ -41,6 +43,7 @@ export default class Composer extends React.Component {
         onChangeText={text => this.onChangeText(text)}
         style={[styles.textInput, this.props.textInputStyle, { height: this.props.composerHeight }]}
         autoFocus={this.props.textInputAutoFocus}
+        underlineColorAndroid="transparent"
         value={this.props.text}
         enablesReturnKeyAutomatically
         underlineColorAndroid="transparent"
@@ -55,7 +58,7 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     marginLeft: 10,
-    fontSize: 16,
+    fontSize: textResizing(16),
     lineHeight: 16,
     marginTop: Platform.select({
       ios: 6,

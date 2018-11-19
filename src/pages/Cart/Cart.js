@@ -8,6 +8,8 @@ import CartItem from "./CartItem";
 
 import { CartApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Cart extends Component {
   state = {
     lists: [],
@@ -59,11 +61,11 @@ export default class Cart extends Component {
           ))}
 
           {this.state.lists.length === 0 ? (
-            <Text style={{ width: "100%", textAlign: "center", marginTop: 50, fontSize: 27, color: "#212529" }}>장바구니가 비었습니다.</Text>
+            <Text style={{ width: "100%", textAlign: "center", marginTop: 50, fontSize: textResizing(27), color: "#212529" }}>장바구니가 비었습니다.</Text>
           ) : (
             <TouchableWithoutFeedback onPress={this.removeAllCart}>
               <View>
-                <Text style={{ width: "100%", marginBottom: 30, textAlign: "center", marginTop: 50, fontSize: 27, color: "#212529" }}>
+                <Text style={{ width: "100%", marginBottom: 30, textAlign: "center", marginTop: 50, fontSize: textResizing(27), color: "#212529" }}>
                   장바구니 전체 비우기
                 </Text>
               </View>

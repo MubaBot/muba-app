@@ -8,6 +8,8 @@ import OrderItem from "./OrderItem";
 
 import { OrderApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Order extends Component {
   state = {
     lists: [],
@@ -69,7 +71,7 @@ export default class Order extends Component {
           ))}
 
           {this.state.lists.length === 0 ? (
-            <Text style={{ width: "100%", textAlign: "center", marginTop: 50, fontSize: 27, color: "#212529" }}>주문 기록이 없습니다.</Text>
+            <Text style={{ width: "100%", textAlign: "center", marginTop: 50, fontSize: textResizing(27), color: "#212529" }}>주문 기록이 없습니다.</Text>
           ) : null}
         </ScrollView>
       </LoadingContainer>

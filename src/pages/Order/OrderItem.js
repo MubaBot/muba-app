@@ -8,6 +8,8 @@ import SvgImage from "react-native-remote-svg";
 
 import { OrderApi, CartApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Order extends Component {
   constructor(props) {
     super(props);
@@ -39,16 +41,16 @@ export default class Order extends Component {
     switch (admission) {
       case 0:
         return (
-          <Text style={{ fontSize: 18, fontWeight: "bold", color: "#e75d5d" }}>
+          <Text style={{ fontSize: textResizing(18), fontWeight: "bold", color: "#e75d5d" }}>
             {this.props.order_refuse_message ? this.props.order_refuse_message.NAME : "거절됨"}
           </Text>
         );
       case 1:
-        return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#468ef7" }}>승인됨</Text>;
+        return <Text style={{ fontSize: textResizing(18), fontWeight: "bold", color: "#468ef7" }}>승인됨</Text>;
       case 2:
-        return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#e75d5d" }}>취소함</Text>;
+        return <Text style={{ fontSize: textResizing(18), fontWeight: "bold", color: "#e75d5d" }}>취소함</Text>;
       case null:
-        return <Text style={{ fontSize: 18, fontWeight: "bold", color: "#77dd77" }}>대기중</Text>;
+        return <Text style={{ fontSize: textResizing(18), fontWeight: "bold", color: "#77dd77" }}>대기중</Text>;
     }
   };
 
@@ -102,24 +104,24 @@ export default class Order extends Component {
     return (
       <View style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#dee2e6" }}>
         <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" }}>
-          <Text style={{ color: "#212529", fontSize: 14 }}>{moment(this.props.createdAt).fromNow()}</Text>
+          <Text style={{ color: "#212529", fontSize: textResizing(14) }}>{moment(this.props.createdAt).fromNow()}</Text>
           {this.displayAdmission(this.state.ADMISSION)}
         </View>
-        <Text style={{ color: "#212529", fontWeight: "bold", fontSize: 24, marginTop: 5 }}>{this.props.shop.SHOPNAME}</Text>
-        <Text style={{ color: "#868e96", fontSize: 16, marginTop: 5 }}>{this.props.ADDRESS}</Text>
+        <Text style={{ color: "#212529", fontWeight: "bold", fontSize: textResizing(24), marginTop: 5 }}>{this.props.shop.SHOPNAME}</Text>
+        <Text style={{ color: "#868e96", fontSize: textResizing(16), marginTop: 5 }}>{this.props.ADDRESS}</Text>
 
         <View style={{ backgroundColor: "#FFF", borderColor: "#dee2e6", borderWidth: 1, borderBottomWidth: 0, padding: 20, paddingBottom: 13, marginTop: 20 }}>
           {this.props.order_menus.map((v, i) => (
             <View key={v._id} style={{ flexDirection: "row", alignItems: "center", marginBottom: 7 }}>
-              <Text style={{ fontSize: 18, color: "#212529", marginRight: 5 }}>
+              <Text style={{ fontSize: textResizing(18), color: "#212529", marginRight: 5 }}>
                 {v.shop_menu.MENUNAME}
                 {this.getOptionNames(v)}
               </Text>
-              <Text style={{ fontSize: 18, fontWeight: "bold", color: "#212529", marginRight: 1 }}>
+              <Text style={{ fontSize: textResizing(18), fontWeight: "bold", color: "#212529", marginRight: 1 }}>
                 {accounting.formatMoney(v.PRICE + this.getOptionPrice(v), { symbol: "원", format: "%v%s", precision: 0 })}
               </Text>
-              <Text style={{ fontSize: 10, color: "#212529", marginRight: 1 }}>∙</Text>
-              <Text style={{ fontSize: 18, color: "#212529" }}>{v.COUNT}개</Text>
+              <Text style={{ fontSize: textResizing(10), color: "#212529", marginRight: 1 }}>∙</Text>
+              <Text style={{ fontSize: textResizing(18), color: "#212529" }}>{v.COUNT}개</Text>
             </View>
           ))}
         </View>

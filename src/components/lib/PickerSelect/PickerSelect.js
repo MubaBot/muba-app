@@ -3,6 +3,8 @@ import { ColorPropType, Modal, Picker, Platform, StyleSheet, Text, TextInput, To
 import PropTypes from "prop-types";
 import { isEqual } from "lodash";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class RNPickerSelect extends PureComponent {
   static propTypes = {
     onValueChange: PropTypes.func.isRequired,
@@ -242,6 +244,7 @@ export default class RNPickerSelect extends PureComponent {
           style={[!hideIcon ? { paddingRight: 30 } : {}, style.inputIOS, this.getPlaceholderStyle()]}
           value={this.state.selectedItem.label}
           ref={this.setInputRef}
+          underlineColorAndroid="transparent"
           editable={false}
           {...textInputProps}
         />
@@ -381,7 +384,7 @@ const defaultStyles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 3,
     padding: 10,
-    fontSize: 18
+    fontSize: textResizing(18)
   },
   underline: {
     borderTopWidth: 1,

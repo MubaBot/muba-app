@@ -11,6 +11,8 @@ import Carousel from "react-native-snap-carousel";
 
 import { ShopApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class SearchItem extends Component {
   constructor(props) {
     super(props);
@@ -31,14 +33,14 @@ export default class SearchItem extends Component {
         <Text
           style={
             existSale
-              ? { fontSize: 14, color: "#868e96", textDecorationLine: "line-through", marginRight: 7, marginTop: 1 }
-              : { fontSize: 20, color: "#212529", fontWeight: "bold" }
+              ? { fontSize: textResizing(14), color: "#868e96", textDecorationLine: "line-through", marginRight: 7, marginTop: 1 }
+              : { fontSize: textResizing(20), color: "#212529", fontWeight: "bold" }
           }
         >
           {accounting.formatMoney(menu.PRICE, { symbol: "원", format: "%v%s", precision: 0 })}
         </Text>
         {existSale ? (
-          <Text style={{ fontSize: 20, color: "#212529", fontWeight: "bold" }}>
+          <Text style={{ fontSize: textResizing(20), color: "#212529", fontWeight: "bold" }}>
             {accounting.formatMoney(menu.sales[0].PRICE, { symbol: "원", format: "%v%s", precision: 0 })}
           </Text>
         ) : null}
@@ -49,12 +51,31 @@ export default class SearchItem extends Component {
   renderMenuItems = ({ item, index }) => {
     return (
       <View>
+        {item.sales.length !== 0 ? (
+          <View
+            style={{
+              position: "absolute",
+              right: 5,
+              backgroundColor: "rgba(33,35,41,0.5)",
+              opacity: 0.5,
+              paddingTop: 2,
+              paddingBottom: 2,
+              paddingLeft: 10,
+              paddingRight: 10,
+              borderRadius: 10,
+              top: 145,
+              zIndex: 888
+            }}
+          >
+            <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: textResizing(14) }}>{item.sales[0].COUNT}개 남음</Text>
+          </View>
+        ) : null}
         <Image
           style={{ width: "100%", height: 170, borderRadius: 3 }}
           source={{ uri: "https://api.mubabot.com/static/" + (item.URL ? "menu/" + item.URL : "public/img/noimage.png") }}
         />
         <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 5 }}>
-          <Text style={{ fontSize: 20, color: "#212529" }}>{item.MENUNAME}</Text>
+          <Text style={{ fontSize: textResizing(20), color: "#212529" }}>{item.MENUNAME}</Text>
           {this.getMenuPrice(item)}
         </View>
       </View>
@@ -66,19 +87,19 @@ export default class SearchItem extends Component {
       <View>
         <View style={{ paddingLeft: 30, paddingRight: 30, marginTop: 30 }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ color: "#212529", fontSize: 23, fontWeight: "bold", marginRight: 5 }}>{this.props.SHOPNAME}</Text>
+            <Text style={{ color: "#212529", fontSize: textResizing(23), fontWeight: "bold", marginRight: 5 }}>{this.props.SHOPNAME}</Text>
             <Rating startingValue={this.props.POINT} readonly={true} style={{ paddingVertical: 10, marginBottom: 2 }} imageSize={18} />
           </View>
 
           <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6", marginTop: 7 }}>
             <TouchableWithoutFeedback onPress={() => this.props.showShopInfo(this.props._id)}>
               <View style={{ width: "50%", alignItems: "center" }}>
-                <Text style={{ color: "#212529", fontSize: 20, paddingTop: 15, paddingBottom: 15 }}>메뉴/정보</Text>
+                <Text style={{ color: "#212529", fontSize: textResizing(20), paddingTop: 15, paddingBottom: 15 }}>메뉴/정보</Text>
               </View>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={() => this.props.showReview(this.props._id)}>
               <View style={{ width: "50%", alignItems: "center", borderLeftWidth: 1, borderLeftColor: "#dee2e6" }}>
-                <Text style={{ color: "#212529", fontSize: 20, paddingTop: 15, paddingBottom: 15 }}>
+                <Text style={{ color: "#212529", fontSize: textResizing(20), paddingTop: 15, paddingBottom: 15 }}>
                   리뷰 ({this.props.reviews ? this.props.reviews.length : 0}개)
                 </Text>
               </View>
@@ -106,7 +127,7 @@ export default class SearchItem extends Component {
         <View style={{ paddingLeft: 30, paddingRight: 30 }}>
           <TouchableWithoutFeedback onPress={() => call({ number: this.props.PHONE, prompt: true })}>
             <View style={{ alignItems: "center", backgroundColor: "#468ef7" }}>
-              <Text style={{ color: "#FFF", fontSize: 20, fontWeight: "bold", paddingTop: 15, paddingBottom: 15 }}>전화 주문하기</Text>
+              <Text style={{ color: "#FFF", fontSize: textResizing(20), fontWeight: "bold", paddingTop: 15, paddingBottom: 15 }}>전화 주문하기</Text>
             </View>
           </TouchableWithoutFeedback>
 

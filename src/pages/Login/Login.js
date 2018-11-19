@@ -6,6 +6,8 @@ import LoadingContainer from "@/components/LoadingContainer";
 
 import { AuthApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Login extends Component {
   constructor(props) {
     super(props);
@@ -43,11 +45,11 @@ export default class Login extends Component {
 
   render() {
     return (
-      <LoadingContainer loading={false} header={<Text style={{ fontSize: 25, fontWeight: "bold", color: "#212529" }}>로그인</Text>}>
+      <LoadingContainer loading={false} header={<Text style={{ fontSize: textResizing(25), fontWeight: "bold", color: "#212529" }}>로그인</Text>}>
         <View>
           <TextInput
             style={{
-              fontSize: 24,
+              fontSize: textResizing(24),
               paddingTop: 10,
               paddingBottom: 10,
               marginTop: 40,
@@ -58,11 +60,12 @@ export default class Login extends Component {
             }}
             autoFocus
             placeholder="아이디 또는 이메일"
+            underlineColorAndroid="transparent"
             onChangeText={text => this.onChangeText("id", text)}
           />
           <TextInput
             style={{
-              fontSize: 24,
+              fontSize: textResizing(24),
               paddingTop: 10,
               paddingBottom: 10,
               marginTop: 20,
@@ -72,6 +75,7 @@ export default class Login extends Component {
               borderBottomColor: "#ced4da"
             }}
             placeholder="비밀번호"
+            underlineColorAndroid="transparent"
             secureTextEntry={true}
             onChangeText={text => this.onChangeText("password", text)}
             onSubmitEditing={this.doLogin}
@@ -80,13 +84,13 @@ export default class Login extends Component {
             <View
               style={{ marginLeft: 30, marginRight: 30, marginTop: 60, backgroundColor: "#468ef7", paddingTop: 15, paddingBottom: 15, alignItems: "center" }}
             >
-              <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 20 }}>로그인</Text>
+              <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: textResizing(20) }}>로그인</Text>
             </View>
           </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback onPress={() => Actions.push("register")}>
             <View style={{ marginLeft: 30, marginRight: 30, marginTop: 15, paddingTop: 15, paddingBottom: 15, alignItems: "center" }}>
-              <Text style={{ color: "#468ef7", fontWeight: "bold", fontSize: 20 }}>회원가입</Text>
+              <Text style={{ color: "#468ef7", fontWeight: "bold", fontSize: textResizing(20) }}>회원가입</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>

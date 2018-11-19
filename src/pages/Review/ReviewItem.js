@@ -4,6 +4,8 @@ import { TouchableWithoutFeedback, View, Text, Image } from "react-native";
 import { Rating } from "react-native-elements";
 import moment from "moment";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class ReviewItem extends Component {
   getMenuOptions = menu => {
     let options = [];
@@ -37,7 +39,7 @@ export default class ReviewItem extends Component {
       <View style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#dee2e6" }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold", color: "#212529" }}>{this.props.user.USERNAME}</Text>
+            <Text style={{ fontSize: textResizing(20), fontWeight: "bold", color: "#212529" }}>{this.props.user.USERNAME}</Text>
             <Rating startingValue={this.props.POINT} readonly={true} style={{ marginLeft: 5, marginTop: 2 }} imageSize={12} />
           </View>
           <Text>{moment(this.props.createdAt).fromNow()}</Text>
@@ -56,7 +58,7 @@ export default class ReviewItem extends Component {
         </View>
 
         <View style={{ marginTop: 10 }}>
-          <Text style={{ fontSize: 16, color: "#212529" }}>{this.props.TEXT}</Text>
+          <Text style={{ fontSize: textResizing(16), color: "#212529" }}>{this.props.TEXT}</Text>
         </View>
       </View>
     );

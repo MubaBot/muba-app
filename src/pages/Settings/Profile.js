@@ -6,6 +6,8 @@ import Image from "react-native-remote-svg";
 import { RadioGroup, RadioButton } from "@/components/lib/RadioButton";
 import DatePicker from "@/components/DatePicker";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 const genderList = [{ label: "선택 안함", value: null }, { label: "남", value: true }, { label: "여", value: false }];
 
 export default class Profile extends Component {
@@ -64,7 +66,7 @@ export default class Profile extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 30 }}>이름을 입력하세요</Text>
+        <Text style={{ fontSize: textResizing(30) }}>이름을 입력하세요</Text>
 
         <View
           style={{
@@ -80,7 +82,8 @@ export default class Profile extends Component {
           <View style={{ flex: 4 }}>
             <TextInput
               ref={ref => (this.name = ref)}
-              style={{ fontSize: 30 }}
+              style={{ fontSize: textResizing(30), padding: 0 }}
+              underlineColorAndroid="transparent"
               onFocus={() => this.props.focusKeyboard("profile", "in")}
               onBlur={() => this.props.focusKeyboard("profile", "out")}
               onChangeText={this.props.setName}
@@ -97,7 +100,7 @@ export default class Profile extends Component {
           </View>
         </View>
 
-        <Text style={{ fontSize: 30 }}>전화번호를 입력하세요</Text>
+        <Text style={{ fontSize: textResizing(30) }}>전화번호를 입력하세요</Text>
 
         <View
           style={{
@@ -112,7 +115,8 @@ export default class Profile extends Component {
           <View style={{ flex: 4 }}>
             <TextInput
               ref={ref => (this.phone = ref)}
-              style={{ fontSize: 30 }}
+              underlineColorAndroid="transparent"
+              style={{ fontSize: textResizing(30), padding: 0 }}
               onFocus={() => this.props.focusKeyboard("profile", "in")}
               onBlur={() => this.props.focusKeyboard("profile", "out")}
               onChangeText={this.props.setPhone}
@@ -131,18 +135,18 @@ export default class Profile extends Component {
         </View>
 
         <View style={{ marginTop: 15, marginBottom: 5, flex: 1, flexDirection: "row" }}>
-          <Text style={{ fontSize: 20 }}>성별 : </Text>
+          <Text style={{ fontSize: textResizing(20) }}>성별 : </Text>
 
           <RadioGroup selectedIndex={this.state.gender} onSelect={(i, v) => this.props.setGender(v)} style={{ flex: 1, flexDirection: "row", marginTop: -10 }}>
             {genderList.map((x, i) => (
               <RadioButton key={i} value={x.value} color="#468ef7" activeColor="#000" borderColor="#bababa">
-                <Text style={{ fontSize: 20 }}>{x.label}</Text>
+                <Text style={{ fontSize: textResizing(20) }}>{x.label}</Text>
               </RadioButton>
             ))}
           </RadioGroup>
         </View>
         <View style={{ marginTop: 5, marginBottom: 5, flex: 1, flexDirection: "row" }}>
-          <Text style={{ fontSize: 20 }}>생일 : </Text>
+          <Text style={{ fontSize: textResizing(20) }}>생일 : </Text>
           <DatePicker
             year={this.state.year}
             month={this.state.month}

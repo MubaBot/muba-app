@@ -6,6 +6,8 @@ import { StyleSheet, Text, TouchableOpacity, View, ViewPropTypes } from "react-n
 
 import Color from "./Color";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Send extends React.Component {
   render() {
     const { text, containerStyle, onSend, children, textStyle, label, alwaysShowSend } = this.props;
@@ -36,7 +38,7 @@ const styles = StyleSheet.create({
   text: {
     color: Color.defaultBlue,
     fontWeight: "600",
-    fontSize: 17,
+    fontSize: textResizing(17),
     backgroundColor: Color.backgroundTransparent,
     marginBottom: 12,
     marginLeft: 10,

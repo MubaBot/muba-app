@@ -8,6 +8,10 @@ const searchShop = async ({ keyword, page, lat, lng }) => {
   return Axios.Get(["/api/shop/list", page, lat, lng, keyword].join("/"));
 };
 
+const searchShopFood = async ({ keyword, page, lat, lng }) => {
+  return Axios.Get(["/api/shop/food/list", page, lat, lng, keyword].join("/")).then(shops => shops.data.lists);
+};
+
 const getShopInfo = async ({ id }) => {
   return Axios.Get("/api/shop/" + id);
 };
@@ -44,4 +48,4 @@ const getReview = async ({ shop, page }) => {
   return Axios.Get(["/api/shop", shop, "review", page].join("/")).then(res => res.data.reviews);
 };
 
-export { searchSaleShopList, searchShop, setLatlng, getShopInfo, getShopMenus, orderCart, writeReview, getReview };
+export { searchSaleShopList, searchShop, searchShopFood, setLatlng, getShopInfo, getShopMenus, orderCart, writeReview, getReview };

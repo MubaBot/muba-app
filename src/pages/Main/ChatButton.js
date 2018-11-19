@@ -3,6 +3,8 @@ import { Platform, View, StyleSheet } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { Icon, Text } from "native-base";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 const styles = StyleSheet.create({
   chatContainer: {
     width: "100%",
@@ -14,7 +16,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 80,
     lineHeight: Platform.OS === "ios" ? 65 : 50,
-    fontSize: 20
+    fontSize: textResizing(20)
   },
   chatButton: {
     position: "absolute",
@@ -38,11 +40,7 @@ export default class ChatButton extends Component {
       <View style={styles.chatContainer}>
         <Text style={styles.chatText}>무바랑 대화하기</Text>
         <View style={styles.chatButton}>
-          <Icon
-            onPress={goToChat}
-            name="chatboxes"
-            style={{ color: "white" }}
-          />
+          <Icon onPress={goToChat} name="chatboxes" style={{ color: "white" }} />
         </View>
       </View>
     );

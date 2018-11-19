@@ -8,6 +8,8 @@ import { range } from "lodash";
 import moment from "moment";
 import "moment/locale/ko";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class DatePicker extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +42,7 @@ export default class DatePicker extends Component {
           onValueChange={this.props.updateYear ? this.props.updateYear : year => this.setState({ year })}
           value={this.state.year}
         >
-          <Text style={{ fontSize: 20, marginLeft: 10 }}>{this.state.year}년</Text>
+          <Text style={{ fontSize: textResizing(20), marginLeft: 10 }}>{this.state.year}년</Text>
         </PickerSelect>
 
         <PickerSelect
@@ -52,7 +54,7 @@ export default class DatePicker extends Component {
           onValueChange={this.props.updateMonth ? this.props.updateMonth : month => this.setState({ month })}
           value={this.state.month}
         >
-          <Text style={{ fontSize: 20, marginLeft: 10 }}>{this.state.month}월</Text>
+          <Text style={{ fontSize: textResizing(20), marginLeft: 10 }}>{this.state.month}월</Text>
         </PickerSelect>
 
         <PickerSelect
@@ -64,7 +66,7 @@ export default class DatePicker extends Component {
           onValueChange={this.props.updateDay ? this.props.updateDay : day => this.setState({ day })}
           value={this.state.day}
         >
-          <Text style={{ fontSize: 20, marginLeft: 10 }}>{this.state.day}일</Text>
+          <Text style={{ fontSize: textResizing(20), marginLeft: 10 }}>{this.state.day}일</Text>
         </PickerSelect>
       </View>
     );

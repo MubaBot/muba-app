@@ -10,6 +10,8 @@ import MainItem from "./MainItem";
 
 import { AuthApi, UserApi, ShopApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Main extends Component {
   state = {
     location: "",
@@ -24,11 +26,7 @@ export default class Main extends Component {
 
   reloadSaleShopList = () =>
     AuthApi.isLogged().then(isLogin =>
-      isLogin === true
-        ? this.syncNowAddress().then(address => {
-            this.updateSaleShopList(address.lat, address.lng, 1, 0).then(() => this.setState({ page: 2 }));
-          })
-        : null
+      isLogin === true ? this.syncNowAddress().then(address => this.updateSaleShopList(address.lat, address.lng, 1, 0)) : null
     );
 
   syncNowAddress = async () =>
@@ -70,9 +68,19 @@ export default class Main extends Component {
           }
         }
 
-        this.setState({ loading: false, lists: p === 1 ? lists : this.state.lists.concat(lists) });
+        this.setState({ loading: false, lists: p === 1 ? lists : this.state.lists.concat(lists), page: p + 1 });
       })
       .catch(err => []);
+  };
+
+  getNextSaleShopList = async () => this.updateSaleShopList(this.state.lat.lat, this.state.lng, this.state.page, 0);
+
+  onScroll = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    if (contentSize.height - layoutMeasurement.height <= contentOffset.y) {
+      if (!this.state.next) return null;
+      this.setState({ loading: true });
+      this.getOrderList();
+    }
   };
 
   render() {
@@ -94,7 +102,7 @@ export default class Main extends Component {
           <Image source={require("assets/logo.svg")} style={{ marginLeft: 10, height: 25 }} />
 
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", marginRight: 20 }}>
-            <Text style={{ color: "#212529", fontSize: 22, marginRight: 7 }}>{this.state.location || "장소를 선택해 주세요."}</Text>
+            <Text style={{ color: "#212529", fontSize: textResizing(22), marginRight: 7 }}>{this.state.location || "장소를 선택해 주세요."}</Text>
 
             <TouchableWithoutFeedback onPress={() => Actions.push("settings")}>
               <View>
@@ -103,19 +111,12 @@ export default class Main extends Component {
             </TouchableWithoutFeedback>
           </View>
         </View>
-
-        <ScrollView style={{ paddingLeft: 20, marginRight: 20, paddingBottom: 10, marginBottom: 70 }}>
+        <ScrollView
+          style={{ paddingLeft: 20, marginRight: 20, paddingBottom: 10, marginBottom: 70 }}
+          onScroll={({ nativeEvent }) => this.onScroll(nativeEvent)}
+        >
           <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 30 }}>
-            <Text style={{ color: "#212529", fontSize: 25, fontWeight: "bold" }}>땡처리 메뉴 추천</Text>
-            {/* <TouchableWithoutFeedback onPress={null}>
-              <View style={{ flexDirection: "row", marginTop: 5 }}>
-                <Text style={{ color: "#212529", fontSize: 20, marginRight: 5 }}>할인시간순</Text>
-
-                <View>
-                  <Image source={require("assets/icons/icon-chevron-down.svg")} style={{ width: 10, height: 10, marginTop: 2 }} />
-                </View>
-              </View>
-            </TouchableWithoutFeedback> */}
+            <Text style={{ color: "#212529", fontSize: textResizing(25), fontWeight: "bold" }}>땡처리 메뉴 추천</Text>
           </View>
           <View style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 20 }}>
             {this.state.lists.map((v, i) => (

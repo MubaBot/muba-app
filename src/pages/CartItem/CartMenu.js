@@ -6,6 +6,8 @@ import SvgImage from "react-native-remote-svg";
 
 import { CartApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class CartMenu extends Component {
   constructor(props) {
     super(props);
@@ -55,28 +57,28 @@ export default class CartMenu extends Component {
           />
 
           <View style={{ width: "100%" }}>
-            <Text style={{ color: "#212529", fontSize: 22, lineHeight: 35 }}>{this.state.MENUNAME}</Text>
+            <Text style={{ color: "#212529", fontSize: textResizing(22), lineHeight: 35 }}>{this.state.MENUNAME}</Text>
             <View style={this.state.shop_menu_options.length !== 0 ? { borderBottomColor: "#dee2e6", borderBottomWidth: 1, paddingBottom: 20 } : {}}>
               <View>
                 <View style={{ flexDirection: "row", height: 35, alignItems: "center" }}>
                   <Text
                     style={[
                       this.state.sales[0]
-                        ? { fontSize: 15, color: "#868e96", textDecorationLine: "line-through" }
-                        : { fontSize: 16, color: "#212529", fontWeight: "bold" }
+                        ? { fontSize: textResizing(15), color: "#868e96", textDecorationLine: "line-through" }
+                        : { fontSize: textResizing(16), color: "#212529", fontWeight: "bold" }
                     ]}
                   >
                     {accounting.formatMoney(this.state.PRICE, { symbol: "원", format: "%v%s", precision: 0 })}
                   </Text>
                   {this.state.sales[0] ? (
-                    <Text style={{ fontSize: 16, color: "#212529", fontWeight: "bold", marginLeft: 3, marginRight: 3 }}>
+                    <Text style={{ fontSize: textResizing(16), color: "#212529", fontWeight: "bold", marginLeft: 3, marginRight: 3 }}>
                       {accounting.formatMoney(this.state.sales[0].PRICE, { symbol: "원", format: "%v%s", precision: 0 })}
                     </Text>
                   ) : null}
                 </View>
 
                 {this.state.sales[0] && this.state.sales[0].COUNT !== 0 ? (
-                  <Text style={{ fontSize: 16, color: "#212529", marginTop: -10 }}>({this.state.sales[0].COUNT}개 남음)</Text>
+                  <Text style={{ fontSize: textResizing(16), color: "#212529", marginTop: -10 }}>({this.state.sales[0].COUNT}개 남음)</Text>
                 ) : null}
               </View>
             </View>

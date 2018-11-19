@@ -7,6 +7,8 @@ import accounting from "accounting-js";
 
 import { ShopApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class CartItem extends Component {
   state = {
     SHOPNAME: "",
@@ -65,7 +67,7 @@ export default class CartItem extends Component {
     return (
       <View style={{ paddingLeft: 30, paddingRight: 30, marginTop: 30 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={{ color: "#212529", fontSize: 23, fontWeight: "bold", marginRight: 5 }}>{this.state.SHOPNAME}</Text>
+          <Text style={{ color: "#212529", fontSize: textResizing(23), fontWeight: "bold", marginRight: 5 }}>{this.state.SHOPNAME}</Text>
           {this.state.POINT !== null ? (
             <Rating startingValue={this.state.POINT} readonly={true} style={{ paddingVertical: 10, marginBottom: 2 }} imageSize={18} />
           ) : null}
@@ -74,12 +76,12 @@ export default class CartItem extends Component {
         <View style={{ flexDirection: "row", borderWidth: 1, borderColor: "#dee2e6", marginTop: 7 }}>
           <TouchableWithoutFeedback onPress={this.showShop}>
             <View style={{ width: "50%", alignItems: "center" }}>
-              <Text style={{ color: "#212529", fontSize: 20, paddingTop: 15, paddingBottom: 15 }}>메뉴/정보</Text>
+              <Text style={{ color: "#212529", fontSize: textResizing(20), paddingTop: 15, paddingBottom: 15 }}>메뉴/정보</Text>
             </View>
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback onPress={this.showReview}>
             <View style={{ width: "50%", alignItems: "center", borderLeftWidth: 1, borderLeftColor: "#dee2e6" }}>
-              <Text style={{ color: "#212529", fontSize: 20, paddingTop: 15, paddingBottom: 15 }}>리뷰 ({this.state.reviews.length}개)</Text>
+              <Text style={{ color: "#212529", fontSize: textResizing(20), paddingTop: 15, paddingBottom: 15 }}>리뷰 ({this.state.reviews.length}개)</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -87,22 +89,24 @@ export default class CartItem extends Component {
         <View style={{ backgroundColor: "#FFF", borderColor: "#dee2e6", borderWidth: 1, padding: 20, paddingBottom: 13, marginTop: 20 }}>
           {this.props.cart.map((v, i) => (
             <View key={v.id} style={{ flexDirection: "row", alignItems: "center", marginBottom: 7 }}>
-              <Text style={{ fontSize: 18, color: "#212529", marginRight: 5 }}>
+              <Text style={{ fontSize: textResizing(18), color: "#212529", marginRight: 5 }}>
                 {this.getMenu(v.item).MENUNAME}
                 {this.getOptionNames(v.item, v.options)}
               </Text>
-              <Text style={{ fontSize: 18, fontWeight: "bold", color: "#212529", marginRight: 1 }}>
+              <Text style={{ fontSize: textResizing(18), fontWeight: "bold", color: "#212529", marginRight: 1 }}>
                 {accounting.formatMoney(this.getMenu(v.item).PRICE + this.getOptionPrice(v.item, v.options), { symbol: "원", format: "%v%s", precision: 0 })}
               </Text>
-              <Text style={{ fontSize: 10, color: "#212529", marginRight: 1 }}>∙</Text>
-              <Text style={{ fontSize: 18, color: "#212529" }}>{v.count}개</Text>
+              <Text style={{ fontSize: textResizing(10), color: "#212529", marginRight: 1 }}>∙</Text>
+              <Text style={{ fontSize: textResizing(18), color: "#212529" }}>{v.count}개</Text>
             </View>
           ))}
         </View>
 
         <TouchableWithoutFeedback onPress={this.doOrder}>
           <View style={{ alignItems: "center", backgroundColor: "#f8f9fa", borderWidth: 1, borderColor: "#dee2e6", borderTopWidth: 0 }}>
-            <Text style={{ color: "#212529", fontSize: 20, fontWeight: "bold", paddingTop: 15, paddingBottom: 15 }}>{this.props.cart.length}개 주문하기</Text>
+            <Text style={{ color: "#212529", fontSize: textResizing(20), fontWeight: "bold", paddingTop: 15, paddingBottom: 15 }}>
+              {this.props.cart.length}개 주문하기
+            </Text>
           </View>
         </TouchableWithoutFeedback>
 

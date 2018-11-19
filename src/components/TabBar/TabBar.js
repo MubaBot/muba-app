@@ -5,6 +5,8 @@ import { Actions } from "react-native-router-flux";
 import Image from "react-native-remote-svg";
 // import SvgIcon from "react-native-svg-icon";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 const items = [
   { icon: require("assets/icons/tabs/icon-home.svg"), iconSelect: require("assets/icons/tabs/icon-home-select.svg"), label: "홈", route: "main" },
   { icon: require("assets/icons/tabs/icon-search.svg"), iconSelect: require("assets/icons/tabs/icon-search-select.svg"), label: "상점찾기", route: "search" },
@@ -36,7 +38,9 @@ export default class TabBar extends Component {
               <View style={{ alignItems: "center" }}>
                 <Image source={this.props.navigation.state.key === v.route ? v.iconSelect : v.icon} style={{ width: 25, height: 25 }} />
                 {/* <SvgIcon style={{ width: 25, height: 25 }} svgs={v.icon} />; */}
-                <Text style={{ color: this.props.navigation.state.key === v.route ? "#468ef7" : "#868e96", marginTop: 5, fontSize: 12 }}>{v.label}</Text>
+                <Text style={{ color: this.props.navigation.state.key === v.route ? "#468ef7" : "#868e96", marginTop: 5, fontSize: textResizing(12) }}>
+                  {v.label}
+                </Text>
               </View>
             </TouchableWithoutFeedback>
           ))}

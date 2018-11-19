@@ -78,6 +78,13 @@ export default class Message extends React.PureComponent {
     return <Avatar {...avatarProps} />;
   }
 
+  renderCustomUnderView() {
+    if (this.props.renderCustomUnderView) {
+      return this.props.renderCustomUnderView(this.props);
+    }
+    return null;
+  }
+
   render() {
     const sameUser = isSameUser(this.props.currentMessage, this.props.nextMessage);
     return (
@@ -99,6 +106,7 @@ export default class Message extends React.PureComponent {
             {this.props.position === "right" ? this.renderAvatar() : null}
           </View>
         )}
+        {this.renderCustomUnderView()}
       </View>
     );
   }

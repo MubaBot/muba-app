@@ -11,6 +11,8 @@ import Color from "./Color";
 import { isSameDay } from "./utils";
 import { DATE_FORMAT } from "./Constant";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default function Day({ dateFormat, currentMessage, previousMessage, nextMessage, containerStyle, wrapperStyle, textStyle, inverted }, context) {
   if (!isSameDay(currentMessage, inverted ? previousMessage : nextMessage)) {
     return (
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
   text: {
     backgroundColor: Color.backgroundTransparent,
     color: Color.defaultColor,
-    fontSize: 12,
+    fontSize: textResizing(12),
     fontWeight: "600"
   }
 });

@@ -8,6 +8,8 @@ import Communications from "react-native-communications";
 
 const WWW_URL_PATTERN = /^www\./i;
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class MessageText extends React.Component {
   constructor(props) {
     super(props);
@@ -78,7 +80,7 @@ export default class MessageText extends React.Component {
           ]}
           childrenProps={{ ...this.props.textProps }}
         >
-          {this.props.currentMessage.text}
+          {this.props.renderCustomText(this.props.currentMessage)}
         </ParsedText>
       </View>
     );
@@ -86,7 +88,7 @@ export default class MessageText extends React.Component {
 }
 
 const textStyle = {
-  fontSize: 16,
+  fontSize: textResizing(16),
   lineHeight: 20,
   marginTop: 5,
   marginBottom: 5,

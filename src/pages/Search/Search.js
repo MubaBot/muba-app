@@ -11,6 +11,8 @@ import SearchItem from "./SearchItem";
 
 import { UserApi, ShopApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Search extends Component {
   state = {
     lists: [],
@@ -114,7 +116,8 @@ export default class Search extends Component {
           >
             <View style={{ flex: 4 }}>
               <TextInput
-                style={{ fontSize: 30 }}
+                underlineColorAndroid="transparent"
+                style={{ fontSize: textResizing(30), padding: 0 }}
                 onChangeText={this.onChangeSearchText}
                 value={this.state.keyword}
                 placeholder="상점 이름을 입력하세요"

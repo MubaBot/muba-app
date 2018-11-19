@@ -10,6 +10,8 @@ import Header from "./Header";
 
 import { UserApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 const styles = StyleSheet.create({
   webView: {
     justifyContent: "center",
@@ -90,19 +92,20 @@ export default class DaumMap extends Component {
           </View>
 
           <View style={{ marginTop: 15, marginLeft: 25, marginRight: 25 }}>
-            <Text style={{ fontSize: 24 }}>{this.state.address_name || "지번 주소"}</Text>
-            <Text style={{ fontSize: 18, marginTop: 5, color: "#969ba7" }}>
+            <Text style={{ fontSize: textResizing(24) }}>{this.state.address_name || "지번 주소"}</Text>
+            <Text style={{ fontSize: textResizing(18), marginTop: 5, color: "#969ba7" }}>
               {this.state.road_address ? this.state.road_address.split("구 ")[1] : "도로명 주소"}
             </Text>
             <TextInput
-              style={{ borderWidth: 1, marginTop: 15, borderColor: "#d9d9d9", padding: 15, fontSize: 20 }}
+              style={{ borderWidth: 1, marginTop: 15, borderColor: "#d9d9d9", padding: 15, fontSize: textResizing(20) }}
               value={this.state.detail_address}
               placeholder="상세주소를 입력하세요."
+              underlineColorAndroid="transparent"
               onChangeText={this.onChangeAddressText}
             />
             <TouchableWithoutFeedback onPress={this.onSubmit}>
               <View style={{ backgroundColor: "#080808", marginTop: 15, marginBottom: 15, flexDirection: "row", justifyContent: "center", padding: 17 }}>
-                <Text style={{ color: "#FFF", fontSize: 20, fontWeight: "bold" }}>완료</Text>
+                <Text style={{ color: "#FFF", fontSize: textResizing(20), fontWeight: "bold" }}>완료</Text>
               </View>
             </TouchableWithoutFeedback>
           </View>

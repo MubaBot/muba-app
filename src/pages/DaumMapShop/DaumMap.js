@@ -6,6 +6,8 @@ import Image from "react-native-remote-svg";
 
 import LoadingContainer from "@/components/LoadingContainer";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 const styles = StyleSheet.create({
   webView: {
     justifyContent: "center",
@@ -53,7 +55,7 @@ export default class DaumMap extends Component {
               </View>
             </TouchableWithoutFeedback>
 
-            <Text style={{ fontSize: 25, fontWeight: "bold", color: "#212529" }}>{this.state.NAME}</Text>
+            <Text style={{ fontSize: textResizing(25), fontWeight: "bold", color: "#212529" }}>{this.state.NAME}</Text>
 
             <TouchableWithoutFeedback onPress={this.showDaumMap}>
               <View style={{ width: 20, height: 20 }}>

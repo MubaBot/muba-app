@@ -19,6 +19,8 @@ import { ShopApi } from "@/apis";
 
 const deviceHeight = Dimensions.get("window").height;
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Review extends Component {
   constructor(props) {
     super(props);
@@ -177,7 +179,7 @@ export default class Review extends Component {
                 this.state.REVIEWS.map((v, i) => (v.order ? <ReviewItem key={v._id} {...v} galleryPhoto={this.galleryPhoto} /> : null))
               ) : (
                 <View style={{ alignItems: "center", justifyContent: "center", paddingVertical: 30 }}>
-                  <Text style={{ fontSize: 20, fontWeight: "bold", color: "#212529" }}>리뷰가 존재하지 않습니다.</Text>
+                  <Text style={{ fontSize: textResizing(20), fontWeight: "bold", color: "#212529" }}>리뷰가 존재하지 않습니다.</Text>
                 </View>
               )}
             </ScrollView>

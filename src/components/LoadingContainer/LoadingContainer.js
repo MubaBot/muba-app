@@ -8,6 +8,7 @@ import Loading from "./Loading";
 import { AuthApi } from "apis";
 
 // import KeyboardSpacer from "react-native-keyboard-spacer";
+import CONFIG, { textResizing, marginResizing } from "@/config";
 
 const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 20 : StatusBar.currentHeight;
 const APPBAR_HEIGHT = Platform.OS === "ios" ? 44 : 56;
@@ -66,8 +67,8 @@ export default class LoadingContainer extends Component {
               height: 50,
               width: "100%",
               alignItems: "center",
-              paddingTop: 15,
-              paddingBottom: 10,
+              paddingTop: marginResizing(15),
+              paddingBottom: marginResizing(10),
               borderBottomWidth: 1,
               borderBottomColor: "#e9ecef",
               backgroundColor: "#FFF",

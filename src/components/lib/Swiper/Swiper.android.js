@@ -6,6 +6,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Text, View, ViewPropTypes, ScrollView, Dimensions, TouchableOpacity, ViewPagerAndroid, Platform, ActivityIndicator } from "react-native";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 /**
  * Default styles
  * @type {StyleSheetPropType}
@@ -80,7 +82,7 @@ const styles = {
   },
 
   buttonText: {
-    fontSize: 50,
+    fontSize: textResizing(50),
     color: "#007aff"
   }
 };
@@ -293,7 +295,8 @@ export default class extends Component {
 
     this.autoplayTimer && clearTimeout(this.autoplayTimer);
     this.autoplayTimer = setTimeout(() => {
-      if (!this.props.loop && (this.props.autoplayDirection ? this.state.index === this.state.total - 1 : this.state.index === 0)) return this.setState({ autoplayEnd: true });
+      if (!this.props.loop && (this.props.autoplayDirection ? this.state.index === this.state.total - 1 : this.state.index === 0))
+        return this.setState({ autoplayEnd: true });
 
       this.scrollBy(this.props.autoplayDirection ? 1 : -1);
     }, this.props.autoplayTimeout * 1000);

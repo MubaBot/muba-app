@@ -6,6 +6,8 @@ import Image from "react-native-remote-svg";
 
 import { AuthApi, UserApi } from "@/apis";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 export default class Location extends Component {
   constructor(props) {
     super(props);
@@ -63,7 +65,7 @@ export default class Location extends Component {
   render() {
     return (
       <View style={{ marginTop: 30, flex: 1 }}>
-        <Text style={{ fontSize: 30 }}>
+        <Text style={{ fontSize: textResizing(30) }}>
           지번, 도로명, 건물명을 {"\n"}
           입력하세요.
         </Text>
@@ -80,7 +82,8 @@ export default class Location extends Component {
         >
           <View style={{ flex: 4 }}>
             <TextInput
-              style={{ fontSize: 30 }}
+              style={{ fontSize: textResizing(30), padding: 0 }}
+              underlineColorAndroid="transparent"
               onChangeText={this.onChangeAddressText}
               value={this.state.search}
               placeholder="역삼동 아남타워"
@@ -110,7 +113,7 @@ export default class Location extends Component {
             }}
           >
             <Image source={require("assets/icons/m-address.svg")} />
-            <Text style={{ marginLeft: 10, fontSize: 20 }}>현 위치로 주소 설정</Text>
+            <Text style={{ marginLeft: 10, fontSize: textResizing(20) }}>현 위치로 주소 설정</Text>
           </View>
         </TouchableWithoutFeedback>
 
@@ -127,7 +130,7 @@ export default class Location extends Component {
               marginTop: 10
             }}
           >
-            <Text style={{ padding: 15, fontSize: 20 }}>{this.state.showAddress ? "주소 선택" : this.displayAddress(this.props.nowAddress)}</Text>
+            <Text style={{ padding: 15, fontSize: textResizing(20) }}>{this.state.showAddress ? "주소 선택" : this.displayAddress(this.props.nowAddress)}</Text>
             <Image style={{ padding: 13, marginRight: 25 }} source={require("assets/icons/m-select.svg")} />
           </View>
         </TouchableWithoutFeedback>
@@ -145,7 +148,7 @@ export default class Location extends Component {
         >
           <Picker
             selectedValue={this.state.picker}
-            itemStyle={{ fontSize: 13 }}
+            itemStyle={{ fontSize: textResizing(13) }}
             onValueChange={(itemValue, itemIndex) => this.onChangeAddressPicker(itemValue)}
           >
             <Picker.Item label="선택 안함" value={null} />
@@ -157,7 +160,7 @@ export default class Location extends Component {
 
         <TouchableWithoutFeedback onPress={this.doLogout}>
           <View style={{ flex: 1, alignSelf: "flex-end", marginTop: 20 }}>
-            <Text style={{ marginLeft: 10, fontSize: 20, textDecorationLine: "underline" }}>로그아웃</Text>
+            <Text style={{ marginLeft: 10, fontSize: textResizing(20), textDecorationLine: "underline" }}>로그아웃</Text>
           </View>
         </TouchableWithoutFeedback>
       </View>

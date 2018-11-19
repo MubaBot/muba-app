@@ -5,6 +5,8 @@ import { Actions } from "react-native-router-flux";
 import { Rating } from "react-native-elements";
 import call from "react-native-phone-call";
 
+import CONFIG, { textResizing, marginResizing } from "@/config";
+
 const style = StyleSheet.create({
   view: {
     marginTop: 7,
@@ -13,11 +15,11 @@ const style = StyleSheet.create({
   },
   leftText: {
     width: 50,
-    fontSize: 15,
+    fontSize: textResizing(15),
     color: "#212529"
   },
   rightText: {
-    fontSize: 15,
+    fontSize: textResizing(15),
     color: "#868e96"
   }
 });
@@ -26,7 +28,7 @@ export default class Info extends Component {
   render() {
     return (
       <View>
-        <Text style={{ color: "#212529", fontWeight: "bold", fontSize: 24 }}>{this.props.SHOPNAME}</Text>
+        <Text style={{ color: "#212529", fontWeight: "bold", fontSize: textResizing(24) }}>{this.props.SHOPNAME}</Text>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
             {this.props.POINT !== null ? (
@@ -37,7 +39,7 @@ export default class Info extends Component {
 
           <TouchableWithoutFeedback onPress={() => Actions.push("review", { id: this.props._id })}>
             <View>
-              <Text style={{ color: "#468ef7", fontWeight: "bold", fontSize: 20 }}>리뷰</Text>
+              <Text style={{ color: "#468ef7", fontWeight: "bold", fontSize: textResizing(20) }}>리뷰</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
