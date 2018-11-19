@@ -22,7 +22,7 @@ import ShowShopMenu from "./PopupItems/ShowShopMenu";
 
 import LoadingContainer from "@/components/LoadingContainer";
 
-import { ChatApi, UserApi } from "@/apis";
+import { ChatApi, UserApi, ShopApi } from "@/apis";
 
 import CONFIG, { textResizing, marginResizing } from "@/config";
 
@@ -111,7 +111,6 @@ export default class Chat extends Component {
           scenario: response.scenario,
           argv: response.argv
         });
-        const messages = await ChatApi.removeChatMessage(chat._id);
 
         this.setState({ messages: messages });
 
@@ -119,6 +118,8 @@ export default class Chat extends Component {
 
         var type = ChatApi.CONFIG.TYPE_NORMAL;
         var msg = response.msg;
+
+        let temp;
 
         switch (response.func) {
           case "show_food_related_restaurant":
@@ -133,13 +134,15 @@ export default class Chat extends Component {
             break;
           case "show_menu":
             type = ChatApi.CONFIG.TYPE_SHOP_MENU;
-            msg = argv.restaurant[0];
+            temp = await ShopApi.getShopInfoByName({ shop: argv.restaurant[0], lat: this.state.lat, lng: this.state.lng });
+            msg = JSON.stringify({ ID: temp._id, SHOPNAME: temp.SHOPNAME });
             break;
           case "show_restaurant_info":
             Actions.push("shop", { id: argv.restaurant[0] });
             break;
         }
 
+        const messages = await ChatApi.removeChatMessage(chat._id);
         ChatApi.saveMessage(ChatApi.CONFIG.BOT_ID, msg, type).then(chat => this.setState(() => ({ messages: GiftedChat.append(this.state.messages, chat) })));
       }
     );

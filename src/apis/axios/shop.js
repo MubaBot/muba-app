@@ -24,6 +24,10 @@ const getShopInfo = async ({ id }) => {
   return Axios.Get("/api/shop/" + id);
 };
 
+const getShopInfoByName = async ({ shop, lat, lng }) => {
+  return Axios.Get(["/api/shop", lat, lng, shop].join("/")).then(shop => shop.data.shop);
+};
+
 const getShopMenus = async ({ id }) => {
   return Axios.Get(["/api/shop", id, "menus", "sales"].join("/"));
 };
@@ -64,6 +68,7 @@ export {
   searchShopRandom,
   setLatlng,
   getShopInfo,
+  getShopInfoByName,
   getShopMenus,
   orderCart,
   writeReview,
