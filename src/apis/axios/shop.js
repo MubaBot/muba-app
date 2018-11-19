@@ -12,6 +12,14 @@ const searchShopFood = async ({ keyword, page, lat, lng }) => {
   return Axios.Get(["/api/shop/food/list", page, lat, lng, keyword].join("/")).then(shops => shops.data.lists);
 };
 
+const searchShopRandom = async ({ page, lat, lng }) => {
+  return Axios.Get(["/api/shop/random/list", page, lat, lng].join("/")).then(shops => shops.data.lists);
+};
+
+const searchFoodRandom = async ({ page, lat, lng }) => {
+  return Axios.Get(["/api/shop/menu/random/list", page, lat, lng].join("/")).then(shops => shops.data.lists);
+};
+
 const getShopInfo = async ({ id }) => {
   return Axios.Get("/api/shop/" + id);
 };
@@ -48,4 +56,16 @@ const getReview = async ({ shop, page }) => {
   return Axios.Get(["/api/shop", shop, "review", page].join("/")).then(res => res.data.reviews);
 };
 
-export { searchSaleShopList, searchShop, searchShopFood, setLatlng, getShopInfo, getShopMenus, orderCart, writeReview, getReview };
+export {
+  searchSaleShopList,
+  searchShop,
+  searchFoodRandom,
+  searchShopFood,
+  searchShopRandom,
+  setLatlng,
+  getShopInfo,
+  getShopMenus,
+  orderCart,
+  writeReview,
+  getReview
+};

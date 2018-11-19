@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { TouchableWithoutFeedback, Platform, View, Keyboard } from "react-native";
 
 import { Body, Left, Right, Text, Title, Icon, Spinner } from "native-base";
+import { Actions } from "react-native-router-flux";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import Toast from "react-native-easy-toast";
 
@@ -15,6 +16,8 @@ import Day from "./GiftedChatComponents/Day";
 import Header from "./Header";
 import SearchShops from "./PopupItems/SearchShops";
 import SearchFood from "./PopupItems/SearchFood";
+import SearchShopRandom from "./PopupItems/SearchShopRandom";
+import SearchFoodRandom from "./PopupItems/SearchFoodRandom";
 import ShowShopMenu from "./PopupItems/ShowShopMenu";
 
 import LoadingContainer from "@/components/LoadingContainer";
@@ -116,17 +119,31 @@ export default class Chat extends Component {
 
         var type = ChatApi.CONFIG.TYPE_NORMAL;
         var msg = response.msg;
-        if (this.checkSearchFood(response.func)) {
-          type = ChatApi.CONFIG.TYPE_SERACH_FOOD;
-          msg = argv.food[0];
+
+        switch (response.func) {
+          case "show_food_related_restaurant":
+            type = ChatApi.CONFIG.TYPE_SERACH_FOOD;
+            msg = argv.food[0];
+            break;
+          case "restaurant_recommend":
+            type = ChatApi.CONFIG.TYPE_SERACH_SHOP_RANDOM;
+            break;
+          case "food_recommend":
+            type = ChatApi.CONFIG.TYPE_SERACH_FOOD_RANDOM;
+            break;
+          case "show_menu":
+            type = ChatApi.CONFIG.TYPE_SHOP_MENU;
+            msg = argv.restaurant[0];
+            break;
+          case "show_restaurant_info":
+            Actions.push("shop", { id: argv.restaurant[0] });
+            break;
         }
 
         ChatApi.saveMessage(ChatApi.CONFIG.BOT_ID, msg, type).then(chat => this.setState(() => ({ messages: GiftedChat.append(this.state.messages, chat) })));
       }
     );
   }
-
-  checkSearchFood = type => type === "show_food_related_restaurant";
 
   getSearchKeyword = message => {
     if (!/^근처의/.test(message)) return null;
@@ -150,6 +167,10 @@ export default class Chat extends Component {
 
   renderCustomUnderView = props => {
     switch (props.currentMessage.type) {
+      case ChatApi.CONFIG.TYPE_SERACH_SHOP_RANDOM:
+        return <SearchShopRandom lat={this.state.lat} lng={this.state.lng} showShopMenus={this.showShopMenus} />;
+      case ChatApi.CONFIG.TYPE_SERACH_FOOD_RANDOM:
+        return <SearchFoodRandom lat={this.state.lat} lng={this.state.lng} showShopInfo={this.showShopInfo} />;
       case ChatApi.CONFIG.TYPE_SERACH_FOOD:
         return <SearchFood search={props.currentMessage.text} lat={this.state.lat} lng={this.state.lng} showShopMenus={this.showShopMenus} />;
       case ChatApi.CONFIG.TYPE_SHOP_MENU:
@@ -182,6 +203,8 @@ export default class Chat extends Component {
       this.setState(() => ({ messages: GiftedChat.append(this.state.messages, chat) }))
     );
   };
+
+  showShopInfo = id => Actions.push("shop", { id: id });
 
   render() {
     return (
