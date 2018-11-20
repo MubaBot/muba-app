@@ -144,7 +144,6 @@ export default class Chat extends Component {
             break;
         }
 
-        const messages = await ChatApi.removeChatMessage(chat._id);
         ChatApi.saveMessage(ChatApi.CONFIG.BOT_ID, msg, type).then(chat => this.setState(() => ({ messages: GiftedChat.append(this.state.messages, chat) })));
       }
     );
