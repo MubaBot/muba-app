@@ -112,6 +112,8 @@ export default class Chat extends Component {
           argv: response.argv
         });
 
+        const messages = await ChatApi.removeChatMessage(chat._id);
+
         this.setState({ messages: messages });
 
         const argv = JSON.parse(response.argv);
